@@ -1067,7 +1067,7 @@ function renderActivePackagesWidget() {
     let html = `
         <div class="glass-panel rounded-2xl p-6 border border-primary/20 bg-primary-fixed/10 mb-8 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
             <h4 class="font-title-md text-primary font-bold flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-primary">stars</span> Paket Aktif Anda (akan muncul ketika sudah login)
+                <span class="material-symbols-outlined text-primary">stars</span> Your Active Packages
             </h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     `;
@@ -1079,10 +1079,10 @@ function renderActivePackagesWidget() {
             <div class="flex justify-between items-center bg-white/60 p-4 rounded-xl border border-outline-variant/30">
                 <div>
                     <p class="font-semibold text-on-surface">${bundle.name}</p>
-                    <p class="text-xs text-on-surface-variant">Sisa Kuota: ${remaining} dari ${bundle.sessions} Sesi</p>
+                    <p class="text-xs text-on-surface-variant">Remaining quota: ${remaining} of ${bundle.sessions} sessions</p>
                 </div>
                 <button onclick="bookPackageSession('${key}')" class="bg-primary text-white text-xs px-4 py-2 rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors">
-                    Gunakan Paket
+                    Use Package
                 </button>
             </div>
         `;
@@ -1098,7 +1098,7 @@ window.purchaseBundle = function (bundleId) {
     if (!bundle) return;
 
     if (state.walletBalance < bundle.price) {
-        showNotification(`Saldo Serenity Wallet tidak cukup untuk membeli ${bundle.name}. Silakan Top Up terlebih dahulu!`, 'error');
+        showNotification(`Insufficient Serenity Wallet balance to purchase ${bundle.name}. Please Top Up first!`, 'error');
         return;
     }
 
@@ -1115,7 +1115,7 @@ window.purchaseBundle = function (bundleId) {
     updateHeaderWalletDisplay();
     renderActivePackagesWidget();
     saveState();
-    showNotification(`Sukses membeli ${bundle.name}! ${bundle.sessions} sesi ditambahkan ke paket aktif Anda.`, 'success');
+    showNotification(`Success purchasing ${bundle.name}! ${bundle.sessions} sessions added to your active packages.`, 'success');
 };
 
 // Book a session from an active package (routes to dedicated book-package view)
@@ -1124,7 +1124,7 @@ window.bookPackageSession = function (bundleId) {
     const sessionsLeft = state.activePackages[bundleId] || 0;
     if (!bundle) return;
     if (sessionsLeft <= 0) {
-        showNotification('Semua sesi untuk paket ini sudah habis.', 'error');
+        showNotification('All sessions for this package have been used.', 'error');
         return;
     }
 
@@ -1512,7 +1512,7 @@ window.saveGuestInfo = function () {
     state.guestInfo = { name, email, phone, specialRequests };
     isEditingGuest = false;
     renderGuestInfoCard();
-    showNotification('Informasi tamu berhasil diperbarui.', 'success');
+    showNotification('Guest information successfully updated.', 'success');
 };
 
 let selectedPaymentMethod = 'wallet'; // default payment method
@@ -1850,19 +1850,19 @@ function renderSuccessView() {
 window.nextStep = function (currentStep) {
     if (currentStep === 1) {
         if (!state.booking.service) {
-            showNotification('Harap pilih layanan terlebih dahulu untuk melanjutkan.', 'warning');
+            showNotification('Please select a service first to proceed.', 'warning');
             return;
         }
         navigateTo('select-therapist');
     } else if (currentStep === 2) {
         if (!state.booking.therapist) {
-            showNotification('Harap pilih therapist terlebih dahulu untuk melanjutkan.', 'warning');
+            showNotification('Please select a therapist first to proceed.', 'warning');
             return;
         }
         navigateTo('select-time');
     } else if (currentStep === 3) {
         if (!state.booking.date || !state.booking.time) {
-            showNotification('Harap pilih tanggal dan jam terlebih dahulu untuk melanjutkan.', 'warning');
+            showNotification('Please select a date and time first to proceed.', 'warning');
             return;
         }
         navigateTo('confirm-booking');
@@ -1914,7 +1914,7 @@ window.confirmReservation = function () {
 
         state.successResId = resId;
 
-        showNotification(`Sesi berhasil dibooking! 1 sesi dipotong dari paket Anda.`, 'success');
+        showNotification(`Session successfully booked! 1 session deducted from your package.`, 'success');
         navigateTo('success');
         return;
     }
@@ -1961,7 +1961,7 @@ window.confirmReservation = function () {
 
         state.successResId = resId;
 
-        showNotification(`Pemesanan berhasil dikonfirmasi! 1 sesi dipotong dari paket Anda.`, 'success');
+        showNotification(`Booking successfully confirmed! 1 session deducted from your package.`, 'success');
         navigateTo('success');
     } else {
         const subtotal = service.price;
@@ -1970,7 +1970,7 @@ window.confirmReservation = function () {
 
         if (selectedPaymentMethod === 'wallet') {
             if (state.walletBalance < total) {
-                showNotification(`Saldo wallet Anda tidak cukup (Total: MYR ${total.toFixed(2)}). Harap lakukan Top Up atau pilih metode pembayaran lain.`, 'error');
+                showNotification(`Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Please Top Up or choose another payment method.`, 'error');
                 return;
             }
             state.walletBalance -= total;
@@ -2010,7 +2010,7 @@ window.confirmReservation = function () {
         state.successResId = resId;
         navigateTo('success');
 
-        showNotification('Reservasi Anda berhasil disimpan.', 'success');
+        showNotification('Your reservation has been saved successfully.', 'success');
     }
 
     navigateTo('success');
@@ -3584,8 +3584,8 @@ function renderBookPackageView() {
 
     container.innerHTML = `
         <div class="mb-8 text-center md:text-left">
-            <h1 class="font-serif text-3xl text-[#1E293B] font-bold mb-1">Gunakan Sesi Paket</h1>
-            <p class="font-body-sm text-xs text-on-surface-variant">Jadwalkan sesi perawatan untuk paket aktif Anda.</p>
+            <h1 class="font-serif text-3xl text-[#1E293B] font-bold mb-1">Use Package Session</h1>
+            <p class="font-body-sm text-xs text-on-surface-variant">Schedule a treatment session for your active package.</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -3593,7 +3593,7 @@ function renderBookPackageView() {
             <div class="lg:col-span-8 space-y-6">
                 <div class="glass-panel rounded-3xl p-6 md:p-8 bg-white shadow-sm border border-outline-variant/30">
                     <h2 class="font-title-md text-base text-[#50613f] mb-6 flex items-center gap-2 font-semibold">
-                        <span class="material-symbols-outlined">calendar_month</span> Pilih Tanggal &amp; Waktu
+                        <span class="material-symbols-outlined">calendar_month</span> Select Date &amp; Time
                     </h2>
 
                     <!-- Calendar Card -->
@@ -3655,7 +3655,7 @@ function renderBookPackageView() {
                                 <div>
                                     <span class="font-label-caps text-[9px] text-outline mb-0.5 block uppercase font-bold tracking-wider">SERVICE</span>
                                     <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">${bundle.name}</h3>
-                                    <p class="font-body-sm text-[11px] text-on-surface-variant">Sisa Paket: ${sessionsLeft} Sesi</p>
+                                    <p class="font-body-sm text-[11px] text-on-surface-variant">Remaining: ${sessionsLeft} Session(s)</p>
                                 </div>
                             </div>
                             
@@ -3716,7 +3716,7 @@ function renderBookPackageView() {
                         <!-- Confirm Actions -->
                         <div class="pt-2">
                             <button onclick="confirmPackageBooking()" class="w-full bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
-                                Konfirmasi Booking Sesi <span class="material-symbols-outlined text-sm">check_circle</span>
+                                Confirm Session Booking <span class="material-symbols-outlined text-sm">check_circle</span>
                             </button>
                         </div>
                     </div>
@@ -3766,7 +3766,7 @@ window.confirmPackageBooking = function () {
     if (!bundle) return;
 
     if ((state.activePackages[bundleId] || 0) <= 0) {
-        showNotification('Semua sesi paket sudah habis.', 'error');
+        showNotification('All package sessions have been used.', 'error');
         return;
     }
 
@@ -3793,7 +3793,7 @@ window.confirmPackageBooking = function () {
     state.notifications.unshift({
         id: 'notif-' + Date.now(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-        text: `Sesi Paket Dipesan: Sesi paket Anda untuk ${bundle.name} dijadwalkan pada ${state.pkgBooking.date} pukul ${state.pkgBooking.time}.`
+        text: `Package Session Booked: Your package session for ${bundle.name} is scheduled on ${state.pkgBooking.date} at ${state.pkgBooking.time}.`
     });
 
     // Populate state.booking so renderSuccessView renders it perfectly
@@ -3816,7 +3816,7 @@ window.confirmPackageBooking = function () {
     
     // Go to success view!
     navigateTo('success');
-    showNotification('Sesi paket berhasil dijadwalkan!', 'success');
+    showNotification('Package session successfully scheduled!', 'success');
 };
 
 // 8.1 RENDER: ALL ACTIVE PACKAGES CATALOG VIEW

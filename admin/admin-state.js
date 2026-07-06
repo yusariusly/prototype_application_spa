@@ -25,7 +25,7 @@ const DEFAULT_STAFF = [
 
 const DEFAULT_RESERVATIONS = [
   { id: 'RES-001', customer: 'Eleanor Vance', service: 'Deep Tissue', therapistId: 'stf-4', timeSlot: '10:00', duration: 120, date: '2025-07-03', status: 'Confirmed' },
-  { id: 'RES-002', customer: 'Bpk. Reza', service: 'Express Massage', therapistId: 'stf-1', timeSlot: '13:00', duration: 60, date: '2025-07-03', status: 'Pending' },
+  { id: 'RES-002', customer: 'Mr. Reza', service: 'Express Massage', therapistId: 'stf-1', timeSlot: '13:00', duration: 60, date: '2025-07-03', status: 'Pending' },
   { id: 'RES-003', customer: 'Diana K.', service: 'Acupuncture', therapistId: 'stf-2', timeSlot: '09:00', duration: 60, date: '2025-07-03', status: 'Pending' },
   { id: 'RES-004', customer: 'Hendra K.', service: 'Acupuncture', therapistId: 'stf-2', timeSlot: '11:00', duration: 60, date: '2025-07-03', status: 'Confirmed' },
   { id: 'RES-005', customer: 'Nia Ramadhani', service: 'Premium Glow Facial', therapistId: 'stf-3', timeSlot: '13:00', duration: 120, date: '2025-07-03', status: 'Confirmed' },
