@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Serenity &amp; Soul</title>
+<meta name="description" content="Create your Serenity &amp; Soul account to enjoy exclusive spa treatments, track your bookings, and manage your wellness journey.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: #eef4f0;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient blobs */
+  .blob { position: fixed; border-radius: 50%; filter: blur(90px); opacity: 0.3; pointer-events: none; z-index: 0; }
+  .blob-1 { width: 560px; height: 560px; background: #a8c5a0; top: -160px; left: -160px; }
+  .blob-2 { width: 420px; height: 420px; background: #fed65b; bottom: -120px; right: -100px; }
+  .blob-3 { width: 300px; height: 300px; background: #c5e0bb; top: 50%; right: 8%; }
+
+  /* Top nav */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(238,244,240,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(197,200,188,0.3);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand-logo { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: #50613f; text-decoration: none; }
+  .back-link {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 0.8rem; font-weight: 600; color: #50613f;
+    text-decoration: none; transition: opacity 0.2s;
+  }
+  .back-link:hover { opacity: 0.7; }
+
+  /* Main layout */
+  .page-wrap {
+    position: relative; z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 16px 60px;
+  }
+
+  /* Header */
+  .page-header { text-align: center; margin-bottom: 32px; }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: #161d1d;
+    margin-bottom: 8px;
+  }
+  .page-header p { font-size: 0.9rem; color: #75786e; }
+
+  /* Card */
+  .card {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(22,29,29,0.1);
+    padding: 36px 32px;
+  }
+  @media (max-width: 480px) { .card { padding: 24px 20px; } }
+
+  /* Section titles */
+  .section-title {
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: #50613f; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before, .section-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: rgba(197,200,188,0.5);
+  }
+
+  /* Grid */
+  .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+  @media (max-width: 540px) { .fields-grid { grid-template-columns: 1fr; } }
+  .col-span-2 { grid-column: 1 / -1; }
+
+  /* Field */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #45483f;
+  }
+  .field label .req { color: #b45309; }
+  .input-wrap { position: relative; display: flex; align-items: center; }
+  .input-wrap .ico {
+    position: absolute; left: 12px; font-size: 17px;
+    color: #75786e; pointer-events: none;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 11px 14px 11px 40px;
+    border: 1.5px solid rgba(197,200,188,0.6);
+    border-radius: 12px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.88rem; color: #161d1d;
+    background: rgba(255,255,255,0.7);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus {
+    border-color: #50613f;
+    box-shadow: 0 0 0 3px rgba(80,97,63,0.12);
+  }
+  .field input.no-ico, .field select.no-ico { padding-left: 14px; }
+
+  /* Gender radio group */
+  .gender-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .gender-option {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.82rem; font-weight: 600; color: #161d1d;
+    cursor: pointer; padding: 9px 16px;
+    border: 1.5px solid rgba(197,200,188,0.6);
+    border-radius: 10px; transition: all 0.15s;
+    user-select: none; flex: 1; min-width: 90px; justify-content: center;
+  }
+  .gender-option input { display: none; }
+  .gender-option:has(input:checked) {
+    background: rgba(80,97,63,0.08);
+    border-color: #50613f; color: #50613f; font-weight: 700;
+  }
+
+  /* Toggle password */
+  .pw-toggle {
+    position: absolute; right: 12px;
+    background: none; border: none; cursor: pointer;
+    color: #75786e; display: flex; align-items: center;
+    transition: color 0.15s;
+  }
+  .pw-toggle:hover { color: #50613f; }
+
+  /* Error / success */
+  .form-error {
+    display: none;
+    background: #ffdad6; color: #93000a;
+    font-size: 0.8rem; font-weight: 600;
+    padding: 12px 16px; border-radius: 12px;
+    margin-bottom: 20px; align-items: center; gap: 8px;
+  }
+  .form-error.show { display: flex; }
+
+  /* Submit */
+  .btn-submit {
+    width: 100%; padding: 14px;
+    background: #50613f; color: #fff;
+    border: none; border-radius: 12px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .btn-submit:hover { filter: brightness(1.1); box-shadow: 0 6px 20px rgba(80,97,63,0.3); }
+  .btn-submit:active { transform: scale(0.98); }
+
+  /* Login link */
+  .login-redirect {
+    text-align: center; margin-top: 20px;
+    font-size: 0.82rem; color: #45483f;
+  }
+  .login-redirect a { color: #50613f; font-weight: 700; text-decoration: none; }
+  .login-redirect a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Top Nav -->
+<nav class="top-nav">
+  <a href="/" class="brand-logo">Serenity &amp; Soul</a>
+  <a href="/" class="back-link">
+    <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
+    Back to Home
+  </a>
+</nav>
+
+<!-- Main -->
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Create your account</h1>
+    <p>Join Serenity &amp; Soul and start your wellness journey today.</p>
+  </div>
+
+  <div class="card">
+    <!-- Error display -->
+    <div class="form-error" id="form-error">
+      <span class="material-symbols-outlined" style="font-size:18px;">error</span>
+      <span id="error-text">An error occurred.</span>
+    </div>
+
+    <form id="register-form" onsubmit="handleRegister(event)" novalidate>
+
+      <!-- Section: Personal Info -->
+      <div class="section-title">Personal Information</div>
+      <div class="fields-grid" style="margin-bottom:24px;">
+        <div class="field col-span-2">
+          <label>Full Name <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined ico">person</span>
+            <input type="text" id="reg-name" placeholder="e.g. Sarah Dewi" required autocomplete="name">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Email Address <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined ico">mail</span>
+            <input type="email" id="reg-email" placeholder="sarah@email.com" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Phone Number <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined ico">call</span>
+            <input type="tel" id="reg-phone" placeholder="+60 12 345 6789" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Date of Birth</label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined ico">cake</span>
+            <input type="date" id="reg-dob" autocomplete="bday">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Gender</label>
+          <div class="gender-group">
+            <label class="gender-option">
+              <input type="radio" name="reg-gender" value="female" checked>
+              <span class="material-symbols-outlined" style="font-size:15px;">female</span> Female
+            </label>
+            <label class="gender-option">
+              <input type="radio" name="reg-gender" value="male">
+              <span class="material-symbols-outlined" style="font-size:15px;">male</span> Male
+            </label>
+            <label class="gender-option" style="flex:none;padding:9px 12px;">
+              <input type="radio" name="reg-gender" value="other">
+              Other
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Security -->
+      <div class="section-title">Account Security</div>
+      <div class="fields-grid" style="margin-bottom:32px;">
+        <div class="field">
+          <label>Password <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined ico">lock</span>
+            <input type="password" id="reg-password" placeholder="Min. 8 characters" required autocomplete="new-password">
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-password','pw-eye1')" id="pw-eye1-wrap">
+              <span class="material-symbols-outlined" style="font-size:18px;" id="pw-eye1">visibility</span>
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="material-symbols-outlined ico">lock_reset</span>
+            <input type="password" id="reg-confirm" placeholder="Repeat password" required autocomplete="new-password">
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-confirm','pw-eye2')">
+              <span class="material-symbols-outlined" style="font-size:18px;" id="pw-eye2">visibility</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">
+        Create Account
+      </button>
+    </form>
+
+    <p class="login-redirect">Already have an account? <a href="/">Sign in</a></p>
+  </div>
+</div>
+
+<script>
+  function togglePw(inputId, eyeId) {
+    const input = document.getElementById(inputId);
+    const eye = document.getElementById(eyeId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      eye.textContent = 'visibility_off';
+    } else {
+      input.type = 'password';
+      eye.textContent = 'visibility';
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('error-text').textContent = msg;
+    document.getElementById('form-error').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleRegister(e) {
+    e.preventDefault();
+    document.getElementById('form-error').classList.remove('show');
+
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim().toLowerCase();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const dob = document.getElementById('reg-dob').value;
+    const gender = document.querySelector('input[name="reg-gender"]:checked')?.value || 'other';
+    const password = document.getElementById('reg-password').value;
+    const confirm = document.getElementById('reg-confirm').value;
+
+    if (!name) return showError('Please enter your full name.');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Please enter a valid email address.');
+    if (!phone) return showError('Please enter your phone number.');
+    if (!password || password.length < 8) return showError('Password must be at least 8 characters.');
+    if (password !== confirm) return showError('Passwords do not match. Please try again.');
+
+    // Check for existing email
+    const users = JSON.parse(localStorage.getItem('spa_registered_users') || '[]');
+    if (users.find(u => u.email === email)) {
+      return showError('An account with this email already exists. Please sign in.');
+    }
+
+    // Save user
+    const newUser = { name, email, phone, dob, gender, password, createdAt: new Date().toISOString() };
+    users.push(newUser);
+    localStorage.setItem('spa_registered_users', JSON.stringify(users));
+
+    // Auto-login
+    localStorage.setItem('user_logged_in', 'true');
+    localStorage.setItem('user_name', name);
+    localStorage.setItem('user_email', email);
+
+    // Redirect to home
+    const btn = document.getElementById('btn-submit');
+    btn.textContent = 'Account created! Redirecting…';
+    btn.disabled = true;
+    btn.style.opacity = '0.8';
+    setTimeout(() => {
+      window.location.replace('/');
+    }, 800);
+  }
+</script>
+</body>
+</html>
