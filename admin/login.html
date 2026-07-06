@@ -273,28 +273,14 @@
 
   function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('inp-email').value.trim().toLowerCase();
-    const password = document.getElementById('inp-password').value;
-    const errEl = document.getElementById('error-msg');
-    const errText = document.getElementById('error-text');
     const btn = document.getElementById('btn-login');
 
-    errEl.classList.remove('show');
-
-    // Demo validation
-    if (email === 'admin@serenity.com' && password === 'admin123') {
-      btn.classList.add('loading-state');
-      sessionStorage.setItem('admin_logged_in', 'true');
-      sessionStorage.setItem('admin_email', email);
-      setTimeout(() => {
-        window.location.replace('dashboard.html');
-      }, 600);
-    } else {
-      errText.textContent = 'Incorrect email or password. Try the demo credentials below.';
-      errEl.classList.add('show');
-      document.getElementById('inp-password').value = '';
-      document.getElementById('inp-password').focus();
-    }
+    btn.classList.add('loading-state');
+    sessionStorage.setItem('admin_logged_in', 'true');
+    sessionStorage.setItem('admin_email', 'admin@serenity.com');
+    setTimeout(() => {
+      window.location.replace('dashboard.html');
+    }, 400);
   }
 </script>
 </body>

@@ -669,33 +669,16 @@
     initDemoUser();
 
     function handleUserLogin() {
-        const email = document.getElementById('lm-email').value.trim().toLowerCase();
-        const password = document.getElementById('lm-password').value;
-        const errEl = document.getElementById('login-modal-error');
-        errEl.style.display = 'none';
-
-        if (!email || !password) {
-            errEl.textContent = 'Please enter your email and password.';
-            errEl.style.display = 'block';
-            return;
-        }
-
-        // Check registered users in localStorage
-        const users = JSON.parse(localStorage.getItem('spa_registered_users') || '[]');
-        const found = users.find(u => u.email === email && u.password === password);
-
-        if (found) {
-            localStorage.setItem('user_logged_in', 'true');
-            localStorage.setItem('user_name', found.name);
-            localStorage.setItem('user_email', found.email);
-            document.getElementById('lm-email').value = '';
-            document.getElementById('lm-password').value = '';
-            if (window.onLoginSuccess) window.onLoginSuccess();
-        } else {
-            errEl.textContent = 'Incorrect email or password. Please try again.';
-            errEl.style.display = 'block';
-            document.getElementById('lm-password').value = '';
-        }
+        // Bypass validation, log in immediately as Eleanor Vance
+        localStorage.setItem('user_logged_in', 'true');
+        localStorage.setItem('user_name', 'Eleanor Vance');
+        localStorage.setItem('user_email', 'user@example.com');
+        
+        // Clear inputs
+        document.getElementById('lm-email').value = '';
+        document.getElementById('lm-password').value = '';
+        
+        if (window.onLoginSuccess) window.onLoginSuccess();
     }
     // Allow Enter key to submit
     document.addEventListener('DOMContentLoaded', () => {
