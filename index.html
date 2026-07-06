@@ -120,10 +120,9 @@
         </div>
 
         <div class="flex items-center gap-3 md:gap-6">
-            <!-- Wallet Nav Pill -->
-            <div onclick="navigateTo('wallet')" class="wallet-nav-pill flex items-center gap-2 text-primary bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:bg-primary/10 transition-colors cursor-pointer">
+            <div onclick="requireLogin(() => navigateTo('wallet'))" class="wallet-nav-pill flex items-center gap-2 text-primary bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:bg-primary/10 transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-[18px] md:text-[20px]">account_balance_wallet</span>
-                <span class="wallet-balance-text font-title-md text-xs md:text-sm font-semibold">MYR 250.00</span>
+                <span class="wallet-balance-text font-title-md text-xs md:text-sm font-semibold">MYR 0.00</span>
             </div>
             <button onclick="startBookingWithService(null)" class="bg-[#FACC15] text-on-secondary-fixed px-4 py-1.5 md:px-6 md:py-2 rounded-full font-label-caps text-[10px] md:text-xs hover:shadow-lg transition-all duration-300">Book Now</button>
             <button id="nav-user-btn" onclick="requireLogin(()=>navigateTo('profile'))" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center hover:bg-primary/10 transition-colors" title="Login / Register">

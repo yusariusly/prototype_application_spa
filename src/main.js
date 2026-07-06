@@ -384,14 +384,19 @@ function updateNavbarAuth() {
     const loggedIn = isLoggedIn();
     const name = localStorage.getItem('user_name') || '';
     const avatar = document.getElementById('nav-user-btn');
-    if (!avatar) return;
-    if (loggedIn) {
-        avatar.setAttribute('title', name ? `Hi, ${name}` : 'My Account');
-        avatar.style.background = 'rgba(80,97,63,0.15)';
-    } else {
-        avatar.setAttribute('title', 'Login / Register');
-        avatar.style.background = '';
+    if (avatar) {
+        if (loggedIn) {
+            avatar.setAttribute('title', name ? `Hi, ${name}` : 'My Account');
+            avatar.style.background = 'rgba(80,97,63,0.15)';
+        } else {
+            avatar.setAttribute('title', 'Login / Register');
+            avatar.style.background = '';
+        }
     }
+    // Refresh wallet balance text
+    updateHeaderWalletDisplay();
+    // Refresh active packages widget on home
+    renderActivePackagesWidget();
 }
 
 // 3. CORE ROUTING & VIEW CONTROLLER
@@ -570,8 +575,13 @@ function renderActiveViewContents(viewId) {
 // Update Wallet Balance & Packages in Nav Header
 function updateHeaderWalletDisplay() {
     const balances = document.querySelectorAll('.wallet-balance-text');
+    const loggedIn = isLoggedIn();
     balances.forEach(bal => {
-        bal.textContent = `MYR ${state.walletBalance.toFixed(2)}`;
+        if (loggedIn) {
+            bal.textContent = `MYR ${state.walletBalance.toFixed(2)}`;
+        } else {
+            bal.textContent = `MYR 0.00`;
+        }
     });
 
     const walletPills = document.querySelectorAll('.wallet-nav-pill');
@@ -1055,6 +1065,12 @@ function renderServicesCatalogView() {
 function renderActivePackagesWidget() {
     const widget = document.getElementById('owned-packages-widget');
     if (!widget) return;
+
+    if (!isLoggedIn()) {
+        widget.innerHTML = '';
+        widget.classList.add('hidden');
+        return;
+    }
 
     const ownedKeys = Object.keys(state.activePackages).filter(k => state.activePackages[k] > 0);
     if (ownedKeys.length === 0) {
