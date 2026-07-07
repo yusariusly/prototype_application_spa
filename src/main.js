@@ -1691,7 +1691,7 @@ function renderPaymentMethodSelection() {
     let html = `
         <div class="relative w-full text-left" id="payment-dropdown-container">
             <!-- Dropdown Trigger -->
-            <button type="button" onclick="togglePaymentDropdown()" class="w-full flex items-center justify-between bg-white border ${window.paymentDropdownOpen ? 'border-primary ring-1 ring-primary' : 'border-outline-variant hover:border-outline'} rounded-xl px-4 py-3 text-sm text-on-surface focus:outline-none transition-all shadow-sm">
+            <button type="button" onclick="togglePaymentDropdown(event)" class="w-full flex items-center justify-between bg-white border ${window.paymentDropdownOpen ? 'border-primary ring-1 ring-primary' : 'border-outline-variant hover:border-outline'} rounded-xl px-4 py-3 text-sm text-on-surface focus:outline-none transition-all shadow-sm">
                 <div class="flex items-center gap-3 overflow-hidden">
                     <span class="material-symbols-outlined text-primary text-xl shrink-0">${selectedMethod.icon}</span>
                     <span class="font-semibold text-[#1E293B] font-body-lg flex flex-wrap items-center gap-1 text-left">${selectedDisplayName}</span>
@@ -1708,7 +1708,7 @@ function renderPaymentMethodSelection() {
         const displayName = method.id === 'wallet' ? `${method.name} <span class="text-xs text-on-surface-variant font-normal ml-1 whitespace-nowrap">(Balance: MYR ${state.walletBalance.toFixed(2)})</span>` : method.name;
         
         html += `
-                <button type="button" onclick="selectPaymentMethod('${method.id}')" class="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors border-b border-outline-variant/30 last:border-0 ${isSelected ? 'bg-primary/5' : ''}">
+                <button type="button" onclick="selectPaymentMethod('${method.id}', event)" class="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors border-b border-outline-variant/30 last:border-0 ${isSelected ? 'bg-primary/5' : ''}">
                     <div class="flex items-center gap-3 overflow-hidden">
                         <span class="material-symbols-outlined text-xl shrink-0 ${isSelected ? 'text-primary' : 'text-on-surface-variant'}">${method.icon}</span>
                         <span class="text-sm font-body-lg text-left ${isSelected ? 'font-bold text-primary' : 'font-medium text-[#1E293B]'} flex flex-wrap items-center">${displayName}</span>
@@ -1728,9 +1728,16 @@ function renderPaymentMethodSelection() {
 
 window.paymentDropdownOpen = false;
 
-window.togglePaymentDropdown = function (forceState) {
-    if (typeof forceState === 'boolean') {
-        window.paymentDropdownOpen = forceState;
+window.togglePaymentDropdown = function (event, forceState) {
+    if (event && event.stopPropagation) {
+        event.stopPropagation();
+    }
+    let resolvedForce = forceState;
+    if (typeof event === 'boolean') {
+        resolvedForce = event;
+    }
+    if (typeof resolvedForce === 'boolean') {
+        window.paymentDropdownOpen = resolvedForce;
     } else {
         window.paymentDropdownOpen = !window.paymentDropdownOpen;
     }
@@ -1744,7 +1751,10 @@ document.addEventListener('click', function(event) {
     }
 });
 
-window.selectPaymentMethod = function (methodId) {
+window.selectPaymentMethod = function (methodId, event) {
+    if (event && event.stopPropagation) {
+        event.stopPropagation();
+    }
     selectedPaymentMethod = methodId;
     window.paymentDropdownOpen = false;
     renderPaymentMethodSelection();
