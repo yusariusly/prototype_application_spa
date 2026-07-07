@@ -408,7 +408,7 @@ window.closeLoginModal = function() {
     // Restore bottom nav bar if on a booking step
     const _nav = document.getElementById('mobile-bottom-nav');
     if (_nav) {
-        const bookingViews = ['select-service', 'select-therapist', 'select-time', 'confirm-booking'];
+        const bookingViews = ['select-service', 'select-therapist', 'select-time'];
         if (bookingViews.includes(state.currentView)) {
             _nav.classList.add('show-mobile-nav');
         } else {
@@ -425,7 +425,7 @@ window.onLoginSuccess = function () {
     // Restore bottom nav bar if on a booking step
     const _nav = document.getElementById('mobile-bottom-nav');
     if (_nav) {
-        const bookingViews = ['select-service', 'select-therapist', 'select-time', 'confirm-booking'];
+        const bookingViews = ['select-service', 'select-therapist', 'select-time'];
         if (bookingViews.includes(state.currentView)) {
             _nav.classList.add('show-mobile-nav');
         } else {
@@ -493,7 +493,7 @@ function navigateTo(viewId) {
     // Update active state of navbar menu items
     updateNavbarActiveState(viewId);
 
-    // Mobile bottom nav bar: always visible on booking steps 1-4
+    // Mobile bottom nav bar: always visible on booking steps 1-3
     const _mobileNav = document.getElementById('mobile-bottom-nav');
     const _backBtn   = document.getElementById('mobile-back-btn');
     const _contBtn   = document.getElementById('mobile-continue-btn');
@@ -510,10 +510,6 @@ function navigateTo(viewId) {
             _mobileNav.classList.add('show-mobile-nav');
             _backBtn.onclick = () => navigateTo('select-therapist');
             _contBtn.onclick = () => window.nextStep(3);
-        } else if (viewId === 'confirm-booking') {
-            _mobileNav.classList.add('show-mobile-nav');
-            _backBtn.onclick = () => navigateTo('select-time');
-            _contBtn.onclick = () => confirmReservation();
         } else {
             _mobileNav.classList.remove('show-mobile-nav');
         }
@@ -1684,28 +1680,27 @@ function renderPaymentMethodSelection() {
     if (!container) return;
 
     const methods = [
-        { id: 'card', name: 'Credit/Debit Card', icon: 'credit_card' },
-        { id: 'paynow', name: 'PayNow', icon: 'qr_code_scanner' },
-        { id: 'wallet', name: 'Serenity Wallet', icon: 'account_balance_wallet', showBalance: true }
+        { id: 'card', name: 'Credit/Debit Card' },
+        { id: 'paynow', name: 'PayNow' },
+        { id: 'wallet', name: 'Serenity Wallet' }
     ];
 
-    let html = '';
+    let html = `
+        <div class="relative">
+            <select onchange="selectPaymentMethod(this.value)" class="w-full appearance-none bg-white border border-outline-variant rounded-xl px-4 py-3 text-sm text-on-surface focus:ring-primary focus:border-primary cursor-pointer font-body-lg pr-10">
+    `;
+    
     methods.forEach(method => {
         const isSelected = selectedPaymentMethod === method.id;
-
-        html += `
-            <label onclick="selectPaymentMethod('${method.id}')" class="flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-colors relative ${isSelected ? 'border-primary bg-primary-fixed/20' : 'border-outline-variant hover:bg-surface-container-low'}">
-                <div class="flex items-center gap-3">
-                    <input name="payment_method" type="radio" class="text-primary focus:ring-primary w-4 h-4 border-outline" ${isSelected ? 'checked' : ''}>
-                    <span class="font-body-lg text-sm text-on-surface ${isSelected ? 'font-semibold' : ''}">${method.name}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    ${method.showBalance ? `<span class="font-body-sm text-xs text-on-surface-variant">(Balance: MYR ${state.walletBalance.toFixed(2)})</span>` : ''}
-                    <span class="material-symbols-outlined ${isSelected ? 'text-primary' : 'text-on-surface-variant'}">${method.icon}</span>
-                </div>
-            </label>
-        `;
+        const displayName = method.id === 'wallet' ? `${method.name} (Balance: MYR ${state.walletBalance.toFixed(2)})` : method.name;
+        html += `<option value="${method.id}" ${isSelected ? 'selected' : ''}>${displayName}</option>`;
     });
+
+    html += `
+            </select>
+            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+        </div>
+    `;
 
     container.innerHTML = html;
 }
