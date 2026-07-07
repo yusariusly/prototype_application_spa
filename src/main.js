@@ -1776,30 +1776,9 @@ function renderSidebarSummary() {
     const date = state.booking.date;
     const time = state.booking.time;
 
-    let matchingBundleKey = null;
-    let hasAvailablePackage = false;
-
-    if (service) {
-        if (service.type === 'massage' && state.activePackages['aromatherapy-bundle'] > 0) {
-            matchingBundleKey = 'aromatherapy-bundle';
-            hasAvailablePackage = true;
-        } else if (service.type === 'facial' && state.activePackages['radiance-bundle'] > 0) {
-            matchingBundleKey = 'radiance-bundle';
-            hasAvailablePackage = true;
-        }
-    }
-
-    const applyPackage = hasAvailablePackage && selectedPaymentMethod === 'wallet' && state.currentView === 'confirm-booking';
-
     let subtotal = service ? service.price : 0;
     let tax = subtotal * 0.07;
     let total = subtotal + tax;
-
-    if (applyPackage) {
-        subtotal = 0;
-        tax = 0;
-        total = 0;
-    }
 
     let html = `
         <h2 class="font-headline-lg text-lg text-[#1E293B] border-b border-surface-variant pb-4 font-bold mb-6">Booking Summary</h2>
@@ -1860,19 +1839,6 @@ function renderSidebarSummary() {
         </div>
     `;
 
-    if (state.currentView === 'confirm-booking' && applyPackage) {
-        const remaining = state.activePackages[matchingBundleKey];
-        html += `
-            <div class="mt-6 bg-[#50613f]/10 rounded-lg p-4 border border-[#50613f]/25 flex items-start gap-3">
-                <span class="material-symbols-outlined text-[#50613f] mt-0.5">stars</span>
-                <div class="font-body-sm text-[11px] text-on-surface">
-                    <span class="font-bold block mb-0.5 text-[#50613f]">Package Applied</span>
-                    1 Session deducted from your Aromatherapy Package (Remaining: ${remaining}/10).
-                </div>
-            </div>
-        `;
-    }
-
     // Price breakdown
     const isServiceSelected = !!service;
     const isConfirmOrTime = state.currentView === 'confirm-booking' || state.currentView === 'select-time';
@@ -1881,15 +1847,15 @@ function renderSidebarSummary() {
         <div class="mt-6 pt-6 border-t border-surface-variant">
             <div class="flex justify-between items-center mb-2 text-on-surface-variant text-xs">
                 <span>Subtotal</span>
-                <span class="${applyPackage ? 'line-through opacity-50' : ''}">MYR ${isServiceSelected ? service.price.toFixed(2) : '0.00'}</span>
+                <span>MYR ${isServiceSelected ? service.price.toFixed(2) : '0.00'}</span>
             </div>
             <div class="flex justify-between items-center mb-3 text-on-surface-variant text-xs">
                 <span>Tax (7%)</span>
-                <span class="${applyPackage ? 'line-through opacity-50' : ''}">MYR ${(isServiceSelected ? (service.price * 0.07) : 0).toFixed(2)}</span>
+                <span>MYR ${(isServiceSelected ? (service.price * 0.07) : 0).toFixed(2)}</span>
             </div>
             <div class="flex justify-between items-center pt-3 border-t border-outline-variant/30">
                 <span class="font-semibold text-xs text-on-surface">${isConfirmOrTime ? 'Total' : 'Estimated Total'}</span>
-                <span class="font-serif text-base text-[#1E293B] font-bold">MYR ${total === 0 && applyPackage ? '0.00' : total.toFixed(2)}</span>
+                <span class="font-serif text-base text-[#1E293B] font-bold">MYR ${total.toFixed(2)}</span>
             </div>
         </div>
     `;
@@ -2134,102 +2100,57 @@ window.confirmReservation = function () {
             return;
         }
 
-        // --- Standard Booking: check if we can apply active packages ---
-        let matchingBundleKey = null;
-        let hasAvailablePackage = false;
+        // --- Standard Booking ---
+        const subtotal = service.price;
+        const tax = subtotal * 0.07;
+        const total = subtotal + tax;
 
-        if (service.type === 'massage' && state.activePackages['aromatherapy-bundle'] > 0) {
-            matchingBundleKey = 'aromatherapy-bundle';
-            hasAvailablePackage = true;
-        } else if (service.type === 'facial' && state.activePackages['radiance-bundle'] > 0) {
-            matchingBundleKey = 'radiance-bundle';
-            hasAvailablePackage = true;
-        }
-
-        const applyPackage = hasAvailablePackage && selectedPaymentMethod === 'wallet';
-
-        if (applyPackage) {
-            state.activePackages[matchingBundleKey]--;
-
-            const resId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
-
-            // Add to booking history
-            state.bookings.unshift({
-                id: 'booking-' + Date.now(),
-                resId: resId,
-                serviceName: service.name,
-                serviceType: service.type,
-                date: state.booking.date || new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
-                time: state.booking.time || '11:00 AM',
-                therapist: state.booking.therapist ? state.booking.therapist.name : 'Sari',
-                location: 'Serenity & Soul Sanctuary, 12 Orchard Road, Singapore 238886',
-                price: 0,
-                status: 'Upcoming'
-            });
-
-            // Add notification
-            state.notifications.unshift({
-                id: 'notif-' + Date.now(),
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                text: `Appointment Confirmed: Your package session for ${service.name} has been booked.`
-            });
-
-            state.successResId = resId;
-
-            showNotification(`Booking successfully confirmed! 1 session deducted from your package.`, 'success');
-            navigateTo('success');
-        } else {
-            const subtotal = service.price;
-            const tax = subtotal * 0.07;
-            const total = subtotal + tax;
-
-            if (selectedPaymentMethod === 'wallet') {
-                if (state.walletBalance < total) {
-                    showNotification(`Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Redirecting to Top Up...`, 'error');
-                    setTimeout(() => {
-                        navigateTo('topup');
-                    }, 1500);
-                    return;
-                }
-                state.walletBalance -= total;
-
-                // Add wallet transaction log
-                state.transactions.unshift({
-                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                    description: `${service.name} Payment`,
-                    amount: -total,
-                    status: 'Completed'
-                });
+        if (selectedPaymentMethod === 'wallet') {
+            if (state.walletBalance < total) {
+                showNotification(`Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Redirecting to Top Up...`, 'error');
+                setTimeout(() => {
+                    navigateTo('topup');
+                }, 1500);
+                return;
             }
+            state.walletBalance -= total;
 
-            const resId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
-
-            // Add to booking history
-            state.bookings.unshift({
-                id: 'booking-' + Date.now(),
-                resId: resId,
-                serviceName: service.name,
-                serviceType: service.type,
-                date: state.booking.date || new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
-                time: state.booking.time || '11:00 AM',
-                therapist: state.booking.therapist ? state.booking.therapist.name : 'Sari',
-                location: 'Serenity & Soul Sanctuary, 12 Orchard Road, Singapore 238886',
-                price: total,
-                status: 'Upcoming'
-            });
-
-            // Add notification
-            state.notifications.unshift({
-                id: 'notif-' + Date.now(),
+            // Add wallet transaction log
+            state.transactions.unshift({
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                text: `Appointment Confirmed: Your ${service.name} has been booked successfully.`
+                description: `${service.name} Payment`,
+                amount: -total,
+                status: 'Completed'
             });
-
-            state.successResId = resId;
-            navigateTo('success');
-
-            showNotification('Your reservation has been saved successfully.', 'success');
         }
+
+        const resId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+
+        // Add to booking history
+        state.bookings.unshift({
+            id: 'booking-' + Date.now(),
+            resId: resId,
+            serviceName: service.name,
+            serviceType: service.type,
+            date: state.booking.date || new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+            time: state.booking.time || '11:00 AM',
+            therapist: state.booking.therapist ? state.booking.therapist.name : 'Sari',
+            location: 'Serenity & Soul Sanctuary, 12 Orchard Road, Singapore 238886',
+            price: total,
+            status: 'Upcoming'
+        });
+
+        // Add notification
+        state.notifications.unshift({
+            id: 'notif-' + Date.now(),
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+            text: `Appointment Confirmed: Your ${service.name} has been booked successfully.`
+        });
+
+        state.successResId = resId;
+        navigateTo('success');
+
+        showNotification('Your reservation has been saved successfully.', 'success');
 
         navigateTo('success');
     });
