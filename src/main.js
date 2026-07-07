@@ -1680,33 +1680,73 @@ function renderPaymentMethodSelection() {
     if (!container) return;
 
     const methods = [
-        { id: 'card', name: 'Credit/Debit Card' },
-        { id: 'paynow', name: 'PayNow' },
-        { id: 'wallet', name: 'Serenity Wallet' }
+        { id: 'card', name: 'Credit/Debit Card', icon: 'credit_card' },
+        { id: 'paynow', name: 'PayNow', icon: 'qr_code_scanner' },
+        { id: 'wallet', name: 'Serenity Wallet', icon: 'account_balance_wallet' }
     ];
 
+    const selectedMethod = methods.find(m => m.id === selectedPaymentMethod) || methods[0];
+    const selectedDisplayName = selectedMethod.id === 'wallet' ? `${selectedMethod.name} <span class="text-xs text-on-surface-variant font-normal whitespace-nowrap">(Balance: MYR ${state.walletBalance.toFixed(2)})</span>` : selectedMethod.name;
+
     let html = `
-        <div class="relative">
-            <select onchange="selectPaymentMethod(this.value)" class="w-full appearance-none bg-white border border-outline-variant rounded-xl px-4 py-3 text-sm text-on-surface focus:ring-primary focus:border-primary cursor-pointer font-body-lg pr-10">
+        <div class="relative w-full text-left" id="payment-dropdown-container">
+            <!-- Dropdown Trigger -->
+            <button type="button" onclick="togglePaymentDropdown()" class="w-full flex items-center justify-between bg-white border ${window.paymentDropdownOpen ? 'border-primary ring-1 ring-primary' : 'border-outline-variant hover:border-outline'} rounded-xl px-4 py-3 text-sm text-on-surface focus:outline-none transition-all shadow-sm">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="material-symbols-outlined text-primary text-xl shrink-0">${selectedMethod.icon}</span>
+                    <span class="font-semibold text-[#1E293B] font-body-lg flex flex-wrap items-center gap-1 text-left">${selectedDisplayName}</span>
+                </div>
+                <span id="payment-dropdown-icon" class="material-symbols-outlined text-on-surface-variant transition-transform duration-200 shrink-0" style="transform: ${window.paymentDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'}">keyboard_arrow_down</span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="payment-dropdown-menu" class="${window.paymentDropdownOpen ? '' : 'hidden'} absolute z-[60] w-full mt-2 bg-white border border-outline-variant/50 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden origin-top animate-fade-in">
     `;
     
     methods.forEach(method => {
         const isSelected = selectedPaymentMethod === method.id;
-        const displayName = method.id === 'wallet' ? `${method.name} (Balance: MYR ${state.walletBalance.toFixed(2)})` : method.name;
-        html += `<option value="${method.id}" ${isSelected ? 'selected' : ''}>${displayName}</option>`;
+        const displayName = method.id === 'wallet' ? `${method.name} <span class="text-xs text-on-surface-variant font-normal ml-1 whitespace-nowrap">(Balance: MYR ${state.walletBalance.toFixed(2)})</span>` : method.name;
+        
+        html += `
+                <button type="button" onclick="selectPaymentMethod('${method.id}')" class="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-container-low transition-colors border-b border-outline-variant/30 last:border-0 ${isSelected ? 'bg-primary/5' : ''}">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <span class="material-symbols-outlined text-xl shrink-0 ${isSelected ? 'text-primary' : 'text-on-surface-variant'}">${method.icon}</span>
+                        <span class="text-sm font-body-lg text-left ${isSelected ? 'font-bold text-primary' : 'font-medium text-[#1E293B]'} flex flex-wrap items-center">${displayName}</span>
+                    </div>
+                    ${isSelected ? '<span class="material-symbols-outlined text-primary text-lg shrink-0 ml-2">check_circle</span>' : ''}
+                </button>
+        `;
     });
 
     html += `
-            </select>
-            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+            </div>
         </div>
     `;
 
     container.innerHTML = html;
 }
 
+window.paymentDropdownOpen = false;
+
+window.togglePaymentDropdown = function (forceState) {
+    if (typeof forceState === 'boolean') {
+        window.paymentDropdownOpen = forceState;
+    } else {
+        window.paymentDropdownOpen = !window.paymentDropdownOpen;
+    }
+    renderPaymentMethodSelection();
+};
+
+document.addEventListener('click', function(event) {
+    const container = document.getElementById('payment-dropdown-container');
+    if (container && !container.contains(event.target) && window.paymentDropdownOpen) {
+        window.togglePaymentDropdown(false);
+    }
+});
+
 window.selectPaymentMethod = function (methodId) {
     selectedPaymentMethod = methodId;
+    window.paymentDropdownOpen = false;
     renderPaymentMethodSelection();
     renderSidebarSummary(); // recalculate price breakdown if bundle could be applied
 };
