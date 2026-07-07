@@ -405,8 +405,12 @@ window.requireLogin = function (callback) {
 window.closeLoginModal = function() {
     const modal = document.getElementById('user-login-modal');
     if (modal) modal.style.display = 'none';
-    // Restore bottom nav for the current booking step
-    updateMobileBottomNav(state.currentView);
+    // Restore bottom nav bar if on a booking step
+    const _nav = document.getElementById('mobile-bottom-nav');
+    if (_nav) {
+        const bookingViews = ['select-service', 'select-therapist', 'select-time'];
+        _nav.style.display = bookingViews.includes(state.currentView) ? 'flex' : 'none';
+    }
 };
 
 // Called by login modal on successful login
@@ -414,8 +418,12 @@ window.onLoginSuccess = function () {
     const modal = document.getElementById('user-login-modal');
     if (modal) modal.style.display = 'none';
     updateNavbarAuth();
-    // Restore bottom nav for the current step
-    updateMobileBottomNav(state.currentView);
+    // Restore bottom nav bar if on a booking step
+    const _nav = document.getElementById('mobile-bottom-nav');
+    if (_nav) {
+        const bookingViews = ['select-service', 'select-therapist', 'select-time'];
+        _nav.style.display = bookingViews.includes(state.currentView) ? 'flex' : 'none';
+    }
     if (window._loginCallback) {
         const cb = window._loginCallback;
         window._loginCallback = null;
@@ -477,8 +485,27 @@ function navigateTo(viewId) {
     // Update active state of navbar menu items
     updateNavbarActiveState(viewId);
 
-    // Update mobile bottom navigation bar for booking steps
-    updateMobileBottomNav(viewId);
+    // Mobile bottom nav bar: always visible on booking steps 1-3
+    const _mobileNav = document.getElementById('mobile-bottom-nav');
+    const _backBtn   = document.getElementById('mobile-back-btn');
+    const _contBtn   = document.getElementById('mobile-continue-btn');
+    if (_mobileNav && _backBtn && _contBtn) {
+        if (viewId === 'select-service') {
+            _mobileNav.style.display = 'flex';
+            _backBtn.onclick = () => resetBookingFlow();
+            _contBtn.onclick = () => window.nextStep(1);
+        } else if (viewId === 'select-therapist') {
+            _mobileNav.style.display = 'flex';
+            _backBtn.onclick = () => navigateTo('select-service');
+            _contBtn.onclick = () => window.nextStep(2);
+        } else if (viewId === 'select-time') {
+            _mobileNav.style.display = 'flex';
+            _backBtn.onclick = () => navigateTo('select-therapist');
+            _contBtn.onclick = () => window.nextStep(3);
+        } else {
+            _mobileNav.style.display = 'none';
+        }
+    }
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
