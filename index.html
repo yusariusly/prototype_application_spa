@@ -118,17 +118,24 @@
 
         <!-- Navigation Links -->
         <div class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            <a onclick="resetBookingFlow()" class="text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer">Home</a>
-            <a onclick="navigateTo('services-catalog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer">Service</a>
+            <a onclick="resetBookingFlow()" class="text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_home">Home</a>
+            <a onclick="navigateTo('services-catalog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_service">Service</a>
         </div>
 
         <!-- Desktop Header Buttons (Hidden on Mobile) -->
-        <div class="hidden md:flex items-center gap-3 md:gap-6">
+        <div class="hidden md:flex items-center gap-3 md:gap-4">
             <div onclick="requireLogin(() => navigateTo('wallet'))" class="wallet-nav-pill flex items-center gap-2 text-primary bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:bg-primary/10 transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-[18px] md:text-[20px]">account_balance_wallet</span>
                 <span class="wallet-balance-text font-title-md text-xs md:text-sm font-semibold">MYR 0.00</span>
             </div>
-            <button onclick="startBookingWithService(null)" class="bg-[#FACC15] text-on-secondary-fixed px-4 py-1.5 md:px-6 md:py-2 rounded-full font-label-caps text-[10px] md:text-xs hover:shadow-lg transition-all duration-300">Book Now</button>
+            <button onclick="startBookingWithService(null)" class="bg-[#FACC15] text-on-secondary-fixed px-4 py-1.5 md:px-5 md:py-2 rounded-full font-label-caps text-[10px] md:text-xs hover:shadow-lg transition-all duration-300" data-translate="btn_book_now">Book Now</button>
+            
+            <!-- Language Switcher Desktop -->
+            <button onclick="toggleLanguage(event)" class="text-primary hover:bg-primary/10 border border-outline rounded-full px-3 py-1.5 text-xs font-semibold uppercase flex items-center gap-1.5 shadow-sm cursor-pointer" title="Toggle Language">
+                <span class="material-symbols-outlined text-[16px] md:text-[18px]">language</span>
+                <span id="lang-toggle-text">EN</span>
+            </button>
+            
             <button id="nav-user-btn" onclick="requireLogin(()=>navigateTo('profile'))" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center hover:bg-primary/10 transition-colors" title="Login / Register">
                 <span class="material-symbols-outlined text-[20px] md:text-[24px]">person</span>
             </button>
@@ -156,19 +163,25 @@
             <div class="flex flex-col gap-1">
                 <a onclick="closeMobileMenu(); resetBookingFlow();" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">home</span>
-                    Home
+                    <span data-translate="nav_home">Home</span>
                 </a>
                 <a onclick="closeMobileMenu(); navigateTo('services-catalog');" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">spa</span>
-                    Services
+                    <span data-translate="nav_service">Services</span>
                 </a>
                 <a onclick="closeMobileMenu(); startBookingWithService(null);" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">calendar_month</span>
-                    Book Now
+                    <span data-translate="btn_book_now">Book Now</span>
                 </a>
                 <a onclick="closeMobileMenu(); requireLogin(() => navigateTo('profile'));" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">person</span>
-                    Profile
+                    <span data-translate="nav_profile">Profile</span>
+                </a>
+                
+                <!-- Language Toggle Mobile -->
+                <a onclick="toggleLanguage(event);" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">language</span>
+                    <span id="mobile-lang-toggle-text">Language: EN</span>
                 </a>
             </div>
             
@@ -176,7 +189,7 @@
             <div class="border-t border-slate-100 pt-3 mt-1 text-left">
                 <a id="mobile-menu-auth-btn" onclick="handleMobileMenuAuth()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors cursor-pointer text-sm font-semibold text-left">
                     <span class="material-symbols-outlined text-[20px]">logout</span>
-                    Sign Out
+                    <span data-translate="btn_sign_out">Sign Out</span>
                 </a>
             </div>
         </div>
@@ -194,9 +207,9 @@
                     <div class="absolute inset-0 hero-gradient"></div>
                 </div>
                 <div class="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-                    <h1 class="font-display-lg text-display-lg md:text-[64px] text-primary mb-6 drop-shadow-sm font-serif font-bold">Find Your Inner Peace</h1>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10 leading-relaxed">Unwind and restore your balance through our exclusive spa treatments designed for ultimate tranquility.</p>
-                    <button onclick="navigateTo('all-services')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] px-8 py-4 rounded-full text-base shadow-md hover:shadow-xl transition-all duration-300 inline-block font-bold">Explore Services</button>
+                    <h1 class="font-display-lg text-display-lg md:text-[64px] text-primary mb-6 drop-shadow-sm font-serif font-bold" data-translate="hero_title">Find Your Inner Peace</h1>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-10 leading-relaxed" data-translate="hero_subtitle">Unwind and restore your balance through our exclusive spa treatments designed for ultimate tranquility.</p>
+                    <button onclick="navigateTo('all-services')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] px-8 py-4 rounded-full text-base shadow-md hover:shadow-xl transition-all duration-300 inline-block font-bold" data-translate="btn_explore_services">Explore Services</button>
                 </div>
             </div>
 
@@ -210,31 +223,31 @@
 
             <!-- Why Choose Us Section -->
             <div class="max-w-container-max mx-auto px-4 md:px-margin-desktop py-16 text-center">
-                <h2 class="font-display-lg text-2xl text-[#1E293B] mb-12 font-bold font-serif">Why Choose Us?</h2>
+                <h2 class="font-display-lg text-2xl text-[#1E293B] mb-12 font-bold font-serif" data-translate="why_choose_us_title">Why Choose Us?</h2>
                 <div class="grid grid-cols-2 gap-x-8 gap-y-12 max-w-4xl mx-auto">
                     <!-- Feature 1 -->
                     <div class="flex flex-col items-center text-center">
                         <div class="w-12 h-12 rounded-full bg-[#50613f]/10 flex items-center justify-center text-[#50613f] mb-4">
                             <span class="material-symbols-outlined text-xl">spa</span>
                         </div>
-                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2">Expert Therapists</h3>
-                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed max-w-xs">Our professional team is trained to provide a healing touch that personalizes every session.</p>
+                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2" data-translate="why_choose_us_feat1_title">Expert Therapists</h3>
+                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed max-w-xs" data-translate="why_choose_us_feat1_desc">Our professional team is trained to provide a healing touch that personalizes every session.</p>
                     </div>
                     <!-- Feature 2 -->
                     <div class="flex flex-col items-center text-center">
                         <div class="w-12 h-12 rounded-full bg-[#50613f]/10 flex items-center justify-center text-[#50613f] mb-4">
                             <span class="material-symbols-outlined text-xl">nature</span>
                         </div>
-                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2">Natural Products</h3>
-                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed max-w-xs">We only use high-quality organic ingredients that are friendly to the skin and the environment.</p>
+                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2" data-translate="why_choose_us_feat2_title">Natural Products</h3>
+                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed max-w-xs" data-translate="why_choose_us_feat2_desc">We only use high-quality organic ingredients that are friendly to the skin and the environment.</p>
                     </div>
                     <!-- Feature 3 -->
                     <div class="flex flex-col items-center text-center col-span-2 mx-auto max-w-xs">
                         <div class="w-12 h-12 rounded-full bg-[#50613f]/10 flex items-center justify-center text-[#50613f] mb-4">
                             <span class="material-symbols-outlined text-xl">self_improvement</span>
                         </div>
-                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2">Serene Atmosphere</h3>
-                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed max-w-xs">Our minimalist interior design creates an oasis of peace amidst the hustle and bustle of the city.</p>
+                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2" data-translate="why_choose_us_feat3_title">Serene Atmosphere</h3>
+                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed max-w-xs" data-translate="why_choose_us_feat3_desc">Our minimalist interior design creates an oasis of peace amidst the hustle and bustle of the city.</p>
                     </div>
                 </div>
             </div>
@@ -260,12 +273,12 @@
                 <div class="flex-grow flex flex-col gap-6">
                     <!-- Tabs -->
                     <div class="flex gap-3 overflow-x-auto pb-3 hide-scrollbar border-b border-outline-variant/20">
-                        <button id="cat-tab-all" onclick="filterServiceCategory('all')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-primary/10 text-primary font-semibold border border-primary/20">All</button>
-                        <button id="cat-tab-signature" onclick="filterServiceCategory('signature')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Signature</button>
-                        <button id="cat-tab-massage" onclick="filterServiceCategory('massage')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Massage</button>
-                        <button id="cat-tab-facial" onclick="filterServiceCategory('facial')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Facial</button>
-                        <button id="cat-tab-body" onclick="filterServiceCategory('body')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Body Treatments</button>
-                        <button id="cat-tab-packages" onclick="filterServiceCategory('packages')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors">Packages</button>
+                        <button id="cat-tab-all" onclick="filterServiceCategory('all')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-primary/10 text-primary font-semibold border border-primary/20" data-translate="cat_all">All</button>
+                        <button id="cat-tab-signature" onclick="filterServiceCategory('signature')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors" data-translate="cat_signature">Signature</button>
+                        <button id="cat-tab-massage" onclick="filterServiceCategory('massage')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors" data-translate="cat_massage">Massage</button>
+                        <button id="cat-tab-facial" onclick="filterServiceCategory('facial')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors" data-translate="cat_facial">Facial</button>
+                        <button id="cat-tab-body" onclick="filterServiceCategory('body')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors" data-translate="cat_body">Body Treatments</button>
+                        <button id="cat-tab-packages" onclick="filterServiceCategory('packages')" class="cat-tab-btn px-5 py-2 rounded-full font-title-md text-xs whitespace-nowrap bg-surface-variant text-on-surface-variant hover:bg-surface-container-high transition-colors" data-translate="cat_packages">Packages</button>
                     </div>
                     
                     <!-- Services list container -->
@@ -425,8 +438,8 @@
                 <div class="w-12 h-12 rounded-full bg-[#50613f]/10 flex items-center justify-center text-[#50613f] mx-auto mb-6">
                     <span class="material-symbols-outlined text-2xl font-bold">check_circle</span>
                 </div>
-                <h1 class="font-display-lg text-3xl md:text-4xl text-[#1E293B] mb-3 font-bold font-serif">Your Tranquil Journey is Confirmed!</h1>
-                <p class="font-body-sm text-xs text-on-surface-variant max-w-md mx-auto">We look forward to welcoming you to your sanctuary of peace. Your reservation details are below.</p>
+                <h1 class="font-display-lg text-3xl md:text-4xl text-[#1E293B] mb-3 font-bold font-serif" data-translate="success_title">Your Tranquil Journey is Confirmed!</h1>
+                <p class="font-body-sm text-xs text-on-surface-variant max-w-md mx-auto" data-translate="success_subtitle">We look forward to welcoming you to your sanctuary of peace. Your reservation details are below.</p>
             </div>
             
             <!-- Reservation Card (2 columns on desktop) -->
@@ -436,38 +449,38 @@
 
             <!-- Preparation Tips Section -->
             <div class="w-full mb-12">
-                <h2 class="font-display-lg text-xl text-[#1E293B] mb-6 font-bold font-serif text-left">Preparation Tips</h2>
+                <h2 class="font-display-lg text-xl text-[#1E293B] mb-6 font-bold font-serif text-left" data-translate="prep_tips_title">Preparation Tips</h2>
                 <div class="grid grid-cols-2 gap-6">
                     <!-- Tip 1 -->
                     <div class="glass-panel rounded-xl p-6 flex flex-col items-center text-center">
                         <div class="w-10 h-10 rounded-full bg-[#50613f]/5 flex items-center justify-center text-[#50613f] mb-4">
                             <span class="material-symbols-outlined">schedule</span>
                         </div>
-                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2">Arrive Early</h3>
-                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">Please arrive 15 minutes before your treatment to complete intake and unwind.</p>
+                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2" data-translate="tip1_title">Arrive Early</h3>
+                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed" data-translate="tip1_desc">Please arrive 15 minutes before your treatment to complete intake and unwind.</p>
                     </div>
                     <!-- Tip 2 -->
                     <div class="glass-panel rounded-xl p-6 flex flex-col items-center text-center">
                         <div class="w-10 h-10 rounded-full bg-[#50613f]/5 flex items-center justify-center text-[#50613f] mb-4">
                             <span class="material-symbols-outlined">water_drop</span>
                         </div>
-                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2">Stay Hydrated</h3>
-                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">Drink plenty of water before and after your deep tissue session.</p>
+                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2" data-translate="tip2_title">Stay Hydrated</h3>
+                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed" data-translate="tip2_desc">Drink plenty of water before and after your deep tissue session.</p>
                     </div>
                     <!-- Tip 3 -->
                     <div class="glass-panel rounded-xl p-6 flex flex-col items-center text-center col-span-2 mx-auto max-w-md w-full">
                         <div class="w-10 h-10 rounded-full bg-[#50613f]/5 flex items-center justify-center text-[#50613f] mb-4">
                             <span class="material-symbols-outlined">notifications_off</span>
                         </div>
-                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2">Unplug</h3>
-                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed">We encourage silencing your devices to fully immerse in the experience.</p>
+                        <h3 class="font-title-md text-sm font-semibold text-[#1E293B] mb-2" data-translate="tip3_title">Unplug</h3>
+                        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed" data-translate="tip3_desc">We encourage silencing your devices to fully immerse in the experience.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Return Home Link -->
             <button onclick="resetBookingFlow()" class="flex items-center gap-2 text-xs font-semibold text-[#50613f] hover:underline transition-all">
-                <span class="material-symbols-outlined text-sm">arrow_back</span> Return to Home
+                <span class="material-symbols-outlined text-sm">arrow_back</span> <span data-translate="btn_return_home">Return to Home</span>
             </button>
         </section>
 
@@ -745,7 +758,7 @@
         <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="mb-6 md:mb-0">
                 <div class="font-headline-lg text-lg text-primary mb-3 font-semibold">Serenity &amp; Soul</div>
-                <p class="text-on-surface-variant">© 2024 Serenity &amp; Soul. All Rights Reserved.</p>
+                <p class="text-on-surface-variant" data-translate="footer_rights">© 2024 Serenity &amp; Soul. All Rights Reserved.</p>
             </div>
             <div class="flex flex-wrap gap-8 md:gap-16">
                 <div class="flex flex-col gap-3">
@@ -858,8 +871,8 @@
           <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#50613f;">Serenity &amp; Soul</div>
           <div style="width:28px;height:2px;background:linear-gradient(90deg,#50613f,#fed65b);border-radius:2px;margin:8px auto 0;"></div>
         </div>
-        <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#161d1d;margin:0 0 4px;">Welcome back</h2>
-        <p style="font-size:0.8rem;color:#75786e;margin:0 0 22px;">Sign in to book treatments and view your profile.</p>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#161d1d;margin:0 0 4px;" data-translate="login_modal_title">Welcome back</h2>
+        <p style="font-size:0.8rem;color:#75786e;margin:0 0 22px;" data-translate="login_modal_subtitle">Sign in to book treatments and view your profile.</p>
         <!-- Error -->
         <div id="login-modal-error" style="display:none;background:#ffdad6;color:#93000a;font-size:0.78rem;font-weight:600;padding:10px 14px;border-radius:10px;margin-bottom:14px;"></div>
         <!-- Form -->
@@ -867,17 +880,17 @@
           <label style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Email</label>
           <div style="position:relative;display:flex;align-items:center;">
             <span class="material-symbols-outlined" style="position:absolute;left:11px;font-size:17px;color:#75786e;pointer-events:none;">mail</span>
-            <input id="lm-email" type="email" placeholder="your@email.com" autocomplete="email" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid rgba(197,200,188,0.6);border-radius:11px;font-family:'Manrope',sans-serif;font-size:0.88rem;color:#161d1d;background:rgba(255,255,255,0.7);outline:none;box-sizing:border-box;">
+            <input id="lm-email" type="email" placeholder="your@email.com" data-translate="placeholder_email" autocomplete="email" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid rgba(197,200,188,0.6);border-radius:11px;font-family:'Manrope',sans-serif;font-size:0.88rem;color:#161d1d;background:rgba(255,255,255,0.7);outline:none;box-sizing:border-box;">
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:20px;">
           <label style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Password</label>
           <div style="position:relative;display:flex;align-items:center;">
             <span class="material-symbols-outlined" style="position:absolute;left:11px;font-size:17px;color:#75786e;pointer-events:none;">lock</span>
-            <input id="lm-password" type="password" placeholder="••••••••" autocomplete="current-password" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid rgba(197,200,188,0.6);border-radius:11px;font-family:'Manrope',sans-serif;font-size:0.88rem;color:#161d1d;background:rgba(255,255,255,0.7);outline:none;box-sizing:border-box;">
+            <input id="lm-password" type="password" placeholder="••••••••" data-translate="placeholder_password" autocomplete="current-password" style="width:100%;padding:10px 14px 10px 36px;border:1.5px solid rgba(197,200,188,0.6);border-radius:11px;font-family:'Manrope',sans-serif;font-size:0.88rem;color:#161d1d;background:rgba(255,255,255,0.7);outline:none;box-sizing:border-box;">
           </div>
         </div>
-        <button onclick="handleUserLogin()" style="width:100%;padding:12px;background:#50613f;color:#fff;border:none;border-radius:11px;font-family:'Manrope',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:filter 0.2s;">Sign In</button>
+        <button onclick="handleUserLogin()" style="width:100%;padding:12px;background:#50613f;color:#fff;border:none;border-radius:11px;font-family:'Manrope',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;transition:filter 0.2s;" data-translate="btn_sign_in_now">Sign In</button>
         <!-- Demo credentials -->
         <div style="margin-top:14px;padding:10px 12px;background:rgba(254,214,91,0.18);border:1px solid rgba(254,214,91,0.35);border-radius:10px;font-size:0.75rem;color:#5a4800;line-height:1.45;">
           <strong>Note:</strong> You can click <strong>Sign In</strong> directly to log in without entering anything.<br><br>
@@ -891,7 +904,7 @@
           <span style="font-size:0.72rem;color:#75786e;">or</span>
           <div style="flex:1;height:1px;background:rgba(197,200,188,0.5);"></div>
         </div>
-        <p style="text-align:center;font-size:0.82rem;color:#45483f;margin:0;">Don't have an account? <a href="/register.html" style="color:#50613f;font-weight:700;text-decoration:none;">Register</a></p>
+        <p style="text-align:center;font-size:0.82rem;color:#45483f;margin:0;"><span data-translate="no_account_lbl">Don't have an account?</span> <a href="/register.html" style="color:#50613f;font-weight:700;text-decoration:none;" data-translate="btn_register">Register</a></p>
       </div>
     </div>
     <script>
