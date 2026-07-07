@@ -2269,7 +2269,7 @@ function renderProfileView() {
                         </div>
                         
                         <!-- Packages Grid (Dynamic from state.activePackages) -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="profile-packages-grid">
+                        <div class="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 pb-3 md:pb-0 hide-scrollbar scroll-smooth" id="profile-packages-grid">
                             ${(function () {
             const pkgKeys = Object.keys(state.activePackages);
             if (pkgKeys.length === 0) {
@@ -2289,7 +2289,7 @@ function renderProfileView() {
                     : `<span class="bg-[#FEE2E2] text-[#B91C1C] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Exhausted</span>`;
                 const icon = iconMap[bundle.type] || 'spa';
                 return `
-                                        <div class="bg-white rounded-2xl p-5 border border-outline-variant/30 relative flex flex-col justify-between shadow-sm">
+                                        <div class="flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto bg-white rounded-2xl p-5 border border-outline-variant/30 relative flex flex-col justify-between shadow-sm">
                                             <div>
                                                 <div class="flex justify-between items-center mb-4">
                                                     <div class="w-10 h-10 rounded-lg bg-[#50613f]/10 flex items-center justify-center text-primary">
