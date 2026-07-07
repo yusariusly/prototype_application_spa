@@ -873,8 +873,8 @@ function navigateTo(viewId) {
         }
     }
 
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to top instantly
+    window.scrollTo(0, 0);
     saveState();
 }
 window.navigateTo = navigateTo;
