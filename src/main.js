@@ -946,7 +946,7 @@ function renderServicesCatalogView() {
                                             ${p1.regularPrice && p1.regularPrice > p1.price ? `<span class="text-[10px] text-slate-400 line-through decoration-red-500">MYR ${p1.regularPrice.toFixed(2)}</span>` : '<span class="text-[10px] text-slate-400 uppercase tracking-wider">Total Value</span>'}
                                             <span class="font-serif font-bold text-[#1E293B] text-lg">MYR ${p1.price}</span>
                                         </div>
-                                        <button onclick="startBookingWithService('radiance-bundle')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs px-6 py-2.5 rounded-full transition-colors">Select</button>
+                                        <button onclick="startBookingWithService('radiance-bundle')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] font-bold text-xs px-6 py-2.5 rounded-full transition-all">Book Package</button>
                                     </div>
                                 </div>
                             </div>
@@ -986,7 +986,7 @@ function renderServicesCatalogView() {
                                             ${p2.regularPrice && p2.regularPrice > p2.price ? `<span class="text-[10px] text-slate-400 line-through decoration-red-500">MYR ${p2.regularPrice.toFixed(2)}</span>` : '<span class="text-[10px] text-slate-400 uppercase tracking-wider">Total Value</span>'}
                                             <span class="font-serif font-bold text-[#1E293B] text-lg">MYR ${p2.price}</span>
                                         </div>
-                                        <button onclick="startBookingWithService('aromatherapy-bundle')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs px-6 py-2.5 rounded-full transition-colors">Select</button>
+                                        <button onclick="startBookingWithService('aromatherapy-bundle')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs px-6 py-2.5 rounded-full transition-all">Book Package</button>
                                     </div>
                                 </div>
                             </div>
@@ -1029,8 +1029,8 @@ function renderServicesCatalogView() {
                                     </div>
                                     <span class="text-xs font-bold text-[#1E293B]">MYR 165</span>
                                 </div>
-                                <button onclick="startBookingWithService('hot-stone')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#50613f]/10 text-[#50613f] flex items-center justify-center transition-colors">
-                                    <span class="material-symbols-outlined text-[18px] font-bold">add_shopping_cart</span>
+                                <button onclick="startBookingWithService('hot-stone')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs px-4 py-2 rounded-full transition-all whitespace-nowrap">
+                                    Book Service
                                 </button>
                             </div>
                         </div>
@@ -1056,8 +1056,8 @@ function renderServicesCatalogView() {
                                     </div>
                                     <span class="text-xs font-bold text-[#1E293B]">MYR 150</span>
                                 </div>
-                                <button onclick="startBookingWithService('deep-tissue')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#50613f]/10 text-[#50613f] flex items-center justify-center transition-colors">
-                                    <span class="material-symbols-outlined text-[18px] font-bold">add_shopping_cart</span>
+                                <button onclick="startBookingWithService('deep-tissue')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs px-4 py-2 rounded-full transition-all whitespace-nowrap">
+                                    Book Service
                                 </button>
                             </div>
                         </div>
@@ -1083,8 +1083,8 @@ function renderServicesCatalogView() {
                                     </div>
                                     <span class="text-xs font-bold text-[#1E293B]">MYR 190</span>
                                 </div>
-                                <button onclick="startBookingWithService('signature-soul')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#50613f]/10 text-[#50613f] flex items-center justify-center transition-colors">
-                                    <span class="material-symbols-outlined text-[18px] font-bold">add_shopping_cart</span>
+                                <button onclick="startBookingWithService('signature-soul')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs px-4 py-2 rounded-full transition-all whitespace-nowrap">
+                                    Book Service
                                 </button>
                             </div>
                         </div>
@@ -3743,8 +3743,8 @@ function renderAllServicesView() {
                                 ${srv.regularPrice && srv.regularPrice > srv.price ? `<span class="text-on-surface-variant/50 text-[10px] line-through decoration-red-500">MYR ${srv.regularPrice.toFixed(2)}</span>` : ''}
                                 <span class="font-serif font-bold text-[#1E293B] text-base">MYR ${srv.price}</span>
                             </div>
-                            <button onclick="startBookingWithService('${srv.id}')" class="bg-primary hover:bg-[#3e4b30] text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1">
-                                Book <span class="material-symbols-outlined text-sm">calendar_month</span>
+                            <button onclick="startBookingWithService('${srv.id}')" class="${srv.bestValue ? 'bg-[#FACC15] hover:bg-[#eab308] text-[#241a00]' : 'bg-[#50613f] hover:bg-[#3e4b30] text-white'} font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1">
+                                ${isPackage ? 'Book Package' : 'Book Service'} <span class="material-symbols-outlined text-sm">calendar_month</span>
                             </button>
                         </div>
                     </div>
