@@ -2436,17 +2436,17 @@ function renderWalletView() {
 
         txHtml += `
             <tr class="border-b border-outline-variant/30 hover:bg-slate-50/50 transition-colors">
-                <td class="py-4 text-xs font-semibold text-on-surface-variant">${tx.date}</td>
-                <td class="py-4">
+                <td class="py-4 text-xs font-semibold text-on-surface-variant whitespace-nowrap pr-4">${tx.date}</td>
+                <td class="py-4 pr-4">
                     <div class="flex items-center gap-3">
                         ${iconHtml}
-                        <span class="font-body-md text-xs font-bold text-[#1E293B]">${tx.description}</span>
+                        <span class="font-body-md text-xs font-bold text-[#1E293B] whitespace-nowrap">${tx.description}</span>
                     </div>
                 </td>
-                <td class="py-4">
-                    <span class="bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Completed</span>
+                <td class="py-4 pr-4">
+                    <span class="bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap">Completed</span>
                 </td>
-                <td class="py-4 text-right ${amountClass}">${amountText}</td>
+                <td class="py-4 text-right ${amountClass} whitespace-nowrap">${amountText}</td>
             </tr>
         `;
     });
@@ -2519,13 +2519,13 @@ function renderWalletView() {
                     </a>
                 </div>
                 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto hide-scrollbar">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="border-b border-outline-variant/60 text-outline text-[10px] uppercase font-bold tracking-wider">
-                                <th class="pb-3">Date</th>
-                                <th class="pb-3">Description</th>
-                                <th class="pb-3">Status</th>
+                            <tr class="border-b border-outline-variant/60 text-outline text-[10px] uppercase font-bold tracking-wider whitespace-nowrap">
+                                <th class="pb-3 pr-4">Date</th>
+                                <th class="pb-3 pr-4">Description</th>
+                                <th class="pb-3 pr-4">Status</th>
                                 <th class="pb-3 text-right">Amount</th>
                             </tr>
                         </thead>
