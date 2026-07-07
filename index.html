@@ -843,11 +843,11 @@
     <!-- ==================== USER LOGIN MODAL ==================== -->
     <div id="user-login-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;">
       <!-- Blur backdrop -->
-      <div onclick="document.getElementById('user-login-modal').style.display='none'" style="position:absolute;inset:0;background:rgba(22,29,29,0.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);"></div>
+      <div onclick="closeLoginModal()" style="position:absolute;inset:0;background:rgba(22,29,29,0.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);"></div>
       <!-- Modal card -->
       <div style="position:relative;z-index:1;width:100%;max-width:400px;margin:16px;background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.6);border-radius:24px;box-shadow:0 24px 64px rgba(22,29,29,0.18);padding:36px 32px 28px;font-family:'Manrope',sans-serif;">
         <!-- Close button -->
-        <button onclick="document.getElementById('user-login-modal').style.display='none'" style="position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;color:#75786e;display:flex;align-items:center;">
+        <button onclick="closeLoginModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;cursor:pointer;color:#75786e;display:flex;align-items:center;">
           <span class="material-symbols-outlined" style="font-size:22px;">close</span>
         </button>
         <!-- Brand -->

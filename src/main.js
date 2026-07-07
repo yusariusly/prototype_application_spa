@@ -396,6 +396,17 @@ window.requireLogin = function (callback) {
     window._loginCallback = callback || null;
     const modal = document.getElementById('user-login-modal');
     if (modal) modal.style.display = 'flex';
+    // Hide mobile bottom nav while login modal is open
+    const bottomNav = document.getElementById('mobile-bottom-nav');
+    if (bottomNav) bottomNav.style.display = 'none';
+};
+
+// Close the login modal and restore bottom nav if needed
+window.closeLoginModal = function() {
+    const modal = document.getElementById('user-login-modal');
+    if (modal) modal.style.display = 'none';
+    // Restore bottom nav for the current booking step
+    updateMobileBottomNav(state.currentView);
 };
 
 // Called by login modal on successful login
@@ -403,6 +414,8 @@ window.onLoginSuccess = function () {
     const modal = document.getElementById('user-login-modal');
     if (modal) modal.style.display = 'none';
     updateNavbarAuth();
+    // Restore bottom nav for the current step
+    updateMobileBottomNav(state.currentView);
     if (window._loginCallback) {
         const cb = window._loginCallback;
         window._loginCallback = null;
