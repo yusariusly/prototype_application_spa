@@ -350,7 +350,6 @@ const DEFAULT_STATE = {
 };
 
 let state = { ...DEFAULT_STATE };
-window.state = state;
 
 function loadState() {
     const saved = localStorage.getItem('serenity_soul_spa_state');
