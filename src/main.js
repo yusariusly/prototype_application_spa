@@ -778,15 +778,9 @@ function renderHomeView() {
                                     ${s.regularPrice && s.regularPrice > s.price ? `<span class="text-on-surface-variant/60 text-[11px] block line-through decoration-red-500">MYR ${s.regularPrice.toFixed(2)} (Regular)</span>` : ''}
                                     <span class="font-serif text-2xl text-[#1e293b] font-bold">MYR ${s.price}</span>
                                 </div>
-                                ${isPackage ? `
-                                <button onclick="startBookingWithService('${s.id}')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] px-6 py-2.5 rounded-full font-bold transition-all text-xs flex items-center gap-1.5 shadow-sm">
-                                    Book Package <span class="material-symbols-outlined text-sm font-bold">calendar_month</span>
+                                <button onclick="startBookingWithService('${s.id}')" class="${s.bestValue ? 'bg-[#FACC15] hover:bg-[#eab308] text-[#241a00]' : 'bg-[#50613f] hover:bg-[#3e4b30] text-white'} px-6 py-2.5 rounded-full font-bold transition-all text-xs flex items-center gap-1.5 shadow-sm">
+                                    ${isPackage ? 'Book Package' : 'Book Service'} <span class="material-symbols-outlined text-sm ml-1">calendar_month</span>
                                 </button>
-                                ` : `
-                                <button onclick="startBookingWithService('${s.id}')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white px-6 py-2.5 rounded-full font-bold text-xs shadow-sm transition-all">
-                                    Book Service <span class="material-symbols-outlined text-sm ml-1">calendar_month</span>
-                                </button>
-                                `}
                             </div>
                         </div>
                     </div>
@@ -813,7 +807,7 @@ function renderHomeView() {
                                     ${s.regularPrice && s.regularPrice > s.price ? `<span class="text-on-surface-variant/50 text-[10px] line-through decoration-red-500">MYR ${s.regularPrice.toFixed(2)}</span>` : ''}
                                     <span class="font-serif text-sm text-[#1e293b] font-bold">MYR ${s.price}</span>
                                 </div>
-                                <button onclick="startBookingWithService('${s.id}')" class="${isPackage ? 'bg-[#FACC15] hover:bg-[#eab308] text-[#241a00]' : 'bg-[#50613f] hover:bg-[#3e4b30] text-white'} px-3 py-1.5 rounded-full font-bold text-[10px] shadow-sm transition-all whitespace-nowrap">
+                                <button onclick="startBookingWithService('${s.id}')" class="${s.bestValue ? 'bg-[#FACC15] hover:bg-[#eab308] text-[#241a00]' : 'bg-[#50613f] hover:bg-[#3e4b30] text-white'} px-3 py-1.5 rounded-full font-bold text-[10px] shadow-sm transition-all whitespace-nowrap">
                                     ${isPackage ? 'Book Package' : 'Book Service'}
                                 </button>
                             </div>
@@ -842,15 +836,9 @@ function renderHomeView() {
                                 ${s.regularPrice && s.regularPrice > s.price ? `<span class="text-on-surface-variant/50 text-[10px] line-through decoration-red-500">MYR ${s.regularPrice.toFixed(2)}</span>` : ''}
                                 <span class="font-serif text-base text-[#1e293b] font-bold">MYR ${s.price}</span>
                             </div>
-                            ${isPackage ? `
-                            <button onclick="startBookingWithService('${s.id}')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] px-4 py-2 rounded-full font-bold text-xs shadow-sm transition-all">
-                                Book Package
+                            <button onclick="startBookingWithService('${s.id}')" class="${s.bestValue ? 'bg-[#FACC15] hover:bg-[#eab308] text-[#241a00]' : 'bg-[#50613f] hover:bg-[#3e4b30] text-white'} px-4 py-2 rounded-full font-bold text-xs shadow-sm transition-all">
+                                ${isPackage ? 'Book Package' : 'Book Service'}
                             </button>
-                            ` : `
-                            <button onclick="startBookingWithService('${s.id}')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white px-4 py-2 rounded-full font-bold text-xs shadow-sm transition-all">
-                                Book Service
-                            </button>
-                            `}
                         </div>
                     </div>
                 `;
