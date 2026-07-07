@@ -464,12 +464,7 @@ function navigateTo(viewId) {
     // Update active state of navbar menu items
     updateNavbarActiveState(viewId);
 
-    // Hide mobile view summary button and modal if not in booking steps
-    const viewSummaryBtn = document.getElementById('mobile-view-summary-btn');
-    if (viewSummaryBtn && !['select-service', 'select-therapist', 'select-time', 'confirm-booking'].includes(viewId)) {
-        viewSummaryBtn.classList.add('hidden');
-    }
-    // Always close the summary modal when navigating (use style.display to match openMobileSummaryModal)
+    // Always close the summary modal when navigating
     const summaryModal = document.getElementById('mobile-summary-modal');
     if (summaryModal) {
         summaryModal.style.display = 'none';
@@ -1879,16 +1874,6 @@ function renderSidebarSummary() {
         modalContent.innerHTML = html;
     }
 
-    // Mobile View Summary floating button logic
-    const viewSummaryBtn = document.getElementById('mobile-view-summary-btn');
-    if (viewSummaryBtn) {
-        const isBookingStep = ['select-service', 'select-therapist', 'select-time', 'confirm-booking'].includes(state.currentView);
-        if (isBookingStep && service) {
-            viewSummaryBtn.classList.remove('hidden');
-        } else {
-            viewSummaryBtn.classList.add('hidden');
-        }
-    }
 }
 
 // RENDER: SUCCESS VIEW
