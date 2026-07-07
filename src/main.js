@@ -1218,19 +1218,19 @@ function renderActivePackagesWidget() {
             <h4 class="font-title-md text-primary font-bold flex items-center gap-2 mb-3">
                 <span class="material-symbols-outlined text-primary">stars</span> Your Active Packages
             </h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex overflow-x-auto md:grid md:grid-cols-2 gap-4 pb-3 md:pb-0 hide-scrollbar scroll-smooth">
     `;
 
     ownedKeys.forEach(key => {
         const bundle = SERVICES[key];
         const remaining = state.activePackages[key];
         html += `
-            <div class="flex justify-between items-center bg-white/60 p-4 rounded-xl border border-outline-variant/30">
+            <div class="flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto flex justify-between items-center bg-white/60 p-4 rounded-xl border border-outline-variant/30 shadow-sm">
                 <div>
                     <p class="font-semibold text-on-surface">${bundle.name}</p>
                     <p class="text-xs text-on-surface-variant">Remaining quota: ${remaining} of ${bundle.sessions} sessions</p>
                 </div>
-                <button onclick="bookPackageSession('${key}')" class="bg-primary text-white text-xs px-4 py-2 rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                <button onclick="bookPackageSession('${key}')" class="bg-primary text-white text-xs px-4 py-2 rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors shrink-0 ml-4">
                     Use Package
                 </button>
             </div>
@@ -2202,6 +2202,53 @@ function renderProfileView() {
     const container = document.getElementById('profile-container');
     if (!container) return;
 
+    const upcoming = state.bookings.filter(b => b.status === 'Upcoming');
+    let nextAppHtml = '';
+    if (upcoming.length > 0) {
+        upcoming.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            if (isNaN(dateA) || isNaN(dateB)) return 0;
+            return dateA - dateB;
+        });
+        const nextApp = upcoming[0];
+        nextAppHtml = `
+            <!-- Next Appointment Card -->
+            <div class="bg-[#F1F5F9]/60 rounded-3xl p-6 border border-outline-variant/30 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-label-caps text-[9px] text-[#B45309] font-bold uppercase tracking-wider">Next Appointment</span>
+                    <span class="material-symbols-outlined text-on-surface-variant text-lg">schedule</span>
+                </div>
+                <h3 class="font-serif text-sm font-bold text-[#1E293B] mb-1">${nextApp.serviceName}</h3>
+                <p class="font-body-sm text-[11px] text-on-surface-variant mb-2">${nextApp.date} • ${nextApp.time}</p>
+                <div class="flex items-center gap-1.5 text-on-surface-variant text-[11px] mb-4">
+                    <span class="material-symbols-outlined text-xs text-primary">location_on</span>
+                    <span>${nextApp.location || 'Serenity Orchard Wing'}</span>
+                </div>
+                <button onclick="rescheduleBooking('${nextApp.id}')" class="text-[#B45309] hover:text-[#92400e] font-bold text-[11px] transition-colors">
+                    Reschedule
+                </button>
+            </div>
+        `;
+    } else {
+        nextAppHtml = `
+            <!-- Next Appointment Card -->
+            <div class="bg-[#F1F5F9]/60 rounded-3xl p-6 border border-outline-variant/30 shadow-sm flex flex-col justify-between min-h-[160px]">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-label-caps text-[9px] text-slate-400 font-bold uppercase tracking-wider">Next Appointment</span>
+                    <span class="material-symbols-outlined text-slate-400 text-lg">schedule</span>
+                </div>
+                <div class="text-center py-4 flex-grow flex flex-col justify-center">
+                    <p class="text-xs text-on-surface-variant font-medium">No upcoming appointments</p>
+                    <p class="text-[10px] text-on-surface-variant/70 mt-0.5">Book your next relaxing session today.</p>
+                </div>
+                <button onclick="navigateTo('select-service')" class="text-[#B45309] hover:text-[#92400e] font-bold text-[11px] transition-colors text-left mt-2">
+                    Book Now &rarr;
+                </button>
+            </div>
+        `;
+    }
+
     container.innerHTML = `
         <div class="max-w-container-max mx-auto py-8">
             <!-- Welcome Banner Card -->
@@ -2368,21 +2415,7 @@ function renderProfileView() {
                     </div>
                     
                     <!-- Next Appointment Card -->
-                    <div class="bg-[#F1F5F9]/60 rounded-3xl p-6 border border-outline-variant/30 shadow-sm">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="font-label-caps text-[9px] text-[#B45309] font-bold uppercase tracking-wider">Next Appointment</span>
-                            <span class="material-symbols-outlined text-on-surface-variant text-lg">schedule</span>
-                        </div>
-                        <h3 class="font-serif text-sm font-bold text-[#1E293B] mb-1">Healing Stone Therapy</h3>
-                        <p class="font-body-sm text-[11px] text-on-surface-variant mb-2">Thursday, Oct 24 • 14:00 PM</p>
-                        <div class="flex items-center gap-1.5 text-on-surface-variant text-[11px] mb-4">
-                            <span class="material-symbols-outlined text-xs text-primary">location_on</span>
-                            <span>Serenity Orchard Wing</span>
-                        </div>
-                        <button onclick="showNotification('Reschedule process initiated.', 'info')" class="text-[#B45309] hover:text-[#92400e] font-bold text-[11px] transition-colors">
-                            Reschedule
-                        </button>
-                    </div>
+                    ${nextAppHtml}
                 </div>
             </div>
         </div>
