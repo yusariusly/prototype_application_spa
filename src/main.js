@@ -1367,7 +1367,7 @@ window.selectService = function (serviceId) {
     state.booking.service = srv;
     renderSelectServiceView();
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth < 1024) {
         window.openMobileSummaryModal();
     }
 };
@@ -1430,7 +1430,7 @@ window.selectTherapist = function (therapistId) {
     state.booking.therapist = therapist;
     renderSelectTherapistView();
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth < 1024) {
         window.openMobileSummaryModal();
     }
 };
@@ -1518,7 +1518,7 @@ window.selectDate = function (day) {
     renderCalendar();
     renderSidebarSummary();
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth < 1024) {
         window.openMobileSummaryModal();
     }
 };
@@ -1563,7 +1563,7 @@ window.selectTime = function (time) {
     renderTimeSlots();
     renderSidebarSummary();
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth < 1024) {
         window.openMobileSummaryModal();
     }
 };
