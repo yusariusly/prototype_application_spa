@@ -1135,7 +1135,10 @@ window.purchaseBundle = function (bundleId) {
     if (!bundle) return;
 
     if (state.walletBalance < bundle.price) {
-        showNotification(`Insufficient Serenity Wallet balance to purchase ${bundle.name}. Please Top Up first!`, 'error');
+        showNotification(`Insufficient Serenity Wallet balance to purchase ${bundle.name}. Redirecting to Top Up...`, 'error');
+        setTimeout(() => {
+            navigateTo('topup');
+        }, 1500);
         return;
     }
 
@@ -2006,7 +2009,10 @@ window.confirmReservation = function () {
 
             if (selectedPaymentMethod === 'wallet') {
                 if (state.walletBalance < total) {
-                    showNotification(`Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Please Top Up or choose another payment method.`, 'error');
+                    showNotification(`Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Redirecting to Top Up...`, 'error');
+                    setTimeout(() => {
+                        navigateTo('topup');
+                    }, 1500);
                     return;
                 }
                 state.walletBalance -= total;
