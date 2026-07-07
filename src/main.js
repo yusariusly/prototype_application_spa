@@ -758,10 +758,10 @@ function renderHomeView() {
             if (isLarge) {
                 // md:col-span-12
                 return `
-                    <div class="md:col-span-12 min-h-[320px] bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative flex-shrink-0 w-[85vw] sm:w-[500px] md:w-auto">
+                    <div class="md:col-span-12 min-h-[320px] bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative flex-shrink-0 w-[85vw] sm:w-[360px] md:w-auto">
                         ${s.bestValue ? `<div class="absolute top-4 right-4 bg-[#FACC15] text-[#241a00] px-3.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider shadow-sm z-10">Best Value</div>` : ''}
                         ${discountBadgeHtml}
-                        <div class="w-full md:w-[320px] h-64 md:h-auto shrink-0 p-6 flex">
+                        <div class="w-full md:w-[320px] h-56 md:h-auto shrink-0 p-6 flex">
                             <img class="w-full h-full object-cover rounded-2xl" src="${s.image}" alt="${s.name}">
                         </div>
                         <div class="flex-grow p-6 md:p-8 flex flex-col justify-between">
@@ -788,10 +788,10 @@ function renderHomeView() {
             } else if (isSmall) {
                 // md:col-span-4
                 return `
-                    <div class="md:col-span-4 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col border border-outline-variant/30 p-4 animate-fade-in relative flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto">
+                    <div class="md:col-span-4 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col border border-outline-variant/30 p-4 animate-fade-in relative flex-shrink-0 w-[85vw] sm:w-[360px] md:w-auto">
                         ${s.bestValue ? `<div class="absolute top-4 right-4 bg-[#FACC15] text-[#241a00] px-3.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">Best Value</div>` : ''}
                         ${discountBadgeHtml}
-                        <div class="w-full h-[180px] rounded-2xl overflow-hidden mb-4 shrink-0">
+                        <div class="w-full h-56 md:h-[180px] rounded-2xl overflow-hidden mb-4 shrink-0">
                             <img class="w-full h-full object-cover" src="${s.image}" alt="${s.name}">
                         </div>
                         <div class="flex-grow flex flex-col justify-between">
@@ -817,13 +817,15 @@ function renderHomeView() {
             } else {
                 // md:col-span-8
                 const imgFirst = (idx % 4 === 1);
+                const imgOrderClass = imgFirst ? 'order-1' : 'order-1 md:order-2';
+                const contentOrderClass = imgFirst ? 'order-2' : 'order-2 md:order-1';
                 const imgHtml = `
-                    <div class="w-full md:w-[250px] h-48 md:h-auto shrink-0 p-5 flex">
+                    <div class="w-full md:w-[250px] h-56 md:h-auto shrink-0 p-5 flex ${imgOrderClass}">
                         <img class="w-full h-full object-cover rounded-2xl" src="${s.image}" alt="${s.name}">
                     </div>
                 `;
                 const contentHtml = `
-                    <div class="flex-grow p-6 flex flex-col justify-between">
+                    <div class="flex-grow p-6 flex flex-col justify-between ${contentOrderClass}">
                         <div>
                             <div class="mb-2">
                                 <span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant text-[11px] font-semibold rounded-full">${badgeLabel}</span>
@@ -844,10 +846,11 @@ function renderHomeView() {
                 `;
 
                 return `
-                    <div class="md:col-span-8 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative flex-shrink-0 w-[85vw] sm:w-[450px] md:w-auto">
+                    <div class="md:col-span-8 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative flex-shrink-0 w-[85vw] sm:w-[360px] md:w-auto">
                         ${s.bestValue ? `<div class="absolute top-4 right-4 bg-[#FACC15] text-[#241a00] px-3.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">Best Value</div>` : ''}
                         ${discountBadgeHtml}
-                        ${imgFirst ? imgHtml + contentHtml : contentHtml + imgHtml}
+                        ${imgHtml}
+                        ${contentHtml}
                     </div>
                 `;
             }
