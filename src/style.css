@@ -105,39 +105,27 @@ body {
     
     /* Shrink logo font on small screens to prevent wrap */
     nav .font-headline-lg {
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
     }
     
-    /* Bottom Navigation Bar for Mobile */
-    .mobile-bottom-nav {
-        display: flex !important;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 64px;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
-        z-index: 50;
-        justify-content: space-around;
-        align-items: center;
-        padding-bottom: env(safe-area-inset-bottom);
-        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
-    }
-    
-    /* Add padding at bottom of main container so it does not get cut off by bottom nav */
+    /* Add padding at bottom of main container so it does not get cut off by bottom sticky bar */
     main {
-        padding-bottom: 74px !important;
+        padding-bottom: 90px !important;
     }
     
-    /* Ensure user login modal fits nicely above mobile bottom nav */
+    /* Ensure user login modal fits nicely above mobile sticky bottom bar */
     #user-login-modal {
         padding-bottom: 64px;
     }
-}
 
-.mobile-bottom-nav {
-    display: none;
+    /* Mobile Sticky Bottom Action Bar styling */
+    #mobile-sticky-bottom-bar {
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.08) !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-bottom: calc(env(safe-area-inset-bottom) + 12px) !important;
+    }
 }

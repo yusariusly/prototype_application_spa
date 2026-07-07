@@ -464,6 +464,12 @@ function navigateTo(viewId) {
     // Update active state of navbar menu items
     updateNavbarActiveState(viewId);
 
+    // Hide mobile sticky bottom bar if not in booking steps
+    const stickyBar = document.getElementById('mobile-sticky-bottom-bar');
+    if (stickyBar && !['select-service', 'select-therapist', 'select-time', 'confirm-booking'].includes(viewId)) {
+        stickyBar.classList.add('hidden');
+    }
+
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
     saveState();
@@ -1851,6 +1857,60 @@ function renderSidebarSummary() {
     }
 
     sidebar.innerHTML = html;
+
+    // Mobile sticky bottom bar logic
+    const stickyBar = document.getElementById('mobile-sticky-bottom-bar');
+    if (stickyBar) {
+        const labelEl = document.getElementById('sticky-bar-label');
+        const titleEl = document.getElementById('sticky-bar-title');
+        const subtitleEl = document.getElementById('sticky-bar-subtitle');
+        const actionContainer = document.getElementById('sticky-bar-action-container');
+        
+        const validViews = ['select-service', 'select-therapist', 'select-time', 'confirm-booking'];
+        if (validViews.includes(state.currentView)) {
+            stickyBar.classList.remove('hidden');
+            
+            if (state.currentView === 'select-service') {
+                labelEl.textContent = 'STEP 1: SELECT SERVICE';
+                titleEl.textContent = service ? service.name : 'Choose a service';
+                subtitleEl.textContent = service ? `${service.duration} • MYR ${service.price}` : 'MYR 0.00';
+                actionContainer.innerHTML = `
+                    <button onclick="nextStep(1)" ${!service ? 'disabled' : ''} class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:shadow-lg disabled:opacity-40 transition-all flex items-center gap-1">
+                        Continue <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </button>
+                `;
+            } else if (state.currentView === 'select-therapist') {
+                labelEl.textContent = 'STEP 2: SELECT THERAPIST';
+                titleEl.textContent = therapist ? therapist.name : 'Choose a therapist';
+                subtitleEl.textContent = therapist ? therapist.role : 'Any available therapist';
+                actionContainer.innerHTML = `
+                    <button onclick="nextStep(2)" class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:shadow-lg transition-all flex items-center gap-1">
+                        Continue <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </button>
+                `;
+            } else if (state.currentView === 'select-time') {
+                labelEl.textContent = 'STEP 3: SELECT TIME';
+                titleEl.textContent = date ? date : 'Choose date & time';
+                subtitleEl.textContent = date && time ? time : 'To be selected';
+                actionContainer.innerHTML = `
+                    <button onclick="nextStep(3)" ${!date || !time ? 'disabled' : ''} class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:shadow-lg disabled:opacity-40 transition-all flex items-center gap-1">
+                        Continue <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </button>
+                `;
+            } else if (state.currentView === 'confirm-booking') {
+                labelEl.textContent = 'STEP 4: CONFIRMATION';
+                titleEl.textContent = service ? service.name : '';
+                subtitleEl.textContent = applyPackage ? 'Package Session' : `Total: MYR ${total.toFixed(2)}`;
+                actionContainer.innerHTML = `
+                    <button onclick="confirmReservation()" class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs hover:shadow-lg transition-all flex items-center gap-1">
+                        Confirm <span class="material-symbols-outlined text-xs">check_circle</span>
+                    </button>
+                `;
+            }
+        } else {
+            stickyBar.classList.add('hidden');
+        }
+    }
 }
 
 // RENDER: SUCCESS VIEW
