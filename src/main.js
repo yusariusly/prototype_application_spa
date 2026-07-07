@@ -1840,7 +1840,7 @@ function renderSidebarSummary() {
     // Append Stepper Actions directly below Summary Booking in the sidebar
     if (state.currentView === 'select-service') {
         html += `
-            <div class="flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30 gap-3">
+            <div class="hidden md:flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30 gap-3">
                 <button onclick="resetBookingFlow()" class="px-5 py-2 rounded-lg border border-outline text-[#50613f] hover:bg-[#50613f]/5 text-xs font-bold flex items-center gap-1.5 transition-all w-1/2 justify-center">
                     <span class="material-symbols-outlined text-xs">arrow_back</span> Back
                 </button>
@@ -1851,7 +1851,7 @@ function renderSidebarSummary() {
         `;
     } else if (state.currentView === 'select-therapist') {
         html += `
-            <div class="flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30 gap-3">
+            <div class="hidden md:flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30 gap-3">
                 <button onclick="navigateTo('select-service')" class="px-5 py-2 rounded-lg border border-outline text-[#50613f] hover:bg-[#50613f]/5 text-xs font-bold flex items-center gap-1.5 transition-all w-1/2 justify-center">
                     <span class="material-symbols-outlined text-xs">arrow_back</span> Back
                 </button>
@@ -1862,7 +1862,7 @@ function renderSidebarSummary() {
         `;
     } else if (state.currentView === 'select-time') {
         html += `
-            <div class="flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30 gap-3">
+            <div class="hidden md:flex justify-between items-center mt-6 pt-6 border-t border-outline-variant/30 gap-3">
                 <button onclick="navigateTo('select-therapist')" class="px-5 py-2 rounded-lg border border-outline text-[#50613f] hover:bg-[#50613f]/5 text-xs font-bold flex items-center gap-1.5 transition-all w-1/2 justify-center">
                     <span class="material-symbols-outlined text-xs">arrow_back</span> Back
                 </button>
