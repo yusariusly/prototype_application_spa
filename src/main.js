@@ -813,8 +813,8 @@ function renderHomeView() {
                                     ${s.regularPrice && s.regularPrice > s.price ? `<span class="text-on-surface-variant/50 text-[10px] line-through decoration-red-500">MYR ${s.regularPrice.toFixed(2)}</span>` : ''}
                                     <span class="font-serif text-sm text-[#1e293b] font-bold">MYR ${s.price}</span>
                                 </div>
-                                <button onclick="startBookingWithService('${s.id}')" class="w-8 h-8 rounded-full border border-[#cbd5e1] hover:bg-[#50613f] hover:text-white hover:border-transparent flex items-center justify-center transition-all text-[#475569]">
-                                    <span class="material-symbols-outlined text-[18px]">add</span>
+                                <button onclick="startBookingWithService('${s.id}')" class="${isPackage ? 'bg-[#FACC15] hover:bg-[#eab308] text-[#241a00]' : 'bg-[#50613f] hover:bg-[#3e4b30] text-white'} px-3 py-1.5 rounded-full font-bold text-[10px] shadow-sm transition-all whitespace-nowrap">
+                                    ${isPackage ? 'Book Package' : 'Book Service'}
                                 </button>
                             </div>
                         </div>
@@ -843,12 +843,12 @@ function renderHomeView() {
                                 <span class="font-serif text-base text-[#1e293b] font-bold">MYR ${s.price}</span>
                             </div>
                             ${isPackage ? `
-                            <button onclick="startBookingWithService('${s.id}')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white px-6 py-2.5 rounded-full font-bold text-xs shadow-sm transition-all">
+                            <button onclick="startBookingWithService('${s.id}')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] px-4 py-2 rounded-full font-bold text-xs shadow-sm transition-all">
                                 Book Package
                             </button>
                             ` : `
-                            <button onclick="startBookingWithService('${s.id}')" class="text-[#b45309] hover:text-[#78350f] text-xs font-bold flex items-center gap-1 transition-colors">
-                                Book &rarr;
+                            <button onclick="startBookingWithService('${s.id}')" class="bg-[#50613f] hover:bg-[#3e4b30] text-white px-4 py-2 rounded-full font-bold text-xs shadow-sm transition-all">
+                                Book Service
                             </button>
                             `}
                         </div>
