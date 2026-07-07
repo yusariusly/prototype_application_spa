@@ -553,7 +553,7 @@ window.getServiceTranslation = function(serviceId, field, fallback) {
         }
     };
     if (state.language === 'ms' && dict[serviceId]) {
-        if (field === 'name' && dict[serviceId].name_ms) return dict[serviceId].name_ms;
+        if (field === 'name') return fallback; // Never translate names of services/packages
         if (field === 'desc' && dict[serviceId].desc_ms) return dict[serviceId].desc_ms;
     }
     return fallback;
