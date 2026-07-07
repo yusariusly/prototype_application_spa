@@ -2911,15 +2911,18 @@ function renderBookingHistoryView() {
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-row md:flex-col items-end justify-between md:justify-center border-t md:border-t-0 border-outline-variant/20 pt-3 md:pt-0 gap-3">
-                        <span class="font-serif text-base text-[#1E293B] font-bold">MYR ${parseFloat(booking.price).toFixed(2)}</span>
+                    <div class="flex flex-col gap-3 border-t md:border-t-0 border-outline-variant/20 pt-3.5 md:pt-0 w-full md:w-auto md:items-end">
+                        <div class="flex justify-between items-center w-full md:w-auto md:justify-end gap-2">
+                            <span class="text-[11px] font-semibold text-on-surface-variant md:hidden">Price</span>
+                            <span class="font-serif text-base text-[#1E293B] font-bold">MYR ${parseFloat(booking.price).toFixed(2)}</span>
+                        </div>
                         ${showCancel ? `
-                        <div class="flex gap-2 flex-wrap justify-end">
-                            <button onclick="openQrTicketModal('${booking.id}')" class="px-3 py-1.5 rounded-lg bg-[#50613f]/10 hover:bg-[#50613f]/25 text-[#50613f] text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm">
+                        <div class="flex gap-2 w-full md:w-auto justify-start md:justify-end flex-wrap sm:flex-nowrap">
+                            <button onclick="openQrTicketModal('${booking.id}')" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-lg bg-[#50613f]/10 hover:bg-[#50613f]/25 text-[#50613f] text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm">
                                 <span class="material-symbols-outlined text-[12px] font-bold">qr_code</span> View QR
                             </button>
-                            <button onclick="rescheduleBooking('${booking.id}')" class="px-3 py-1.5 rounded-lg border border-outline text-on-surface-variant hover:bg-slate-50 text-[10px] font-bold transition-all">Reschedule</button>
-                            <button onclick="cancelBooking('${booking.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-bold transition-all">Cancel</button>
+                            <button onclick="rescheduleBooking('${booking.id}')" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-lg border border-outline text-on-surface-variant hover:bg-slate-50 text-[10px] font-bold transition-all text-center">Reschedule</button>
+                            <button onclick="cancelBooking('${booking.id}')" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-bold transition-all text-center">Cancel</button>
                         </div>
                         ` : ''}
                     </div>
