@@ -464,11 +464,8 @@ function navigateTo(viewId) {
     // Update active state of navbar menu items
     updateNavbarActiveState(viewId);
 
-    // Always close the summary modal when navigating
-    const summaryModal = document.getElementById('mobile-summary-modal');
-    if (summaryModal) {
-        summaryModal.style.display = 'none';
-    }
+    // Update mobile bottom navigation bar for booking steps
+    updateMobileBottomNav(viewId);
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1362,10 +1359,6 @@ window.selectService = function (serviceId) {
 
     state.booking.service = srv;
     renderSelectServiceView();
-
-    // Always show modal — on desktop the sidebar is visible (lg:block),
-    // on mobile the aside is hidden (hidden lg:block) so modal is the only summary.
-    window.openMobileSummaryModal();
 };
 
 // RENDER: STEP 2: SELECT THERAPIST VIEW
@@ -1425,8 +1418,6 @@ window.selectTherapist = function (therapistId) {
 
     state.booking.therapist = therapist;
     renderSelectTherapistView();
-
-    window.openMobileSummaryModal();
 };
 
 // RENDER: STEP 3: SELECT DATE & TIME VIEW
@@ -1511,8 +1502,6 @@ window.selectDate = function (day) {
 
     renderCalendar();
     renderSidebarSummary();
-
-    window.openMobileSummaryModal();
 };
 
 function renderTimeSlots() {
@@ -1554,8 +1543,6 @@ window.selectTime = function (time) {
     state.booking.time = time;
     renderTimeSlots();
     renderSidebarSummary();
-
-    window.openMobileSummaryModal();
 };
 
 // RENDER: STEP 4: CONFIRM BOOKING VIEW
@@ -4531,20 +4518,32 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Mobile Summary Modal Helpers
-window.openMobileSummaryModal = function() {
-    // Only show modal on mobile/tablet screens (< 1024px = below lg breakpoint)
-    // On desktop (>= 1024px), the sidebar is visible so modal is not needed
-    if (window.innerWidth >= 1024) return;
-    const modal = document.getElementById('mobile-summary-modal');
-    if (modal) {
-        modal.style.display = 'flex';
-    }
-};
 
-window.closeMobileSummaryModal = function() {
-    const modal = document.getElementById('mobile-summary-modal');
-    if (modal) {
-        modal.style.display = 'none';
+// Mobile Bottom Navigation Bar — shows Back & Continue on steps 1-3 (mobile only)
+function updateMobileBottomNav(viewId) {
+    const nav = document.getElementById('mobile-bottom-nav');
+    const backBtn = document.getElementById('mobile-back-btn');
+    const continueBtn = document.getElementById('mobile-continue-btn');
+    if (!nav || !backBtn || !continueBtn) return;
+
+    const bookingSteps = {
+        'select-service':   { step: 1, back: () => resetBookingFlow(),          continueLabel: 'Continue' },
+        'select-therapist': { step: 2, back: () => navigateTo('select-service'), continueLabel: 'Continue' },
+        'select-time':      { step: 3, back: () => navigateTo('select-therapist'), continueLabel: 'Continue' },
+    };
+
+    const stepConfig = bookingSteps[viewId];
+    if (stepConfig) {
+        nav.style.display = 'flex';
+        // Wire up Back
+        backBtn.onclick = stepConfig.back;
+        // Wire up Continue (reuse existing nextStep validation)
+        continueBtn.textContent = '';
+        continueBtn.innerHTML = `${stepConfig.continueLabel} <span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
+        continueBtn.onclick = () => window.nextStep(stepConfig.step);
+    } else {
+        nav.style.display = 'none';
     }
-};
+}
+// Expose so navigateTo (declared before this function) can call it
+window.updateMobileBottomNav = updateMobileBottomNav;

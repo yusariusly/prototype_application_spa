@@ -245,7 +245,7 @@
 
 
         <!-- ==================== VIEW 2: STEP 1: SELECT SERVICE ==================== -->
-        <section id="view-select-service" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
+        <section id="view-select-service" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop pt-8 pb-28 lg:py-8">
             <div id="stepper-select-service"></div>
             <div class="mb-8 text-center md:text-left">
                 <h1 class="font-display-lg text-2xl md:text-headline-lg text-[#1E293B] mb-2 font-bold font-serif">Select Service (Step 1)</h1>
@@ -281,7 +281,7 @@
         </section>
 
         <!-- ==================== VIEW 3: STEP 2: SELECT THERAPIST ==================== -->
-        <section id="view-select-therapist" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
+        <section id="view-select-therapist" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop pt-8 pb-28 lg:py-8">
             <div id="stepper-select-therapist"></div>
             <div class="mb-8 text-center md:text-left">
                 <h1 class="font-display-lg text-2xl md:text-headline-lg text-[#1E293B] mb-2 font-bold font-serif">Select Your Therapist</h1>
@@ -307,7 +307,7 @@
         </section>
 
         <!-- ==================== VIEW 4: STEP 3: SELECT DATE & TIME ==================== -->
-        <section id="view-select-time" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
+        <section id="view-select-time" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop pt-8 pb-28 lg:py-8">
             <div class="mb-8 text-center md:text-left">
                 <h1 class="font-display-lg text-2xl md:text-headline-lg text-[#1E293B] mb-2 font-bold font-serif">New Reservation</h1>
                 <p class="font-body-sm text-xs text-on-surface-variant">Follow the steps below to schedule your appointment.</p>
@@ -932,20 +932,16 @@
     </script>
 
 
-    <!-- Mobile Booking Summary Modal (Mobile Only) -->
-    <div id="mobile-summary-modal" class="fixed inset-0 z-[9999] flex items-center justify-center" style="display:none;">
-        <!-- Backdrop -->
-        <div onclick="closeMobileSummaryModal()" class="absolute inset-0 bg-black/50 backdrop-blur-md"></div>
-        <!-- Content Container -->
-        <div class="relative bg-white rounded-3xl w-full max-w-[340px] mx-4 p-6 shadow-2xl flex flex-col gap-4 max-h-[85vh] overflow-y-auto" style="font-family: 'Manrope', sans-serif;">
-            <!-- Close button -->
-            <button onclick="closeMobileSummaryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 focus:outline-none">
-                <span class="material-symbols-outlined text-[20px] font-bold">close</span>
-            </button>
-            <div id="mobile-summary-modal-content" class="text-left mt-2">
-                <!-- Dynamically populated summary content -->
-            </div>
-        </div>
+    <!-- Mobile Bottom Navigation Bar (Steps 1-3, Mobile Only) -->
+    <div id="mobile-bottom-nav" class="fixed bottom-0 left-0 right-0 z-[9990] bg-white border-t border-slate-100 px-4 py-3 flex items-center gap-3 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]" style="display:none; font-family:'Manrope',sans-serif;">
+        <button id="mobile-back-btn" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-[#50613f] font-bold text-sm active:scale-95 transition-all">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Back
+        </button>
+        <button id="mobile-continue-btn" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#50613f] text-white font-bold text-sm hover:bg-[#3e4b30] active:scale-95 transition-all shadow-md">
+            Continue
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
     </div>
 
     <script type="module" src="/src/main.js"></script>
