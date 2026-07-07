@@ -552,10 +552,6 @@ window.getServiceTranslation = function(serviceId, field, fallback) {
             desc_ms: 'Rawatan pengelupasan dengan garam laut semulajadi untuk kulit sehalus sutera.'
         }
     };
-    if (state.language === 'ms' && dict[serviceId]) {
-        if (field === 'name') return fallback; // Never translate names of services/packages
-        if (field === 'desc' && dict[serviceId].desc_ms) return dict[serviceId].desc_ms;
-    }
     return fallback;
 };
 
@@ -1120,8 +1116,8 @@ function renderHomeView() {
             const isSmall = pattern.isSmall;
             const isPackage = s.type === 'packages';
             const badgeLabel = isPackage 
-                ? (state.language === 'ms' ? 'Pakej' : 'Bundle')
-                : (state.language === 'ms' ? (s.type === 'massage' ? 'Urutan' : s.type === 'facial' ? 'Rawatan Muka' : s.type === 'body' ? 'Rawatan Badan' : s.type === 'signature' ? 'Pilihan' : s.type) : s.type).toUpperCase();
+                ? 'BUNDLE'
+                : (s.type || 'Service').toUpperCase();
 
             // Calculate saving percent and badge html
             const discountPercent = (s.regularPrice && s.regularPrice > s.price) ? Math.round(((s.regularPrice - s.price) / s.regularPrice) * 100) : 0;
@@ -1140,7 +1136,7 @@ function renderHomeView() {
                             <div>
                                 <div class="flex gap-2 mb-3">
                                     <span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant text-[11px] font-semibold rounded-full">${badgeLabel}</span>
-                                    ${isPackage ? `<span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant text-[11px] font-semibold rounded-full">${state.language === 'ms' ? 'Tawaran Pakej' : 'Package Deal'}</span>` : ''}
+                                    ${isPackage ? `<span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant text-[11px] font-semibold rounded-full">Package Deal</span>` : ''}
                                 </div>
                                 <h3 class="font-title-md text-xl mb-2 font-bold font-serif text-[#3c4c2b]">${getServiceTranslation(s.id, 'name', s.name)}</h3>
                                 <p class="text-body-sm text-xs text-on-surface-variant line-clamp-3 leading-relaxed">${getServiceTranslation(s.id, 'desc', s.description)}</p>
@@ -1711,7 +1707,7 @@ function renderSelectServiceView() {
 
         html += `
             <div class="glass-card rounded-xl p-6 flex flex-col md:flex-row gap-6 items-start md:items-center transition-all duration-300 relative overflow-hidden ${isSelected ? 'ring-2 ring-primary border-transparent' : 'border border-outline-variant/30 hover:border-primary/50'}">
-                ${srv.bestValue ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">${state.language === 'ms' ? 'NILAI TERBAIK' : 'BEST VALUE'}</div>` : (srv.regularPrice && srv.regularPrice > srv.price) ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">${state.language === 'ms' ? 'JIMAT' : 'SAVE'} ${Math.round(((srv.regularPrice - srv.price)/srv.regularPrice)*100)}%</div>` : isPackageDeal ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">${state.language === 'ms' ? 'TAWARAN PAKEJ' : 'PACKAGE DEAL'}</div>` : ''}
+                ${srv.bestValue ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">BEST VALUE</div>` : (srv.regularPrice && srv.regularPrice > srv.price) ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">SAVE ${Math.round(((srv.regularPrice - srv.price)/srv.regularPrice)*100)}%</div>` : isPackageDeal ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">PACKAGE DEAL</div>` : ''}
                 
                 <div class="w-full md:w-44 h-28 rounded-lg overflow-hidden flex-shrink-0 relative">
                     ${isSelected ? `
@@ -1731,10 +1727,10 @@ function renderSelectServiceView() {
                             <div class="flex flex-col items-end whitespace-nowrap">
                                 <span class="text-[10px] text-on-surface-variant/50 line-through decoration-red-500">MYR ${srv.regularPrice.toFixed(2)}</span>
                                 <span class="font-title-md text-base text-[#1E293B] font-bold">MYR ${srv.price}</span>
-                                <span class="text-[9px] font-bold text-[#b45309] bg-[#b45309]/10 px-1.5 py-0.5 rounded-md mt-0.5">${state.language === 'ms' ? 'JIMAT MYR' : 'SAVE MYR'} ${Math.round(srv.regularPrice - srv.price)}</span>
+                                <span class="text-[9px] font-bold text-[#b45309] bg-[#b45309]/10 px-1.5 py-0.5 rounded-md mt-0.5">SAVE MYR ${Math.round(srv.regularPrice - srv.price)}</span>
                             </div>
                         ` : `
-                            <span class="font-title-md text-base text-[#1E293B] font-bold whitespace-nowrap">${state.language === 'ms' ? 'Dari MYR' : 'From MYR'} ${srv.price}</span>
+                            <span class="font-title-md text-base text-[#1E293B] font-bold whitespace-nowrap">From MYR ${srv.price}</span>
                         `}
                     </div>
                     <p class="font-body-sm text-xs text-on-surface-variant line-clamp-2 leading-relaxed">${getServiceTranslation(srv.id, 'desc', srv.description)}</p>
