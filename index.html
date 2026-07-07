@@ -842,6 +842,24 @@
         </div>
         <p style="text-align:center;font-size:0.82rem;color:#45483f;margin:0;">Don't have an account? <a href="/register.html" style="color:#50613f;font-weight:700;text-decoration:none;">Register</a></p>
       </div>
+    <!-- Mobile Bottom Navigation Bar (Hidden on Desktop) -->
+    <div class="mobile-bottom-nav">
+        <button id="mobile-tab-home" onclick="resetBookingFlow()" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-primary py-2 transition-all">
+            <span class="material-symbols-outlined text-[22px]">home</span>
+            <span class="text-[10px] font-medium tracking-wide">Home</span>
+        </button>
+        <button id="mobile-tab-services" onclick="navigateTo('services-catalog')" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-on-surface-variant/60 py-2 transition-all">
+            <span class="material-symbols-outlined text-[22px]">spa</span>
+            <span class="text-[10px] font-medium tracking-wide">Services</span>
+        </button>
+        <button id="mobile-tab-wallet" onclick="requireLogin(() => navigateTo('wallet'))" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-on-surface-variant/60 py-2 transition-all">
+            <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+            <span class="text-[10px] font-medium tracking-wide">Wallet</span>
+        </button>
+        <button id="mobile-tab-profile" onclick="requireLogin(() => navigateTo('profile'))" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-on-surface-variant/60 py-2 transition-all">
+            <span class="material-symbols-outlined text-[22px]">person</span>
+            <span class="text-[10px] font-medium tracking-wide">Profile</span>
+        </button>
     </div>
 
     <script>

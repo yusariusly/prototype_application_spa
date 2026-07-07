@@ -91,3 +91,53 @@ body {
 .material-symbols-outlined.filled {
     font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
 }
+
+/* Mobile-Friendly Adjustments */
+@media (max-w: 768px) {
+    /* Hide desktop-only nav components */
+    .wallet-nav-pill {
+        display: none !important;
+    }
+    
+    nav button[onclick="startBookingWithService(null)"] {
+        display: none !important;
+    }
+    
+    /* Shrink logo font on small screens to prevent wrap */
+    nav .font-headline-lg {
+        font-size: 1.1rem !important;
+    }
+    
+    /* Bottom Navigation Bar for Mobile */
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        z-index: 50;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: env(safe-area-inset-bottom);
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Add padding at bottom of main container so it does not get cut off by bottom nav */
+    main {
+        padding-bottom: 74px !important;
+    }
+    
+    /* Ensure user login modal fits nicely above mobile bottom nav */
+    #user-login-modal {
+        padding-bottom: 64px;
+    }
+}
+
+.mobile-bottom-nav {
+    display: none;
+}

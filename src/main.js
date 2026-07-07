@@ -503,6 +503,40 @@ function updateNavbarActiveState(viewId) {
             }
         });
     }
+
+    // Mobile bottom nav active highlight updates
+    const tabs = {
+        'home': 'mobile-tab-home',
+        'services-catalog': 'mobile-tab-services',
+        'all-services': 'mobile-tab-services',
+        'select-service': 'mobile-tab-services',
+        'select-therapist': 'mobile-tab-services',
+        'select-time': 'mobile-tab-services',
+        'confirm-booking': 'mobile-tab-services',
+        'wallet': 'mobile-tab-wallet',
+        'topup': 'mobile-tab-wallet',
+        'profile': 'mobile-tab-profile',
+        'reschedule': 'mobile-tab-profile',
+        'book-package': 'mobile-tab-services'
+    };
+    
+    document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+        btn.classList.remove('text-[#50613f]', 'font-bold');
+        btn.classList.add('text-slate-400');
+        const icon = btn.querySelector('.material-symbols-outlined');
+        if (icon) icon.classList.remove('filled');
+    });
+    
+    const activeTabId = tabs[viewId];
+    if (activeTabId) {
+        const activeBtn = document.getElementById(activeTabId);
+        if (activeBtn) {
+            activeBtn.classList.remove('text-slate-400');
+            activeBtn.classList.add('text-[#50613f]', 'font-bold');
+            const icon = activeBtn.querySelector('.material-symbols-outlined');
+            if (icon) icon.classList.add('filled');
+        }
+    }
 }
 
 function updateStepperUI(viewId) {
@@ -957,9 +991,12 @@ function renderServicesCatalogView() {
                             </div>
                             
                             <div class="flex justify-between items-center border-t border-slate-50 pt-4 mt-auto">
-                                <div class="flex items-center gap-1.5 text-slate-500">
-                                    <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
-                                    <span class="text-[11px] font-semibold">90 Minutes</span>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-1.5 text-slate-500 mb-0.5">
+                                        <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
+                                        <span class="text-[11px] font-semibold">90 Minutes</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-[#1E293B]">MYR 165</span>
                                 </div>
                                 <button onclick="startBookingWithService('hot-stone')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#50613f]/10 text-[#50613f] flex items-center justify-center transition-colors">
                                     <span class="material-symbols-outlined text-[18px] font-bold">add_shopping_cart</span>
@@ -981,9 +1018,12 @@ function renderServicesCatalogView() {
                             </div>
                             
                             <div class="flex justify-between items-center border-t border-slate-50 pt-4 mt-auto">
-                                <div class="flex items-center gap-1.5 text-slate-500">
-                                    <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
-                                    <span class="text-[11px] font-semibold">60 Minutes</span>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-1.5 text-slate-500 mb-0.5">
+                                        <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
+                                        <span class="text-[11px] font-semibold">90 Minutes</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-[#1E293B]">MYR 150</span>
                                 </div>
                                 <button onclick="startBookingWithService('deep-tissue')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#50613f]/10 text-[#50613f] flex items-center justify-center transition-colors">
                                     <span class="material-symbols-outlined text-[18px] font-bold">add_shopping_cart</span>
@@ -1005,9 +1045,12 @@ function renderServicesCatalogView() {
                             </div>
                             
                             <div class="flex justify-between items-center border-t border-slate-50 pt-4 mt-auto">
-                                <div class="flex items-center gap-1.5 text-slate-500">
-                                    <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
-                                    <span class="text-[11px] font-semibold">120 Minutes</span>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-1.5 text-slate-500 mb-0.5">
+                                        <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
+                                        <span class="text-[11px] font-semibold">120 Minutes</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-[#1E293B]">MYR 190</span>
                                 </div>
                                 <button onclick="startBookingWithService('signature-soul')" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-[#50613f]/10 text-[#50613f] flex items-center justify-center transition-colors">
                                     <span class="material-symbols-outlined text-[18px] font-bold">add_shopping_cart</span>
