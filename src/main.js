@@ -350,6 +350,7 @@ const DEFAULT_STATE = {
 };
 
 let state = { ...DEFAULT_STATE };
+window.state = state;
 
 function loadState() {
     const saved = localStorage.getItem('serenity_soul_spa_state');
@@ -398,7 +399,7 @@ window.requireLogin = function (callback) {
     if (modal) modal.style.display = 'flex';
     // Hide mobile bottom nav while login modal is open
     const bottomNav = document.getElementById('mobile-bottom-nav');
-    if (bottomNav) bottomNav.style.display = 'none';
+    if (bottomNav) bottomNav.classList.remove('show-mobile-nav');
 };
 
 // Close the login modal and restore bottom nav if needed
@@ -409,7 +410,11 @@ window.closeLoginModal = function() {
     const _nav = document.getElementById('mobile-bottom-nav');
     if (_nav) {
         const bookingViews = ['select-service', 'select-therapist', 'select-time'];
-        _nav.style.display = bookingViews.includes(state.currentView) ? 'flex' : 'none';
+        if (bookingViews.includes(state.currentView)) {
+            _nav.classList.add('show-mobile-nav');
+        } else {
+            _nav.classList.remove('show-mobile-nav');
+        }
     }
 };
 
@@ -422,7 +427,11 @@ window.onLoginSuccess = function () {
     const _nav = document.getElementById('mobile-bottom-nav');
     if (_nav) {
         const bookingViews = ['select-service', 'select-therapist', 'select-time'];
-        _nav.style.display = bookingViews.includes(state.currentView) ? 'flex' : 'none';
+        if (bookingViews.includes(state.currentView)) {
+            _nav.classList.add('show-mobile-nav');
+        } else {
+            _nav.classList.remove('show-mobile-nav');
+        }
     }
     if (window._loginCallback) {
         const cb = window._loginCallback;
@@ -491,19 +500,19 @@ function navigateTo(viewId) {
     const _contBtn   = document.getElementById('mobile-continue-btn');
     if (_mobileNav && _backBtn && _contBtn) {
         if (viewId === 'select-service') {
-            _mobileNav.style.display = 'flex';
+            _mobileNav.classList.add('show-mobile-nav');
             _backBtn.onclick = () => resetBookingFlow();
             _contBtn.onclick = () => window.nextStep(1);
         } else if (viewId === 'select-therapist') {
-            _mobileNav.style.display = 'flex';
+            _mobileNav.classList.add('show-mobile-nav');
             _backBtn.onclick = () => navigateTo('select-service');
             _contBtn.onclick = () => window.nextStep(2);
         } else if (viewId === 'select-time') {
-            _mobileNav.style.display = 'flex';
+            _mobileNav.classList.add('show-mobile-nav');
             _backBtn.onclick = () => navigateTo('select-therapist');
             _contBtn.onclick = () => window.nextStep(3);
         } else {
-            _mobileNav.style.display = 'none';
+            _mobileNav.classList.remove('show-mobile-nav');
         }
     }
 
@@ -4565,7 +4574,7 @@ function updateMobileBottomNav(viewId) {
 
     const stepConfig = bookingSteps[viewId];
     if (stepConfig) {
-        nav.style.display = 'flex';
+        nav.classList.add('show-mobile-nav');
         // Wire up Back
         backBtn.onclick = stepConfig.back;
         // Wire up Continue (reuse existing nextStep validation)
@@ -4573,7 +4582,7 @@ function updateMobileBottomNav(viewId) {
         continueBtn.innerHTML = `${stepConfig.continueLabel} <span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
         continueBtn.onclick = () => window.nextStep(stepConfig.step);
     } else {
-        nav.style.display = 'none';
+        nav.classList.remove('show-mobile-nav');
     }
 }
 // Expose so navigateTo (declared before this function) can call it

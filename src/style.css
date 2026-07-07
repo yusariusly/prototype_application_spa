@@ -119,3 +119,14 @@ body {
         padding-bottom: 0px;
     }
 }
+
+/* Mobile Bottom Navigation Layout & Visibility Control */
+#mobile-bottom-nav {
+    display: none !important; /* Default hidden on all screen sizes */
+}
+
+@media (max-width: 767px) {
+    #mobile-bottom-nav.show-mobile-nav {
+        display: flex !important; /* Show as flex on mobile view only */
+    }
+}

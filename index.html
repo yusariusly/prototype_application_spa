@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Serenity & Soul - Spa Sanctuary</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -933,7 +936,7 @@
 
 
     <!-- Mobile Bottom Navigation Bar (Steps 1-3, Mobile Only) -->
-    <div id="mobile-bottom-nav" class="fixed bottom-0 left-0 right-0 z-[9990] bg-white border-t border-slate-100 px-4 py-3 flex items-center gap-3 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]" style="display:none; font-family:'Manrope',sans-serif;">
+    <div id="mobile-bottom-nav" class="fixed bottom-0 left-0 right-0 z-[9990] bg-white border-t border-slate-100 px-4 py-3 items-center gap-3 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]" style="font-family:'Manrope',sans-serif;">
         <button id="mobile-back-btn" class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-[#50613f] font-bold text-sm active:scale-95 transition-all">
             <span class="material-symbols-outlined text-[18px]">arrow_back</span>
             Back
@@ -943,6 +946,54 @@
             <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
         </button>
     </div>
+
+    <!-- Real-time Debug Overlay -->
+    <div id="debug-overlay" style="position:fixed; top:12px; left:12px; z-index:999999; background:rgba(15,23,42,0.92); color:#38bdf8; font-family:monospace; font-size:11px; padding:12px; border-radius:10px; max-width:320px; border:1px solid rgba(56,189,248,0.2); box-shadow:0 10px 25px -5px rgba(0,0,0,0.3); pointer-events:none; line-height:1.5;">
+        <div style="font-weight:bold; border-bottom:1px solid rgba(56,189,248,0.2); pb-1; mb-2; color:#f1f5f9;">🛠️ SPA DIAGNOSTIC PORTAL</div>
+        <div id="debug-view">View: -</div>
+        <div id="debug-viewport">Viewport: -</div>
+        <div id="debug-nav-state" style="word-break:break-all;">Nav classes: -</div>
+        <div id="debug-nav-style">Nav computed display: -</div>
+        <div id="debug-errors" style="color:#f87171; margin-top:6px; max-height:85px; overflow-y:auto; font-weight:bold;">Errors: None</div>
+    </div>
+    <script>
+        // Catch runtime errors immediately
+        window._debugErrors = [];
+        window.addEventListener('error', function(e) {
+            window._debugErrors.push(e.message + ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')');
+            const errDiv = document.getElementById('debug-errors');
+            if (errDiv) {
+                errDiv.innerHTML = 'Errors:<br>• ' + window._debugErrors.join('<br>• ');
+            }
+        });
+        
+        // Periodically update DOM diagnostic data
+        setInterval(() => {
+            try {
+                const viewDiv = document.getElementById('debug-view');
+                const vpDiv = document.getElementById('debug-viewport');
+                const stateDiv = document.getElementById('debug-nav-state');
+                const styleDiv = document.getElementById('debug-nav-style');
+                
+                if (viewDiv) {
+                    viewDiv.innerHTML = 'View: <strong>' + (window.state ? window.state.currentView : 'undefined') + '</strong>';
+                }
+                if (vpDiv) {
+                    vpDiv.textContent = 'Viewport: ' + window.innerWidth + 'px x ' + window.innerHeight + 'px';
+                }
+                
+                const nav = document.getElementById('mobile-bottom-nav');
+                if (nav) {
+                    if (stateDiv) stateDiv.textContent = 'Nav classes: ' + nav.className;
+                    if (styleDiv) styleDiv.innerHTML = 'Nav computed display: <strong>' + window.getComputedStyle(nav).display + '</strong>';
+                } else {
+                    if (stateDiv) stateDiv.textContent = 'Nav element: NOT FOUND IN DOM';
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }, 300);
+    </script>
 
     <script type="module" src="/src/main.js"></script>
 </body>
