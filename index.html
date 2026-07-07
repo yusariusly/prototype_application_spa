@@ -119,7 +119,8 @@
             <a onclick="navigateTo('services-catalog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer">Service</a>
         </div>
 
-        <div class="flex items-center gap-3 md:gap-6">
+        <!-- Desktop Header Buttons (Hidden on Mobile) -->
+        <div class="hidden md:flex items-center gap-3 md:gap-6">
             <div onclick="requireLogin(() => navigateTo('wallet'))" class="wallet-nav-pill flex items-center gap-2 text-primary bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:bg-primary/10 transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-[18px] md:text-[20px]">account_balance_wallet</span>
                 <span class="wallet-balance-text font-title-md text-xs md:text-sm font-semibold">MYR 0.00</span>
@@ -128,6 +129,57 @@
             <button id="nav-user-btn" onclick="requireLogin(()=>navigateTo('profile'))" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center hover:bg-primary/10 transition-colors" title="Login / Register">
                 <span class="material-symbols-outlined text-[20px] md:text-[24px]">person</span>
             </button>
+        </div>
+
+        <!-- Hamburger Menu Button (Mobile Only) -->
+        <button id="mobile-hamburger-btn" onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 rounded-full bg-primary/5 text-primary flex items-center justify-center hover:bg-primary/10 transition-colors z-50">
+            <span class="material-symbols-outlined text-[24px]">menu</span>
+        </button>
+
+        <!-- Mobile Dropdown Menu Popover (Mobile Only) -->
+        <div id="mobile-menu-dropdown" class="hidden absolute top-16 right-4 w-[280px] bg-white rounded-3xl shadow-xl border border-slate-100 p-6 z-50 animate-fade-in flex flex-col gap-4" style="font-family: 'Manrope', sans-serif; position: absolute;">
+            <!-- Profile Section (Header) -->
+            <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
+                <div class="w-12 h-12 rounded-full bg-[#50613f]/15 text-[#50613f] flex items-center justify-center text-sm font-bold overflow-hidden" id="mobile-menu-avatar-container">
+                    <span class="material-symbols-outlined text-[24px]" id="mobile-menu-avatar-icon">person</span>
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-sm font-bold text-slate-800" id="mobile-menu-username">Guest User</span>
+                    <span class="text-xs text-slate-500" id="mobile-menu-userrole">Not Logged In</span>
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="flex flex-col gap-1">
+                <a onclick="closeMobileMenu(); resetBookingFlow();" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">home</span>
+                    Home
+                </a>
+                <a onclick="closeMobileMenu(); navigateTo('services-catalog');" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">spa</span>
+                    Services
+                </a>
+                <a onclick="closeMobileMenu(); startBookingWithService(null);" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                    Book Now
+                </a>
+                <a onclick="closeMobileMenu(); requireLogin(() => navigateTo('wallet'));" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                    Wallet
+                </a>
+                <a onclick="closeMobileMenu(); requireLogin(() => navigateTo('profile'));" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">person</span>
+                    Profile
+                </a>
+            </div>
+            
+            <!-- Auth Button (Sign In / Sign Out) -->
+            <div class="border-t border-slate-100 pt-3 mt-1 text-left">
+                <a id="mobile-menu-auth-btn" onclick="handleMobileMenuAuth()" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors cursor-pointer text-sm font-semibold text-left">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                    Sign Out
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -842,26 +894,6 @@
         </div>
         <p style="text-align:center;font-size:0.82rem;color:#45483f;margin:0;">Don't have an account? <a href="/register.html" style="color:#50613f;font-weight:700;text-decoration:none;">Register</a></p>
       </div>
-    <!-- Mobile Bottom Navigation Bar (Hidden on Desktop) -->
-    <div class="mobile-bottom-nav">
-        <button id="mobile-tab-home" onclick="resetBookingFlow()" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-primary py-2 transition-all">
-            <span class="material-symbols-outlined text-[22px]">home</span>
-            <span class="text-[10px] font-medium tracking-wide">Home</span>
-        </button>
-        <button id="mobile-tab-services" onclick="navigateTo('services-catalog')" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-on-surface-variant/60 py-2 transition-all">
-            <span class="material-symbols-outlined text-[22px]">spa</span>
-            <span class="text-[10px] font-medium tracking-wide">Services</span>
-        </button>
-        <button id="mobile-tab-wallet" onclick="requireLogin(() => navigateTo('wallet'))" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-on-surface-variant/60 py-2 transition-all">
-            <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
-            <span class="text-[10px] font-medium tracking-wide">Wallet</span>
-        </button>
-        <button id="mobile-tab-profile" onclick="requireLogin(() => navigateTo('profile'))" class="mobile-tab-btn flex flex-col items-center justify-center gap-1 flex-1 text-on-surface-variant/60 py-2 transition-all">
-            <span class="material-symbols-outlined text-[22px]">person</span>
-            <span class="text-[10px] font-medium tracking-wide">Profile</span>
-        </button>
-    </div>
-
     <script>
     // Initialize default demo user in localStorage
     function initDemoUser() {

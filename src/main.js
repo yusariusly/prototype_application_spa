@@ -4429,3 +4429,79 @@ document.addEventListener('DOMContentLoaded', () => {
     navigateTo(state.currentView || 'home');
     updateNavbarAuth();
 });
+
+// Mobile Hamburger Dropdown Menu Helpers
+window.toggleMobileMenu = function() {
+    const dropdown = document.getElementById('mobile-menu-dropdown');
+    if (dropdown) {
+        const isHidden = dropdown.classList.contains('hidden');
+        if (isHidden) {
+            window.updateMobileMenuUI();
+            dropdown.classList.remove('hidden');
+        } else {
+            dropdown.classList.add('hidden');
+        }
+    }
+};
+
+window.closeMobileMenu = function() {
+    const dropdown = document.getElementById('mobile-menu-dropdown');
+    if (dropdown) {
+        dropdown.classList.add('hidden');
+    }
+};
+
+window.updateMobileMenuUI = function() {
+    const usernameEl = document.getElementById('mobile-menu-username');
+    const userroleEl = document.getElementById('mobile-menu-userrole');
+    const authBtn = document.getElementById('mobile-menu-auth-btn');
+    const avatarContainer = document.getElementById('mobile-menu-avatar-container');
+    
+    if (!usernameEl || !userroleEl || !authBtn || !avatarContainer) return;
+    
+    const loggedIn = isLoggedIn();
+    if (loggedIn) {
+        const name = localStorage.getItem('user_name') || 'Eleanor Vance';
+        usernameEl.textContent = name;
+        userroleEl.textContent = 'Customer';
+        
+        // Show avatar circle EV
+        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        avatarContainer.innerHTML = `<span class="font-bold text-sm text-[#3c4c2b]">${initials}</span>`;
+        avatarContainer.className = "w-12 h-12 rounded-full bg-[#50613f]/15 flex items-center justify-center overflow-hidden";
+        
+        // Auth button as sign out
+        authBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">logout</span>Sign Out`;
+        authBtn.className = "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors cursor-pointer text-sm font-semibold text-left";
+    } else {
+        usernameEl.textContent = 'Guest User';
+        userroleEl.textContent = 'Not Logged In';
+        avatarContainer.innerHTML = `<span class="material-symbols-outlined text-[24px]">person</span>`;
+        avatarContainer.className = "w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center overflow-hidden";
+        
+        // Auth button as sign in
+        authBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">login</span>Sign In`;
+        authBtn.className = "flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#50613f]/10 text-[#50613f] transition-colors cursor-pointer text-sm font-semibold text-left";
+    }
+};
+
+window.handleMobileMenuAuth = function() {
+    window.closeMobileMenu();
+    const loggedIn = isLoggedIn();
+    if (loggedIn) {
+        handleResetAll();
+    } else {
+        requireLogin(() => {});
+    }
+};
+
+// Document click listener to close dropdown on click outside
+document.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('mobile-menu-dropdown');
+    const hamburger = document.getElementById('mobile-hamburger-btn');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+        if (!dropdown.contains(e.target) && !hamburger.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    }
+});
