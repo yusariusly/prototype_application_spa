@@ -469,9 +469,10 @@ function navigateTo(viewId) {
     if (viewSummaryBtn && !['select-service', 'select-therapist', 'select-time', 'confirm-booking'].includes(viewId)) {
         viewSummaryBtn.classList.add('hidden');
     }
+    // Always close the summary modal when navigating (use style.display to match openMobileSummaryModal)
     const summaryModal = document.getElementById('mobile-summary-modal');
     if (summaryModal) {
-        summaryModal.classList.add('hidden');
+        summaryModal.style.display = 'none';
     }
 
     // Scroll to top
@@ -1367,9 +1368,9 @@ window.selectService = function (serviceId) {
     state.booking.service = srv;
     renderSelectServiceView();
 
-    if (window.innerWidth < 1024) {
-        window.openMobileSummaryModal();
-    }
+    // Always show modal — on desktop the sidebar is visible (lg:block),
+    // on mobile the aside is hidden (hidden lg:block) so modal is the only summary.
+    window.openMobileSummaryModal();
 };
 
 // RENDER: STEP 2: SELECT THERAPIST VIEW
@@ -1430,9 +1431,7 @@ window.selectTherapist = function (therapistId) {
     state.booking.therapist = therapist;
     renderSelectTherapistView();
 
-    if (window.innerWidth < 1024) {
-        window.openMobileSummaryModal();
-    }
+    window.openMobileSummaryModal();
 };
 
 // RENDER: STEP 3: SELECT DATE & TIME VIEW
@@ -1518,9 +1517,7 @@ window.selectDate = function (day) {
     renderCalendar();
     renderSidebarSummary();
 
-    if (window.innerWidth < 1024) {
-        window.openMobileSummaryModal();
-    }
+    window.openMobileSummaryModal();
 };
 
 function renderTimeSlots() {
@@ -1563,9 +1560,7 @@ window.selectTime = function (time) {
     renderTimeSlots();
     renderSidebarSummary();
 
-    if (window.innerWidth < 1024) {
-        window.openMobileSummaryModal();
-    }
+    window.openMobileSummaryModal();
 };
 
 // RENDER: STEP 4: CONFIRM BOOKING VIEW
@@ -4551,6 +4546,9 @@ document.addEventListener('click', function(e) {
 
 // Mobile Summary Modal Helpers
 window.openMobileSummaryModal = function() {
+    // Only show modal on mobile/tablet screens (< 1024px = below lg breakpoint)
+    // On desktop (>= 1024px), the sidebar is visible so modal is not needed
+    if (window.innerWidth >= 1024) return;
     const modal = document.getElementById('mobile-summary-modal');
     if (modal) {
         modal.style.display = 'flex';
