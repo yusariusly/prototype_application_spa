@@ -291,7 +291,8 @@ const TRANSLATIONS = {
         step2_subtitle: "Choose from our experienced practitioners for your deeply relaxing session.",
         step3_title: "New Reservation",
         step3_subtitle: "Follow the steps below to schedule your appointment.",
-        step4_title: "Confirm Booking (Step 4)",
+        step4_title: "Review & Confirm",
+        step4_subtitle: "Please review your reservation details below before finalizing your booking.",
         guest_info_title: "Guest Information",
         payment_method_title: "Payment Method",
         booking_summary_title: "Booking Summary",
@@ -409,7 +410,8 @@ const TRANSLATIONS = {
         step2_subtitle: "Pilih daripada pengamal berpengalaman kami untuk sesi yang sangat menenangkan.",
         step3_title: "Tempahan Baru",
         step3_subtitle: "Ikuti langkah di bawah untuk menjadualkan janji temu anda.",
-        step4_title: "Sahkan Tempahan (Langkah 4)",
+        step4_title: "Semak & Sahkan",
+        step4_subtitle: "Sila semak butiran tempahan anda di bawah sebelum mengesahkan tempahan anda.",
         guest_info_title: "Maklumat Pelanggan",
         payment_method_title: "Kaedah Pembayaran",
         booking_summary_title: "Ringkasan Tempahan",
@@ -2701,10 +2703,10 @@ function renderProfileView() {
                             </div>
                             <div class="flex gap-3">
                                 <button onclick="navigateTo('wallet')" class="bg-[#50613f] text-white hover:bg-[#3e4b30] font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-sm">account_balance_wallet</span> Manage Wallet
+                                    <span class="material-symbols-outlined text-sm">account_balance_wallet</span> ${t('btn_manage_wallet')}
                                 </button>
                                 <button onclick="navigateTo('wallet')" class="bg-white border border-outline text-[#50613f] hover:bg-[#50613f]/5 font-bold text-xs px-4 py-2.5 rounded-xl transition-all flex items-center gap-1">
-                                    History
+                                    ${t('btn_history')}
                                 </button>
                             </div>
                         </div>
@@ -2714,8 +2716,8 @@ function renderProfileView() {
                                 <span class="material-symbols-outlined text-[180px]">account_balance_wallet</span>
                             </div>
                             <div class="relative z-10">
-                                <span class="font-label-caps text-[10px] text-[#FACC15] font-bold uppercase tracking-wider block mb-2">Membership Perk</span>
-                                <h3 class="font-serif text-xl font-bold mb-1">You're earning 5% Soul Points on every top-up this month.</h3>
+                                <span class="font-label-caps text-[10px] text-[#FACC15] font-bold uppercase tracking-wider block mb-2">${t('perk_title')}</span>
+                                <h3 class="font-serif text-xl font-bold mb-1">${t('perk_desc')}</h3>
                             </div>
                         </div>
                     </div>
@@ -2725,34 +2727,34 @@ function renderProfileView() {
                 <div class="lg:col-span-4 space-y-6">
                     <!-- Account Settings Card -->
                     <div class="bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/30">
-                        <h2 class="font-serif text-lg text-[#1E293B] font-bold mb-4 px-2">Account Settings</h2>
+                        <h2 class="font-serif text-lg text-[#1E293B] font-bold mb-4 px-2">${t('settings_title')}</h2>
                         
                         <div class="flex flex-col">
                             <a href="#" onclick="navigateTo('personal-details'); return false;" class="flex justify-between items-center py-3.5 px-2 hover:bg-[#50613f]/5 rounded-xl transition-colors group">
                                 <div class="flex items-center gap-3">
                                     <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-lg">person</span>
-                                    <span class="font-body-md text-xs font-semibold text-on-surface">Personal Details</span>
+                                    <span class="font-body-md text-xs font-semibold text-on-surface">${t('setting_personal')}</span>
                                 </div>
                                 <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
                             </a>
                             <a href="#" onclick="navigateTo('booking-history'); return false;" class="flex justify-between items-center py-3.5 px-2 hover:bg-[#50613f]/5 rounded-xl transition-colors group">
                                 <div class="flex items-center gap-3">
                                     <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-lg">history</span>
-                                    <span class="font-body-md text-xs font-semibold text-on-surface">Booking History</span>
+                                    <span class="font-body-md text-xs font-semibold text-on-surface">${t('setting_history')}</span>
                                 </div>
                                 <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
                             </a>
                             <a href="#" onclick="navigateTo('notifications'); return false;" class="flex justify-between items-center py-3.5 px-2 hover:bg-[#50613f]/5 rounded-xl transition-colors group">
                                 <div class="flex items-center gap-3">
                                     <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-lg">notifications</span>
-                                    <span class="font-body-md text-xs font-semibold text-on-surface">Notifications</span>
+                                    <span class="font-body-md text-xs font-semibold text-on-surface">${t('setting_notifications')}</span>
                                 </div>
                                 <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
                             </a>
                             <a href="#" onclick="navigateTo('privacy-security'); return false;" class="flex justify-between items-center py-3.5 px-2 hover:bg-[#50613f]/5 rounded-xl transition-colors group">
                                 <div class="flex items-center gap-3">
                                     <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors text-lg">shield</span>
-                                    <span class="font-body-md text-xs font-semibold text-on-surface">Privacy & Security</span>
+                                    <span class="font-body-md text-xs font-semibold text-on-surface">${t('setting_privacy')}</span>
                                 </div>
                                 <span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
                             </a>
@@ -2760,7 +2762,7 @@ function renderProfileView() {
                         
                         <div class="border-t border-outline-variant/30 mt-4 pt-4 flex justify-center">
                             <button onclick="confirmSignOut()" class="text-red-500 hover:text-red-700 font-bold text-xs flex items-center gap-2 py-2 px-4 transition-colors">
-                                <span class="material-symbols-outlined text-sm font-bold">logout</span> Sign Out
+                                <span class="material-symbols-outlined text-sm font-bold">logout</span> ${t('btn_sign_out')}
                             </button>
                         </div>
                     </div>
@@ -3105,8 +3107,8 @@ function renderPersonalDetailsView() {
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
                 <div>
-                    <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block">Account Settings</span>
-                    <h1 class="font-serif text-2xl md:text-3xl text-[#1E293B] font-bold">Personal Details</h1>
+                    <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block">${t('settings_title')}</span>
+                    <h1 class="font-serif text-2xl md:text-3xl text-[#1E293B] font-bold">${t('setting_personal')}</h1>
                 </div>
             </div>
 
@@ -3122,45 +3124,45 @@ function renderPersonalDetailsView() {
                             </div>
                         </div>
                         <div class="text-center sm:text-left">
-                            <h3 class="font-serif text-base text-[#1E293B] font-bold mb-1">Profile Photo</h3>
-                            <p class="font-body-sm text-[11px] text-on-surface-variant max-w-xs leading-relaxed">Update your photo to personalize your spa experience. JPG or PNG, max 2MB.</p>
+                            <h3 class="font-serif text-base text-[#1E293B] font-bold mb-1">${state.language === 'ms' ? 'Gambar Profil' : 'Profile Photo'}</h3>
+                            <p class="font-body-sm text-[11px] text-on-surface-variant max-w-xs leading-relaxed">${state.language === 'ms' ? 'Kemaskinikan foto anda untuk memperibadikan pengalaman spa anda. JPG atau PNG, maks 2MB.' : 'Update your photo to personalize your spa experience. JPG or PNG, max 2MB.'}</p>
                         </div>
                     </div>
 
                     <!-- Fields Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Full Name</label>
+                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Nama Penuh' : 'Full Name'}</label>
                             <input type="text" id="pd-name" value="${state.guestInfo.name}" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Email Address</label>
+                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Alamat E-mel' : 'Email Address'}</label>
                             <input type="email" id="pd-email" value="${state.guestInfo.email}" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Phone Number</label>
+                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Nombor Telefon' : 'Phone Number'}</label>
                             <input type="tel" id="pd-phone" value="${state.guestInfo.phone}" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Date of Birth</label>
+                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Tarikh Lahir' : 'Date of Birth'}</label>
                             <input type="date" id="pd-dob" value="1994-08-14" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Gender</label>
+                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Jantina' : 'Gender'}</label>
                             <div class="flex gap-6 mt-1">
                                 <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface">
-                                    <input type="radio" name="pd-gender" value="female" checked class="text-primary focus:ring-primary border-outline-variant"> Female
+                                    <input type="radio" name="pd-gender" value="female" checked class="text-primary focus:ring-primary border-outline-variant"> ${state.language === 'ms' ? 'Perempuan' : 'Female'}
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface">
-                                    <input type="radio" name="pd-gender" value="male" class="text-primary focus:ring-primary border-outline-variant"> Male
+                                    <input type="radio" name="pd-gender" value="male" class="text-primary focus:ring-primary border-outline-variant"> ${state.language === 'ms' ? 'Lelaki' : 'Male'}
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface">
-                                    <input type="radio" name="pd-gender" value="other" class="text-primary focus:ring-primary border-outline-variant"> Prefer not to say
+                                    <input type="radio" name="pd-gender" value="other" class="text-primary focus:ring-primary border-outline-variant"> ${state.language === 'ms' ? 'Tidak mahu menyatakan' : 'Prefer not to say'}
                                 </label>
                             </div>
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Special Requests / Medical Notes</label>
+                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Permintaan Khas / Nota Perubatan' : 'Special Requests / Medical Notes'}</label>
                             <textarea id="pd-requests" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface resize-none">${state.guestInfo.specialRequests}</textarea>
                         </div>
                     </div>
@@ -3168,10 +3170,10 @@ function renderPersonalDetailsView() {
                     <!-- Actions -->
                     <div class="flex gap-4 pt-4 border-t border-outline-variant/30 justify-end">
                         <button type="button" onclick="navigateTo('profile')" class="px-5 py-2.5 rounded-xl border border-outline text-[#50613f] hover:bg-[#50613f]/5 text-xs font-bold transition-all">
-                            Cancel
+                            ${state.language === 'ms' ? 'Batal' : 'Cancel'}
                         </button>
                         <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary hover:bg-[#3e4b30] text-white font-bold text-xs transition-all shadow-sm">
-                            Save Changes
+                            ${state.language === 'ms' ? 'Simpan Perubahan' : 'Save Changes'}
                         </button>
                     </div>
                 </form>
@@ -3189,7 +3191,7 @@ window.savePersonalDetails = function (event) {
     const requests = document.getElementById('pd-requests').value.trim();
 
     if (!name || !email || !phone) {
-        showNotification('Name, email and phone number are required.', 'error');
+        showNotification(state.language === 'ms' ? 'Nama, e-mel dan nombor telefon diperlukan.' : 'Name, email and phone number are required.', 'error');
         return;
     }
 
@@ -3198,7 +3200,7 @@ window.savePersonalDetails = function (event) {
     state.guestInfo.phone = phone;
     state.guestInfo.specialRequests = requests;
 
-    showNotification('Personal details updated successfully.', 'success');
+    showNotification(state.language === 'ms' ? 'Butiran peribadi berjaya dikemas kini.' : 'Personal details updated successfully.', 'success');
     navigateTo('profile');
 };
 
