@@ -1680,8 +1680,6 @@ function renderPaymentMethodSelection() {
     if (!container) return;
 
     const methods = [
-        { id: 'card', name: 'Credit/Debit Card', icon: 'credit_card' },
-        { id: 'paynow', name: 'PayNow', icon: 'qr_code_scanner' },
         { id: 'wallet', name: 'Serenity Wallet', icon: 'account_balance_wallet' }
     ];
 
