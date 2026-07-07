@@ -585,6 +585,8 @@ function renderActiveViewContents(viewId) {
         renderBookPackageView();
     } else if (viewId === 'active-packages') {
         renderActivePackagesView();
+    } else if (viewId === 'reschedule') {
+        renderRescheduleView();
     }
 }
 
@@ -2836,15 +2838,317 @@ window.setHistoryTab = function (tab) {
 };
 
 window.rescheduleBooking = function (bookingId) {
-    showNotification('Reschedule process initiated. Please pick a new slot.', 'info');
     const booking = state.bookings.find(b => b.id === bookingId);
     if (booking) {
-        state.booking.service = Object.values(SERVICES).find(s => s.name === booking.serviceName) || { name: booking.serviceName, type: booking.serviceType, price: booking.price };
-        state.booking.therapist = { name: booking.therapist };
-        state.booking.date = null;
-        state.booking.time = null;
-        navigateTo('select-time');
+        state.rescheduleBooking = {
+            bookingId: bookingId,
+            date: booking.date,
+            time: booking.time,
+            monthOffset: 0
+        };
+        saveState();
+        navigateTo('reschedule');
+        showNotification('Reschedule process initiated. Please pick a new slot.', 'info');
     }
+};
+
+function renderRescheduleView() {
+    const container = document.getElementById('reschedule-container');
+    if (!container) return;
+
+    if (!state.rescheduleBooking) {
+        container.innerHTML = `<p class="text-center py-12 text-on-surface-variant">No reschedule booking session initialized.</p>`;
+        return;
+    }
+
+    const bookingId = state.rescheduleBooking.bookingId;
+    const booking = state.bookings.find(b => b.id === bookingId);
+    if (!booking) {
+        container.innerHTML = `<p class="text-center py-12 text-on-surface-variant">Booking not found.</p>`;
+        return;
+    }
+
+    // Default dates if null
+    if (!state.rescheduleBooking.date) {
+        const defaultDate = new Date(2024, 9, 10);
+        const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        state.rescheduleBooking.date = defaultDate.toLocaleDateString('en-US', options);
+    }
+    if (!state.rescheduleBooking.time) {
+        state.rescheduleBooking.time = '11:00 AM';
+    }
+
+    // Parse selected date
+    let selDate = new Date(state.rescheduleBooking.date);
+    if (isNaN(selDate.getTime())) {
+        selDate = new Date(2024, 9, 10);
+    }
+
+    // Month to render
+    const baseMonth = new Date(2024, 9, 1);
+    const renderMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth() + (state.rescheduleBooking.monthOffset || 0), 1);
+    const monthText = renderMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    // Calendar Cells offset
+    const startDayOfWeek = renderMonth.getDay();
+    let calendarDaysHtml = '';
+    for (let i = 0; i < startDayOfWeek; i++) {
+        calendarDaysHtml += '<div></div>'; 
+    }
+
+    const year = renderMonth.getFullYear();
+    const month = renderMonth.getMonth();
+    const tempDate = new Date(year, month + 1, 0);
+    const daysInMonth = tempDate.getDate();
+
+    const today = new Date(2024, 9, 10); // Simulation "today" is Oct 10, 2024
+    today.setHours(0, 0, 0, 0);
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const cellDate = new Date(year, month, day);
+        cellDate.setHours(0, 0, 0, 0);
+
+        const isDisabled = cellDate < today;
+        const isSelected = selDate.getDate() === day && selDate.getMonth() === month && selDate.getFullYear() === year;
+
+        calendarDaysHtml += `
+            <button ${isDisabled ? 'disabled' : ''} onclick="selectRescheduleDate(${day})" class="h-10 w-10 mx-auto rounded-full font-body-sm text-body-sm flex items-center justify-center transition-colors disabled:opacity-30 disabled:hover:bg-transparent ${isSelected ? 'bg-[#50613f] text-white shadow-md font-bold' : 'text-on-surface hover:bg-surface-container-high'}">
+                ${day}
+            </button>
+        `;
+    }
+
+    // Time Slots
+    const morningSlots = ['09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'];
+    const afternoonSlots = ['01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM'];
+
+    let morningSlotsHtml = '';
+    morningSlots.forEach(t => {
+        const isSelected = state.rescheduleBooking.time === t;
+        const isOccupied = t === '12:00 PM';
+        morningSlotsHtml += `
+            <button ${isOccupied ? 'disabled' : ''} onclick="selectRescheduleTime('${t}')" class="px-4 py-2 rounded-lg border font-body-sm text-xs transition-colors ${isSelected ? 'border-[#50613f] bg-[#50613f]/10 text-[#50613f] font-bold' : isOccupied ? 'border-outline-variant text-on-surface opacity-30 cursor-not-allowed bg-surface-container' : 'border-outline-variant text-on-surface hover:border-[#50613f] hover:bg-[#50613f]/5'}">
+                ${t.replace(' AM', '').replace(' PM', '')}
+            </button>
+        `;
+    });
+
+    let afternoonSlotsHtml = '';
+    afternoonSlots.forEach(t => {
+        const isSelected = state.rescheduleBooking.time === t;
+        const isOccupied = t === '03:00 PM';
+        afternoonSlotsHtml += `
+            <button ${isOccupied ? 'disabled' : ''} onclick="selectRescheduleTime('${t}')" class="px-4 py-2 rounded-lg border font-body-sm text-xs transition-colors ${isSelected ? 'border-[#50613f] bg-[#50613f]/10 text-[#50613f] font-bold' : isOccupied ? 'border-outline-variant text-on-surface opacity-30 cursor-not-allowed bg-surface-container' : 'border-outline-variant text-on-surface hover:border-[#50613f] hover:bg-[#50613f]/5'}">
+                ${t.replace(' AM', '').replace(' PM', '')}
+            </button>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="mb-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4 animate-fade-in">
+            <div>
+                <h1 class="font-serif text-3xl text-[#1E293B] font-bold mb-1">Reschedule Appointment</h1>
+                <p class="font-body-sm text-xs text-on-surface-variant">Select a new date and time slot for your reservation.</p>
+            </div>
+            <button onclick="navigateTo('booking-history')" class="px-4 py-2 rounded-xl border border-outline hover:bg-slate-50 text-secondary font-bold text-xs flex items-center gap-1 transition-colors">
+                <span class="material-symbols-outlined text-sm">arrow_back</span> Back to History
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left side: Calendar & Time Slots -->
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-panel rounded-3xl p-6 md:p-8 bg-white shadow-sm border border-outline-variant/30">
+                    <h2 class="font-title-md text-base text-[#50613f] mb-6 flex items-center gap-2 font-semibold">
+                        <span class="material-symbols-outlined">calendar_month</span> Select New Date &amp; Time
+                    </h2>
+
+                    <!-- Calendar Card -->
+                    <div class="mb-8 border border-outline-variant/30 rounded-2xl p-4 bg-white/45">
+                        <div class="flex justify-between items-center mb-6">
+                            <button onclick="changeRescheduleMonth(-1)" class="p-2 hover:bg-surface-container rounded-full text-on-surface-variant transition-colors">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </button>
+                            <span class="font-title-md text-base font-semibold text-[#1E293B]">${monthText}</span>
+                            <button onclick="changeRescheduleMonth(1)" class="p-2 hover:bg-surface-container rounded-full text-on-surface-variant transition-colors">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-center mb-2">
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Sun</div>
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Mon</div>
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Tue</div>
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Wed</div>
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Thu</div>
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Fri</div>
+                            <div class="font-label-caps text-[10px] text-outline uppercase font-semibold">Sat</div>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-center">
+                            ${calendarDaysHtml}
+                        </div>
+                    </div>
+
+                    <!-- Time Slots Card -->
+                    <div class="border-t border-outline-variant/30 pt-6">
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-title-md text-xs font-bold text-on-surface-variant mb-3 uppercase tracking-wider">Morning (09:00 - 12:00)</h3>
+                                <div class="flex flex-wrap gap-3">
+                                    ${morningSlotsHtml}
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-title-md text-xs font-bold text-on-surface-variant mb-3 uppercase tracking-wider">Afternoon (13:00 - 18:00)</h3>
+                                <div class="flex flex-wrap gap-3">
+                                    ${afternoonSlotsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side: Sidebar Summary -->
+            <div class="lg:col-span-4">
+                <div class="glass-panel rounded-3xl p-6 md:p-8 bg-white border border-outline-variant/30 shadow-sm space-y-6 sticky top-8 flex flex-col justify-between">
+                    <div>
+                        <h2 class="font-serif text-lg text-[#1E293B] font-bold border-b border-outline-variant/20 pb-4 mb-6">Reschedule Summary</h2>
+                        <div class="flex flex-col gap-5">
+                            <!-- Service Info -->
+                            <div class="flex gap-3 items-start">
+                                <div class="w-10 h-10 rounded-lg bg-[#50613f]/10 flex items-center justify-center shrink-0 text-primary">
+                                    <span class="material-symbols-outlined text-lg">spa</span>
+                                </div>
+                                <div>
+                                    <span class="font-label-caps text-[9px] text-outline mb-0.5 block uppercase font-bold tracking-wider">SERVICE</span>
+                                    <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">${booking.serviceName}</h3>
+                                </div>
+                            </div>
+                            
+                            <!-- Therapist Info -->
+                            <div class="flex gap-3 items-start">
+                                <div class="w-10 h-10 rounded-lg bg-[#50613f]/10 flex items-center justify-center text-primary shrink-0">
+                                    <span class="material-symbols-outlined text-lg">person</span>
+                                </div>
+                                <div>
+                                    <span class="font-label-caps text-[9px] text-outline mb-0.5 block uppercase font-bold tracking-wider">THERAPIST</span>
+                                    <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">${booking.therapist}</h3>
+                                </div>
+                            </div>
+                            
+                            <!-- Schedule Info -->
+                            <div class="flex gap-3 items-start">
+                                <div class="w-10 h-10 rounded-lg bg-[#50613f]/10 flex items-center justify-center shrink-0 text-primary">
+                                    <span class="material-symbols-outlined text-lg">calendar_month</span>
+                                </div>
+                                <div>
+                                    <span class="font-label-caps text-[9px] text-outline mb-0.5 block uppercase font-bold tracking-wider">NEW DATE & TIME</span>
+                                    ${state.rescheduleBooking.date ? `
+                                        <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">${state.rescheduleBooking.date}</h3>
+                                        <p class="font-body-sm text-[11px] text-[#50613f] font-bold">${state.rescheduleBooking.time || 'To be selected'}</p>
+                                    ` : `
+                                        <h3 class="font-title-md text-xs font-semibold text-on-surface-variant"><span class="italic text-on-surface-variant opacity-60 text-xs">To be selected</span></h3>
+                                    `}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Payment Details (Free Reschedule) -->
+                    <div class="border-t border-outline-variant/20 pt-4 space-y-4">
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between text-on-surface-variant">
+                                <span>Reschedule Fee</span>
+                                <span class="line-through text-outline">MYR 20.00</span>
+                            </div>
+                            <div class="flex justify-between text-[#2e7d32] font-semibold">
+                                <span>Discount</span>
+                                <span>-MYR 20.00 (Free)</span>
+                            </div>
+                            <div class="border-t border-outline-variant/10 pt-3 flex justify-between items-center">
+                                <span class="font-bold text-[#1E293B]">Total Fee</span>
+                                <span class="font-serif text-lg font-bold text-[#1E293B]">MYR 0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Actions -->
+                        <div class="pt-2">
+                            <button onclick="confirmReschedule()" class="w-full bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                                Confirm Reschedule <span class="material-symbols-outlined text-sm">check_circle</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+window.renderRescheduleView = renderRescheduleView;
+
+window.selectRescheduleDate = function (day) {
+    const baseMonth = new Date(2024, 9, 1);
+    const renderMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth() + (state.rescheduleBooking.monthOffset || 0), day);
+    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+    state.rescheduleBooking.date = renderMonth.toLocaleDateString('en-US', options);
+
+    saveState();
+    renderRescheduleView();
+};
+
+window.selectRescheduleTime = function (time) {
+    state.rescheduleBooking.time = time;
+    saveState();
+    renderRescheduleView();
+};
+
+window.changeRescheduleMonth = function (offset) {
+    const targetOffset = (state.rescheduleBooking.monthOffset || 0) + offset;
+    if (targetOffset < 0) {
+        showNotification('Cannot select past months.', 'info');
+        return;
+    }
+    state.rescheduleBooking.monthOffset = targetOffset;
+    saveState();
+    renderRescheduleView();
+};
+
+window.confirmReschedule = function () {
+    const bookingId = state.rescheduleBooking.bookingId;
+    const booking = state.bookings.find(b => b.id === bookingId);
+    if (!booking) return;
+
+    // Update appointment date & time
+    const oldDate = booking.date;
+    const oldTime = booking.time;
+    booking.date = state.rescheduleBooking.date;
+    booking.time = state.rescheduleBooking.time;
+
+    // Record notification
+    state.notifications.unshift({
+        id: 'notif-' + Date.now(),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        text: `Rescheduled: Your appointment for ${booking.serviceName} has been rescheduled from ${oldDate} at ${oldTime} to ${booking.date} at ${booking.time}.`
+    });
+
+    // Populate state.booking so renderSuccessView renders it perfectly
+    state.booking.service = {
+        name: booking.serviceName,
+        duration: '60 Mins',
+        price: parseFloat(booking.price) || 0
+    };
+    state.booking.therapist = { name: booking.therapist, role: 'Specialist' };
+    state.booking.date = booking.date;
+    state.booking.time = booking.time;
+    state.successResId = booking.resId;
+
+    // Reset reschedule states
+    state.rescheduleBooking = null;
+    saveState();
+    
+    // Go to success view!
+    navigateTo('success');
+    showNotification('Appointment successfully rescheduled!', 'success');
 };
 
 window.cancelBooking = function (bookingId) {
