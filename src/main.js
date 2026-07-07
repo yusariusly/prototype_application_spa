@@ -1471,11 +1471,11 @@ function renderServicesCatalogView() {
             <div class="hidden">
                 <div class="flex justify-between items-end mb-8 border-b border-slate-100 pb-4">
                     <div>
-                        <h2 class="font-serif text-2xl font-bold text-[#1E293B] mb-1">Facial & Body Care</h2>
-                        <p class="text-xs text-slate-500">Pure botanicals and organic care products</p>
+                        <h2 class="font-serif text-2xl font-bold text-[#1E293B] mb-1">${state.language === 'ms' ? 'Rawatan Muka & Badan' : 'Facial & Body Care'}</h2>
+                        <p class="text-xs text-slate-500">${state.language === 'ms' ? 'Bahan botani tulen dan produk penjagaan organik' : 'Pure botanicals and organic care products'}</p>
                     </div>
                     <a onclick="navigateToAllServicesWithFilter('facial')" class="text-xs font-bold text-[#B45309] hover:underline cursor-pointer flex items-center gap-1">
-                        See All <span class="material-symbols-outlined text-[14px]">arrow_right_alt</span>
+                        ${state.language === 'ms' ? 'Lihat Semua' : 'See All'} <span class="material-symbols-outlined text-[14px]">arrow_right_alt</span>
                     </a>
                 </div>
 
@@ -1489,12 +1489,12 @@ function renderServicesCatalogView() {
                         <div class="flex-grow flex flex-col justify-between">
                             <div>
                                 <h4 class="font-serif font-bold text-sm text-[#1E293B] mb-1">Illuminating Peel</h4>
-                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Fruit enzymes to brighten and smooth dull skin.</p>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">${state.language === 'ms' ? 'Enzim buah-buahan untuk mencerahkan dan melicinkan kulit kusam.' : 'Fruit enzymes to brighten and smooth dull skin.'}</p>
                             </div>
                             
                             <div class="flex justify-between items-center mt-auto border-t border-slate-50 pt-3">
                                 <span class="font-serif text-sm font-bold text-[#1E293B]">MYR 95.00</span>
-                                <a onclick="showNotification('Illuminating Peel added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">Add to Cart</a>
+                                <a onclick="showNotification(state.language === 'ms' ? 'Illuminating Peel ditambahkan ke troli!' : 'Illuminating Peel added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">${state.language === 'ms' ? 'Tambah ke Troli' : 'Add to Cart'}</a>
                             </div>
                         </div>
                     </div>
@@ -1507,12 +1507,12 @@ function renderServicesCatalogView() {
                         <div class="flex-grow flex flex-col justify-between">
                             <div>
                                 <h4 class="font-serif font-bold text-sm text-[#1E293B] mb-1">Sea Salt Glow</h4>
-                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Exfoliating ritual for silky smooth skin.</p>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">${state.language === 'ms' ? 'Ritual pengelupasan untuk kulit licin seperti sutera.' : 'Exfoliating ritual for silky smooth skin.'}</p>
                             </div>
                             
                             <div class="flex justify-between items-center mt-auto border-t border-slate-50 pt-3">
                                 <span class="font-serif text-sm font-bold text-[#1E293B]">MYR 110.00</span>
-                                <a onclick="showNotification('Sea Salt Glow added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">Add to Cart</a>
+                                <a onclick="showNotification(state.language === 'ms' ? 'Sea Salt Glow ditambahkan ke troli!' : 'Sea Salt Glow added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">${state.language === 'ms' ? 'Tambah ke Troli' : 'Add to Cart'}</a>
                             </div>
                         </div>
                     </div>
@@ -1525,12 +1525,12 @@ function renderServicesCatalogView() {
                         <div class="flex-grow flex flex-col justify-between">
                             <div>
                                 <h4 class="font-serif font-bold text-sm text-[#1E293B] mb-1">Herbal Detox Wrap</h4>
-                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Warm wrap infused with mountain herbs.</p>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">${state.language === 'ms' ? 'Balutan hangat yang diselitkan dengan herba gunung.' : 'Warm wrap infused with mountain herbs.'}</p>
                             </div>
                             
                             <div class="flex justify-between items-center mt-auto border-t border-slate-50 pt-3">
                                 <span class="font-serif text-sm font-bold text-[#1E293B]">MYR 150.00</span>
-                                <a onclick="showNotification('Herbal Detox Wrap added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">Add to Cart</a>
+                                <a onclick="showNotification(state.language === 'ms' ? 'Herbal Detox Wrap ditambahkan ke troli!' : 'Herbal Detox Wrap added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">${state.language === 'ms' ? 'Tambah ke Troli' : 'Add to Cart'}</a>
                             </div>
                         </div>
                     </div>
@@ -1543,12 +1543,12 @@ function renderServicesCatalogView() {
                         <div class="flex-grow flex flex-col justify-between">
                             <div>
                                 <h4 class="font-serif font-bold text-sm text-[#1E293B] mb-1">Pure Hydration</h4>
-                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">Moisture-locking facial with hyaluronic acid.</p>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mb-4">${state.language === 'ms' ? 'Rawatan muka mengunci kelembapan dengan asid hialuronik.' : 'Moisture-locking facial with hyaluronic acid.'}</p>
                             </div>
                             
                             <div class="flex justify-between items-center mt-auto border-t border-slate-50 pt-3">
                                 <span class="font-serif text-sm font-bold text-[#1E293B]">MYR 120.00</span>
-                                <a onclick="showNotification('Pure Hydration added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">Add to Cart</a>
+                                <a onclick="showNotification(state.language === 'ms' ? 'Pure Hydration ditambahkan ke troli!' : 'Pure Hydration added to cart!', 'success'); return false;" class="text-[11px] font-bold text-[#B45309] hover:underline cursor-pointer">${state.language === 'ms' ? 'Tambah ke Troli' : 'Add to Cart'}</a>
                             </div>
                         </div>
                     </div>
@@ -1611,7 +1611,10 @@ window.purchaseBundle = function (bundleId) {
     if (!bundle) return;
 
     if (state.walletBalance < bundle.price) {
-        showNotification(`Insufficient Serenity Wallet balance to purchase ${bundle.name}. Redirecting to Top Up...`, 'error');
+        const errorMsg = state.language === 'ms'
+            ? `Baki Dompet Serenity tidak mencukupi untuk membeli ${getServiceTranslation(bundle.id, 'name', bundle.name)}. Mengarah ke Tambah Nilai...`
+            : `Insufficient Serenity Wallet balance to purchase ${bundle.name}. Redirecting to Top Up...`;
+        showNotification(errorMsg, 'error');
         setTimeout(() => {
             navigateTo('topup');
         }, 1500);
@@ -1631,7 +1634,10 @@ window.purchaseBundle = function (bundleId) {
     updateHeaderWalletDisplay();
     renderActivePackagesWidget();
     saveState();
-    showNotification(`Success purchasing ${bundle.name}! ${bundle.sessions} sessions added to your active packages.`, 'success');
+    const successMsg = state.language === 'ms'
+        ? `Berjaya membeli ${getServiceTranslation(bundle.id, 'name', bundle.name)}! ${bundle.sessions} sesi ditambahkan ke pakej aktif anda.`
+        : `Success purchasing ${bundle.name}! ${bundle.sessions} sessions added to your active packages.`;
+    showNotification(successMsg, 'success');
 };
 
 // Book a session from an active package (routes to dedicated book-package view)
@@ -1640,7 +1646,7 @@ window.bookPackageSession = function (bundleId) {
     const sessionsLeft = state.activePackages[bundleId] || 0;
     if (!bundle) return;
     if (sessionsLeft <= 0) {
-        showNotification('All sessions for this package have been used.', 'error');
+        showNotification(state.language === 'ms' ? 'Semua sesi untuk pakej ini telah digunakan.' : 'All sessions for this package have been used.', 'error');
         return;
     }
 
@@ -1886,7 +1892,7 @@ window.prevMonth = function () {
     const todayBase = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Current base month
     const targetMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
     if (targetMonth < todayBase) {
-        showNotification('Cannot select past months.', 'info');
+        showNotification(state.language === 'ms' ? 'Tidak boleh memilih bulan yang lepas.' : 'Cannot select past months.', 'info');
         return;
     }
     currentMonth.setMonth(currentMonth.getMonth() - 1);
@@ -2034,7 +2040,7 @@ window.saveGuestInfo = function () {
     state.guestInfo = { name, email, phone, specialRequests };
     isEditingGuest = false;
     renderGuestInfoCard();
-    showNotification('Guest information successfully updated.', 'success');
+    showNotification(state.language === 'ms' ? 'Maklumat tetamu berjaya dikemas kini.' : 'Guest information successfully updated.', 'success');
 };
 
 let selectedPaymentMethod = 'wallet'; // default payment method
@@ -2387,19 +2393,19 @@ function renderSuccessView() {
 window.nextStep = function (currentStep) {
     if (currentStep === 1) {
         if (!state.booking.service) {
-            showNotification('Please select a service first to proceed.', 'warning');
+            showNotification(state.language === 'ms' ? 'Sila pilih perkhidmatan terlebih dahulu untuk meneruskan.' : 'Please select a service first to proceed.', 'warning');
             return;
         }
         navigateTo('select-therapist');
     } else if (currentStep === 2) {
         if (!state.booking.therapist) {
-            showNotification('Please select a therapist first to proceed.', 'warning');
+            showNotification(state.language === 'ms' ? 'Sila pilih terapis terlebih dahulu untuk meneruskan.' : 'Please select a therapist first to proceed.', 'warning');
             return;
         }
         navigateTo('select-time');
     } else if (currentStep === 3) {
         if (!state.booking.date || !state.booking.time) {
-            showNotification('Please select a date and time first to proceed.', 'warning');
+            showNotification(state.language === 'ms' ? 'Sila pilih tarikh dan masa terlebih dahulu untuk meneruskan.' : 'Please select a date and time first to proceed.', 'warning');
             return;
         }
         navigateTo('confirm-booking');
@@ -2421,7 +2427,7 @@ window.confirmReservation = function () {
         if (state.packageBookingMode) {
             const bundleId = state.packageBookingMode;
             if ((state.activePackages[bundleId] || 0) <= 0) {
-                showNotification('Semua sesi paket sudah habis.', 'error');
+                showNotification(state.language === 'ms' ? 'Semua sesi pakej telah habis.' : 'All sessions for this package have been used.', 'error');
                 return;
             }
             state.activePackages[bundleId]--;
@@ -2447,12 +2453,14 @@ window.confirmReservation = function () {
             state.notifications.unshift({
                 id: 'notif-' + Date.now(),
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                text: `Appointment Confirmed: Your package session for ${service.name} has been booked.`
+                text: state.language === 'ms'
+                    ? `Janji Temu Disahkan: Sesi pakej anda untuk ${getServiceTranslation(service.id, 'name', service.name)} telah ditempah.`
+                    : `Appointment Confirmed: Your package session for ${service.name} has been booked.`
             });
 
             state.successResId = resId;
 
-            showNotification(`Session successfully booked! 1 session deducted from your package.`, 'success');
+            showNotification(state.language === 'ms' ? 'Sesi berjaya ditempah! 1 sesi ditolak dari pakej anda.' : 'Session successfully booked! 1 session deducted from your package.', 'success');
             navigateTo('success');
             return;
         }
@@ -2464,7 +2472,10 @@ window.confirmReservation = function () {
 
         if (selectedPaymentMethod === 'wallet') {
             if (state.walletBalance < total) {
-                showNotification(`Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Redirecting to Top Up...`, 'error');
+                const errorMsg = state.language === 'ms'
+                    ? `Baki dompet tidak mencukupi (Jumlah: MYR ${total.toFixed(2)}). Mengarah ke Tambah Nilai...`
+                    : `Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Redirecting to Top Up...`;
+                showNotification(errorMsg, 'error');
                 setTimeout(() => {
                     navigateTo('topup');
                 }, 1500);
@@ -2475,7 +2486,7 @@ window.confirmReservation = function () {
             // Add wallet transaction log
             state.transactions.unshift({
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                description: `${service.name} Payment`,
+                description: state.language === 'ms' ? `Pembayaran ${getServiceTranslation(service.id, 'name', service.name)}` : `${service.name} Payment`,
                 amount: -total,
                 status: 'Completed'
             });
@@ -2501,15 +2512,15 @@ window.confirmReservation = function () {
         state.notifications.unshift({
             id: 'notif-' + Date.now(),
             date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-            text: `Appointment Confirmed: Your ${service.name} has been booked successfully.`
+            text: state.language === 'ms'
+                ? `Janji Temu Disahkan: ${getServiceTranslation(service.id, 'name', service.name)} anda telah berjaya ditempah.`
+                : `Appointment Confirmed: Your ${service.name} has been booked successfully.`
         });
 
         state.successResId = resId;
         navigateTo('success');
 
-        showNotification('Your reservation has been saved successfully.', 'success');
-
-        navigateTo('success');
+        showNotification(state.language === 'ms' ? 'Tempahan anda telah berjaya disimpan.' : 'Your reservation has been saved successfully.', 'success');
     });
 };
 
@@ -3054,7 +3065,7 @@ window.submitStripeTopUp = function () {
     const cardName = document.getElementById('stripe-card-name').value.trim();
 
     if (!cardNum || !cardExpiry || !cardCvc || !cardName) {
-        showNotification('Please enter all payment details to proceed.', 'error');
+        showNotification(state.language === 'ms' ? 'Sila masukkan semua butiran pembayaran untuk meneruskan.' : 'Please enter all payment details to proceed.', 'error');
         return;
     }
 
@@ -3062,7 +3073,7 @@ window.submitStripeTopUp = function () {
     if (state.selectedTopUpAmount === 'custom') {
         const customVal = parseFloat(document.getElementById('custom-topup-input').value);
         if (isNaN(customVal) || customVal <= 0) {
-            showNotification('Please enter a valid amount.', 'error');
+            showNotification(state.language === 'ms' ? 'Sila masukkan jumlah yang sah.' : 'Please enter a valid amount.', 'error');
             return;
         }
         amount = customVal;
@@ -3073,7 +3084,7 @@ window.submitStripeTopUp = function () {
     let bonusText = '';
     if (amount === 200) {
         state.walletBalance += 10.00;
-        bonusText = ' (+ MYR 10.00 Bonus)';
+        bonusText = state.language === 'ms' ? ' (+ Bonus MYR 10.00)' : ' (+ MYR 10.00 Bonus)';
     }
 
     state.walletBalance += amount;
@@ -3087,7 +3098,10 @@ window.submitStripeTopUp = function () {
     });
 
     updateHeaderWalletDisplay();
-    showNotification(`Successfully topped up MYR ${amount.toFixed(2)}${bonusText}!`, 'success');
+    const successMsg = state.language === 'ms'
+        ? `Berjaya menambah nilai MYR ${amount.toFixed(2)}${bonusText}!`
+        : `Successfully topped up MYR ${amount.toFixed(2)}${bonusText}!`;
+    showNotification(successMsg, 'success');
 
     navigateTo('wallet');
 };
@@ -3334,7 +3348,7 @@ window.rescheduleBooking = function (bookingId) {
         };
         saveState();
         navigateTo('reschedule');
-        showNotification('Reschedule process initiated. Please pick a new slot.', 'info');
+        showNotification(state.language === 'ms' ? 'Proses penjadualan semula dimulakan. Sila pilih slot baru.' : 'Reschedule process initiated. Please pick a new slot.', 'info');
     }
 };
 
@@ -3343,14 +3357,14 @@ function renderRescheduleView() {
     if (!container) return;
 
     if (!state.rescheduleBooking) {
-        container.innerHTML = `<p class="text-center py-12 text-on-surface-variant">No reschedule booking session initialized.</p>`;
+        container.innerHTML = `<p class="text-center py-12 text-on-surface-variant">${state.language === 'ms' ? 'Tiada sesi penjadualan semula janji temu dimulakan.' : 'No reschedule booking session initialized.'}</p>`;
         return;
     }
 
     const bookingId = state.rescheduleBooking.bookingId;
     const booking = state.bookings.find(b => b.id === bookingId);
     if (!booking) {
-        container.innerHTML = `<p class="text-center py-12 text-on-surface-variant">Booking not found.</p>`;
+        container.innerHTML = `<p class="text-center py-12 text-on-surface-variant">${state.language === 'ms' ? 'Tempahan tidak ditemui.' : 'Booking not found.'}</p>`;
         return;
     }
 
@@ -3591,7 +3605,7 @@ window.selectRescheduleTime = function (time) {
 window.changeRescheduleMonth = function (offset) {
     const targetOffset = (state.rescheduleBooking.monthOffset || 0) + offset;
     if (targetOffset < 0) {
-        showNotification('Cannot select past months.', 'info');
+        showNotification(state.language === 'ms' ? 'Tidak boleh memilih bulan yang lepas.' : 'Cannot select past months.', 'info');
         return;
     }
     state.rescheduleBooking.monthOffset = targetOffset;
@@ -3614,7 +3628,9 @@ window.confirmReschedule = function () {
     state.notifications.unshift({
         id: 'notif-' + Date.now(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-        text: `Rescheduled: Your appointment for ${booking.serviceName} has been rescheduled from ${oldDate} at ${oldTime} to ${booking.date} at ${booking.time}.`
+        text: state.language === 'ms'
+            ? `Jadual Semula: Janji temu anda untuk ${booking.serviceName} telah dijadualkan semula dari ${oldDate} pada ${oldTime} kepada ${booking.date} pada ${booking.time}.`
+            : `Rescheduled: Your appointment for ${booking.serviceName} has been rescheduled from ${oldDate} at ${oldTime} to ${booking.date} at ${booking.time}.`
     });
 
     // Populate state.booking so renderSuccessView renders it perfectly
@@ -3634,11 +3650,14 @@ window.confirmReschedule = function () {
     
     // Go to success view!
     navigateTo('success');
-    showNotification('Appointment successfully rescheduled!', 'success');
+    showNotification(state.language === 'ms' ? 'Janji temu berjaya dijadualkan semula!' : 'Appointment successfully rescheduled!', 'success');
 };
 
 window.cancelBooking = function (bookingId) {
-    if (confirm("Are you sure you want to cancel this appointment?")) {
+    const confirmMsg = state.language === 'ms'
+        ? "Adakah anda pasti mahu membatalkan janji temu ini?"
+        : "Are you sure you want to cancel this appointment?";
+    if (confirm(confirmMsg)) {
         const booking = state.bookings.find(b => b.id === bookingId);
         if (booking) {
             booking.status = 'Cancelled';
@@ -3648,7 +3667,7 @@ window.cancelBooking = function (bookingId) {
             // Add a transaction logs
             state.transactions.unshift({
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                description: `Refund: ${booking.serviceName} Cancellation`,
+                description: state.language === 'ms' ? `Bayaran Balik: Pembatalan ${booking.serviceName}` : `Refund: ${booking.serviceName} Cancellation`,
                 amount: parseFloat(booking.price),
                 status: 'Completed'
             });
@@ -3657,10 +3676,15 @@ window.cancelBooking = function (bookingId) {
             state.notifications.unshift({
                 id: 'notif-' + Date.now(),
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                text: `Cancelled: Your reservation for ${booking.serviceName} has been cancelled. MYR ${parseFloat(booking.price).toFixed(2)} refunded to your wallet.`
+                text: state.language === 'ms'
+                    ? `Dibatalkan: Tempahan anda untuk ${booking.serviceName} telah dibatalkan. MYR ${parseFloat(booking.price).toFixed(2)} dikembalikan ke dompet anda.`
+                    : `Cancelled: Your reservation for ${booking.serviceName} has been cancelled. MYR ${parseFloat(booking.price).toFixed(2)} refunded to your wallet.`
             });
 
-            showNotification('Appointment cancelled successfully. MYR ' + parseFloat(booking.price).toFixed(2) + ' refunded to wallet.', 'success');
+            const successMsg = state.language === 'ms'
+                ? 'Janji temu berjaya dibatalkan. MYR ' + parseFloat(booking.price).toFixed(2) + ' dikembalikan ke dompet.'
+                : 'Appointment cancelled successfully. MYR ' + parseFloat(booking.price).toFixed(2) + ' refunded to wallet.';
+            showNotification(successMsg, 'success');
             renderBookingHistoryView();
             updateHeaderWalletDisplay();
             saveState();
@@ -4035,7 +4059,7 @@ window.performSignOut = function () {
     ];
 
     updateHeaderWalletDisplay();
-    showNotification('Signed out successfully.', 'success');
+    showNotification(state.language === 'ms' ? 'Berjaya log keluar.' : 'Signed out successfully.', 'success');
     navigateTo('home');
 };
 
@@ -4275,7 +4299,7 @@ window.handleAddNewCard = function (event) {
     const cvvInput = document.getElementById('new-card-cvv').value.trim();
 
     if (numberInput.length < 12) {
-        showNotification('Invalid card number length.', 'error');
+        showNotification(state.language === 'ms' ? 'Panjang nombor kad tidak sah.' : 'Invalid card number length.', 'error');
         return;
     }
 
@@ -4298,11 +4322,17 @@ window.handleAddNewCard = function (event) {
     saveState();
     renderSavedCards();
     window.hideAddNewCardForm();
-    showNotification(`Added new ${brand} ending in ${last4} successfully.`, 'success');
+    const addedMsg = state.language === 'ms'
+        ? `Berjaya menambah ${brand} baru yang berakhir dengan ${last4}.`
+        : `Added new ${brand} ending in ${last4} successfully.`;
+    showNotification(addedMsg, 'success');
 };
 
 window.deleteSavedCard = function (cardId) {
-    if (confirm("Are you sure you want to delete this payment method?")) {
+    const confirmMsg = state.language === 'ms'
+        ? "Adakah anda pasti mahu memadamkan kaedah pembayaran ini?"
+        : "Are you sure you want to delete this payment method?";
+    if (confirm(confirmMsg)) {
         const idx = state.savedCards.findIndex(c => c.id === cardId);
         if (idx !== -1) {
             const removed = state.savedCards.splice(idx, 1)[0];
@@ -4311,7 +4341,7 @@ window.deleteSavedCard = function (cardId) {
             }
             saveState();
             renderSavedCards();
-            showNotification('Payment method deleted successfully.', 'success');
+            showNotification(state.language === 'ms' ? 'Kaedah pembayaran berjaya dipadamkan.' : 'Payment method deleted successfully.', 'success');
         }
     }
 };
@@ -4322,7 +4352,7 @@ window.setDefaultCard = function (cardId) {
     });
     saveState();
     renderSavedCards();
-    showNotification('Default payment method updated.', 'success');
+    showNotification(state.language === 'ms' ? 'Kaedah pembayaran lalai dikemas kini.' : 'Default payment method updated.', 'success');
 };
 
 // 8. RENDER: BOOK PACKAGE SESSION VIEW
@@ -4582,7 +4612,7 @@ window.selectPackageTime = function (time) {
 window.changePackageMonth = function (offset) {
     const targetOffset = (state.pkgBooking.monthOffset || 0) + offset;
     if (targetOffset < 0) {
-        showNotification('Cannot select past months.', 'info');
+        showNotification(state.language === 'ms' ? 'Tidak boleh memilih bulan yang lepas.' : 'Cannot select past months.', 'info');
         return;
     }
     state.pkgBooking.monthOffset = targetOffset;
@@ -4602,7 +4632,7 @@ window.confirmPackageBooking = function () {
     if (!bundle) return;
 
     if ((state.activePackages[bundleId] || 0) <= 0) {
-        showNotification('All package sessions have been used.', 'error');
+        showNotification(state.language === 'ms' ? 'Semua sesi pakej telah habis.' : 'All package sessions have been used.', 'error');
         return;
     }
 
@@ -4629,7 +4659,9 @@ window.confirmPackageBooking = function () {
     state.notifications.unshift({
         id: 'notif-' + Date.now(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-        text: `Package Session Booked: Your package session for ${bundle.name} is scheduled on ${state.pkgBooking.date} at ${state.pkgBooking.time}.`
+        text: state.language === 'ms'
+            ? `Sesi Pakej Ditempah: Sesi pakej anda untuk ${getServiceTranslation(bundle.id, 'name', bundle.name)} dijadualkan pada ${state.pkgBooking.date} pada jam ${state.pkgBooking.time}.`
+            : `Package Session Booked: Your package session for ${bundle.name} is scheduled on ${state.pkgBooking.date} at ${state.pkgBooking.time}.`
     });
 
     // Populate state.booking so renderSuccessView renders it perfectly
@@ -4652,7 +4684,7 @@ window.confirmPackageBooking = function () {
     
     // Go to success view!
     navigateTo('success');
-    showNotification('Package session successfully scheduled!', 'success');
+    showNotification(state.language === 'ms' ? 'Sesi pakej berjaya dijadualkan!' : 'Package session successfully scheduled!', 'success');
 };
 
 // 8.1 RENDER: ALL ACTIVE PACKAGES CATALOG VIEW
