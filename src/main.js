@@ -4553,13 +4553,13 @@ document.addEventListener('click', function(e) {
 window.openMobileSummaryModal = function() {
     const modal = document.getElementById('mobile-summary-modal');
     if (modal) {
-        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
     }
 };
 
 window.closeMobileSummaryModal = function() {
     const modal = document.getElementById('mobile-summary-modal');
     if (modal) {
-        modal.classList.add('hidden');
+        modal.style.display = 'none';
     }
 };
