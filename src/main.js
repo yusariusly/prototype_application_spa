@@ -758,7 +758,7 @@ function renderHomeView() {
             if (isLarge) {
                 // md:col-span-12
                 return `
-                    <div class="md:col-span-12 min-h-[320px] bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative">
+                    <div class="md:col-span-12 min-h-[320px] bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative flex-shrink-0 w-[85vw] sm:w-[500px] md:w-auto">
                         ${s.bestValue ? `<div class="absolute top-4 right-4 bg-[#FACC15] text-[#241a00] px-3.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider shadow-sm z-10">Best Value</div>` : ''}
                         ${discountBadgeHtml}
                         <div class="w-full md:w-[320px] h-64 md:h-auto shrink-0 p-6 flex">
@@ -788,7 +788,7 @@ function renderHomeView() {
             } else if (isSmall) {
                 // md:col-span-4
                 return `
-                    <div class="md:col-span-4 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col border border-outline-variant/30 p-4 animate-fade-in relative">
+                    <div class="md:col-span-4 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col border border-outline-variant/30 p-4 animate-fade-in relative flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto">
                         ${s.bestValue ? `<div class="absolute top-4 right-4 bg-[#FACC15] text-[#241a00] px-3.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">Best Value</div>` : ''}
                         ${discountBadgeHtml}
                         <div class="w-full h-[180px] rounded-2xl overflow-hidden mb-4 shrink-0">
@@ -844,7 +844,7 @@ function renderHomeView() {
                 `;
 
                 return `
-                    <div class="md:col-span-8 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative">
+                    <div class="md:col-span-8 bg-white shadow-sm group rounded-3xl overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative flex-shrink-0 w-[85vw] sm:w-[450px] md:w-auto">
                         ${s.bestValue ? `<div class="absolute top-4 right-4 bg-[#FACC15] text-[#241a00] px-3.5 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">Best Value</div>` : ''}
                         ${discountBadgeHtml}
                         ${imgFirst ? imgHtml + contentHtml : contentHtml + imgHtml}
@@ -862,8 +862,8 @@ function renderHomeView() {
                 <p class="font-body-sm text-xs md:text-sm text-on-surface-variant max-w-lg mx-auto leading-relaxed">Choose from our range of holistic treatments, tailored to rejuvenate your mind and body.</p>
             </div>
 
-            <!-- Bento Grid Container -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <!-- Bento Grid Container (Flex scroll on mobile, Grid on desktop) -->
+            <div class="flex overflow-x-auto pb-4 gap-6 hide-scrollbar md:grid md:grid-cols-12 md:overflow-visible">
                 ${gridHtml}
             </div>
         </div>
@@ -911,15 +911,15 @@ function renderServicesCatalogView() {
                     </a>
                 </div>
 
-                <!-- Grid 2 Columns -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Grid 2 Columns (Flex scroll on mobile, Grid on desktop) -->
+                <div class="flex overflow-x-auto pb-4 gap-6 hide-scrollbar md:grid md:grid-cols-2 md:overflow-visible">
                     ${(() => {
                         const p1 = SERVICES['radiance-bundle'];
                         if (!p1) return '';
                         const discountPercent = (p1.regularPrice && p1.regularPrice > p1.price) ? Math.round(((p1.regularPrice - p1.price) / p1.regularPrice) * 100) : 0;
                         const discountBadgeHtml = discountPercent > 0 ? `<div class="absolute top-4 left-4 bg-[#EAB308] text-white px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">SAVE ${discountPercent}%</div>` : '';
                         return `
-                            <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row relative">
+                            <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row relative flex-shrink-0 w-[85vw] sm:w-[450px] md:w-auto">
                                 <div class="w-full sm:w-5/12 h-48 sm:h-auto relative shrink-0">
                                     ${discountBadgeHtml}
                                     <img class="w-full h-full object-cover" src="${p1.image}" alt="${p1.name}">
@@ -959,7 +959,7 @@ function renderServicesCatalogView() {
                         const discountPercent = (p2.regularPrice && p2.regularPrice > p2.price) ? Math.round(((p2.regularPrice - p2.price) / p2.regularPrice) * 100) : 0;
                         const discountBadgeHtml = discountPercent > 0 ? `<div class="absolute top-4 left-4 bg-[#EAB308] text-white px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">SAVE ${discountPercent}%</div>` : '';
                         return `
-                            <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row relative">
+                            <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row relative flex-shrink-0 w-[85vw] sm:w-[450px] md:w-auto">
                                 <div class="w-full sm:w-5/12 h-48 sm:h-auto relative shrink-0">
                                     ${discountBadgeHtml}
                                     <img class="w-full h-full object-cover" src="${p2.image}" alt="${p2.name}">
@@ -1007,10 +1007,10 @@ function renderServicesCatalogView() {
                     </a>
                 </div>
 
-                <!-- Grid 3 Columns -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Grid 3 Columns (Flex scroll on mobile, Grid on desktop) -->
+                <div class="flex overflow-x-auto pb-4 gap-6 hide-scrollbar md:grid md:grid-cols-3 md:overflow-visible">
                     <!-- Treatment 1: Hot Stone Therapy -->
-                    <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
+                    <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto">
                         <div class="w-full h-56 shrink-0 overflow-hidden relative">
                             <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=400&h=260&q=80" alt="Hot Stone Therapy">
                         </div>
@@ -1037,7 +1037,7 @@ function renderServicesCatalogView() {
                     </div>
 
                     <!-- Treatment 2: Deep Tissue Ritual -->
-                    <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
+                    <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto">
                         <div class="w-full h-56 shrink-0 overflow-hidden relative">
                             <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&h=260&q=80" alt="Deep Tissue Ritual">
                         </div>
@@ -1064,7 +1064,7 @@ function renderServicesCatalogView() {
                     </div>
 
                     <!-- Treatment 3: Signature Soul Massage -->
-                    <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
+                    <div class="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between flex-shrink-0 w-[85vw] sm:w-[320px] md:w-auto">
                         <div class="w-full h-56 shrink-0 overflow-hidden relative">
                             <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&h=260&q=80" alt="Signature Soul Massage">
                         </div>
