@@ -270,7 +270,7 @@ const DEFAULT_STATE = {
             id: 'booking-1',
             serviceName: 'Healing Stone Therapy',
             serviceType: 'signature',
-            date: 'Thursday, Oct 24, 2024',
+            date: 'Thursday, Oct 24, 2026',
             time: '02:00 PM',
             therapist: 'Sari',
             location: 'Serenity Orchard Wing',
@@ -281,7 +281,7 @@ const DEFAULT_STATE = {
             id: 'booking-2',
             serviceName: 'Aromatherapy Massage',
             serviceType: 'massage',
-            date: 'Wednesday, Oct 15, 2023',
+            date: 'Wednesday, Oct 15, 2025',
             time: '10:00 AM',
             therapist: 'Sari',
             location: 'Serenity Orchard Wing',
@@ -292,7 +292,7 @@ const DEFAULT_STATE = {
             id: 'booking-3',
             serviceName: 'Signature Facial',
             serviceType: 'facial',
-            date: 'Monday, Oct 02, 2023',
+            date: 'Monday, Oct 02, 2025',
             time: '03:30 PM',
             therapist: 'Dewi',
             location: 'Serenity Orchard Wing',
@@ -301,9 +301,9 @@ const DEFAULT_STATE = {
         }
     ],
     notifications: [
-        { id: 'notif-1', date: 'Oct 24, 2024', text: 'Appointment Confirmed: Your Healing Stone Therapy with Sari on Thursday, Oct 24 has been confirmed.' },
-        { id: 'notif-2', date: 'Oct 24, 2023', text: 'Wallet Top-up: Successful top-up of MYR 100.00 to your digital wallet.' },
-        { id: 'notif-3', date: 'Sep 28, 2023', text: 'Welcome to Serenity & Soul: Find your inner balance with our exclusive services.' }
+        { id: 'notif-1', date: 'Oct 24, 2026', text: 'Appointment Confirmed: Your Healing Stone Therapy with Sari on Thursday, Oct 24 has been confirmed.' },
+        { id: 'notif-2', date: 'Oct 24, 2025', text: 'Wallet Top-up: Successful top-up of MYR 100.00 to your digital wallet.' },
+        { id: 'notif-3', date: 'Sep 28, 2025', text: 'Welcome to Serenity & Soul: Find your inner balance with our exclusive services.' }
     ],
     notificationPreferences: {
         email: true,
@@ -1350,12 +1350,12 @@ window.selectTherapist = function (therapistId) {
 };
 
 // RENDER: STEP 3: SELECT DATE & TIME VIEW
-let currentMonth = new Date(2024, 9); // Oktober 2024
+let currentMonth = new Date(new Date().getFullYear(), new Date().getMonth()); // Current month and year
 let selectedDateObj = null;
 
 function renderSelectTimeView() {
     if (!selectedDateObj) {
-        selectedDateObj = new Date(2024, 9, 10); // Thursday, Oct 10, 2024
+        selectedDateObj = new Date(); // Today
         const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
         state.booking.date = selectedDateObj.toLocaleDateString('en-US', options);
     }
@@ -1374,21 +1374,29 @@ function renderCalendar() {
 
     calendarMonthText.textContent = currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    // Generate October 2024
-    // Oct 1st is Tuesday. Sun=0, Mon=1, Tue=2.
-    // Days offset: 2 empty blocks.
-    let html = '<div></div><div></div>'; // offset
+    // Dynamic offset calculations
+    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const startDayOfWeek = firstDay.getDay(); // 0 is Sun, 1 is Mon, etc.
+    let html = '';
+    for (let i = 0; i < startDayOfWeek; i++) {
+        html += '<div></div>';
+    }
 
-    const daysInMonth = 31;
-    const today = new Date(2024, 9, 10); // Simulation "today" is Oct 10, 2024
+    // Dynamic total days calculation
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const tempDate = new Date(year, month + 1, 0);
+    const daysInMonth = tempDate.getDate();
+
+    const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     for (let day = 1; day <= daysInMonth; day++) {
-        const cellDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+        const cellDate = new Date(year, month, day);
         cellDate.setHours(0, 0, 0, 0);
 
         const isDisabled = cellDate < today;
-        const isSelected = selectedDateObj && selectedDateObj.getDate() === day && selectedDateObj.getMonth() === currentMonth.getMonth() && selectedDateObj.getFullYear() === currentMonth.getFullYear();
+        const isSelected = selectedDateObj && selectedDateObj.getDate() === day && selectedDateObj.getMonth() === month && selectedDateObj.getFullYear() === year;
 
         html += `
             <button ${isDisabled ? 'disabled' : ''} onclick="selectDate(${day})" class="h-10 w-10 mx-auto rounded-full font-body-sm text-body-sm flex items-center justify-center transition-colors disabled:opacity-30 disabled:hover:bg-transparent ${isSelected ? 'bg-primary text-white shadow-md font-bold' : 'text-on-surface hover:bg-surface-container-high'}">
@@ -1401,7 +1409,7 @@ function renderCalendar() {
 }
 
 window.prevMonth = function () {
-    const todayBase = new Date(2024, 9, 1); // Simulation base month
+    const todayBase = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Current base month
     const targetMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
     if (targetMonth < todayBase) {
         showNotification('Cannot select past months.', 'info');
@@ -2870,7 +2878,7 @@ function renderRescheduleView() {
 
     // Default dates if null
     if (!state.rescheduleBooking.date) {
-        const defaultDate = new Date(2024, 9, 10);
+        const defaultDate = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
         state.rescheduleBooking.date = defaultDate.toLocaleDateString('en-US', options);
     }
@@ -2881,11 +2889,11 @@ function renderRescheduleView() {
     // Parse selected date
     let selDate = new Date(state.rescheduleBooking.date);
     if (isNaN(selDate.getTime())) {
-        selDate = new Date(2024, 9, 10);
+        selDate = new Date();
     }
 
     // Month to render
-    const baseMonth = new Date(2024, 9, 1);
+    const baseMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const renderMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth() + (state.rescheduleBooking.monthOffset || 0), 1);
     const monthText = renderMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
 
@@ -2901,7 +2909,7 @@ function renderRescheduleView() {
     const tempDate = new Date(year, month + 1, 0);
     const daysInMonth = tempDate.getDate();
 
-    const today = new Date(2024, 9, 10); // Simulation "today" is Oct 10, 2024
+    const today = new Date(); // Actual today
     today.setHours(0, 0, 0, 0);
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -3087,7 +3095,7 @@ function renderRescheduleView() {
 window.renderRescheduleView = renderRescheduleView;
 
 window.selectRescheduleDate = function (day) {
-    const baseMonth = new Date(2024, 9, 1);
+    const baseMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const renderMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth() + (state.rescheduleBooking.monthOffset || 0), day);
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
     state.rescheduleBooking.date = renderMonth.toLocaleDateString('en-US', options);
@@ -3514,7 +3522,7 @@ window.performSignOut = function () {
             id: 'booking-1',
             serviceName: 'Healing Stone Therapy',
             serviceType: 'signature',
-            date: 'Thursday, Oct 24, 2024',
+            date: 'Thursday, Oct 24, 2026',
             time: '02:00 PM',
             therapist: 'Sari',
             location: 'Serenity Orchard Wing',
@@ -3525,7 +3533,7 @@ window.performSignOut = function () {
             id: 'booking-2',
             serviceName: 'Aromatherapy Massage',
             serviceType: 'massage',
-            date: 'Wednesday, Oct 15, 2023',
+            date: 'Wednesday, Oct 15, 2025',
             time: '10:00 AM',
             therapist: 'Sari',
             location: 'Serenity Orchard Wing',
@@ -3536,7 +3544,7 @@ window.performSignOut = function () {
             id: 'booking-3',
             serviceName: 'Signature Facial',
             serviceType: 'facial',
-            date: 'Monday, Oct 02, 2023',
+            date: 'Monday, Oct 02, 2025',
             time: '03:30 PM',
             therapist: 'Dewi',
             location: 'Serenity Orchard Wing',
@@ -3855,7 +3863,7 @@ function renderBookPackageView() {
 
     // Initial date if null
     if (!state.pkgBooking.date) {
-        const defaultDate = new Date(2024, 9, 10); // Thursday, Oct 10, 2024
+        const defaultDate = new Date(); // Use actual current date!
         const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
         state.pkgBooking.date = defaultDate.toLocaleDateString('en-US', options);
     }
@@ -3866,11 +3874,11 @@ function renderBookPackageView() {
     // Parse selected date
     let selDate = new Date(state.pkgBooking.date);
     if (isNaN(selDate.getTime())) {
-        selDate = new Date(2024, 9, 10);
+        selDate = new Date();
     }
 
     // Month to render
-    const baseMonth = new Date(2024, 9, 1);
+    const baseMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const renderMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth() + (state.pkgBooking.monthOffset || 0), 1);
     const monthText = renderMonth.toLocaleString('default', { month: 'long', year: 'numeric' });
 
@@ -3886,7 +3894,7 @@ function renderBookPackageView() {
     const tempDate = new Date(year, month + 1, 0);
     const daysInMonth = tempDate.getDate();
 
-    const today = new Date(2024, 9, 10); // Simulation "today" is Oct 10, 2024
+    const today = new Date(); // Actual today
     today.setHours(0, 0, 0, 0);
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -4075,7 +4083,7 @@ function renderBookPackageView() {
 window.renderBookPackageView = renderBookPackageView;
 
 window.selectPackageDate = function (day) {
-    const baseMonth = new Date(2024, 9, 1);
+    const baseMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const renderMonth = new Date(baseMonth.getFullYear(), baseMonth.getMonth() + (state.pkgBooking.monthOffset || 0), day);
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
     state.pkgBooking.date = renderMonth.toLocaleDateString('en-US', options);
