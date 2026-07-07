@@ -3675,7 +3675,7 @@ function renderNotificationsView() {
 
     let logHtml = '';
     if (state.notifications.length === 0) {
-        logHtml = `<p class="text-xs text-on-surface-variant text-center py-6">No notification logs found.</p>`;
+        logHtml = `<p class="text-xs text-on-surface-variant text-center py-6">${state.language === 'ms' ? 'Tiada log notifikasi ditemui.' : 'No notification logs found.'}</p>`;
     } else {
         state.notifications.forEach(notif => {
             logHtml += `
@@ -3702,20 +3702,20 @@ function renderNotificationsView() {
                         <span class="material-symbols-outlined">arrow_back</span>
                     </button>
                     <div>
-                        <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block">Account Settings</span>
-                        <h1 class="font-serif text-2xl md:text-3xl text-[#1E293B] font-bold">Notifications</h1>
+                        <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block">${t('settings_title')}</span>
+                        <h1 class="font-serif text-2xl md:text-3xl text-[#1E293B] font-bold">${t('setting_notifications')}</h1>
                     </div>
                 </div>
 
                 <!-- Preferences Card -->
                 <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30">
-                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4">Notification Channels</h2>
+                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4">${state.language === 'ms' ? 'Saluran Notifikasi' : 'Notification Channels'}</h2>
                     <form onsubmit="saveNotificationPreferences(event)" class="space-y-6">
                         <!-- Email Toggle -->
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-xs font-semibold text-on-surface mb-0.5">Email Notifications</h3>
-                                <p class="text-[11px] text-on-surface-variant leading-normal max-w-xs">Receive booking confirmations, receipts, and newsletters.</p>
+                                <h3 class="text-xs font-semibold text-on-surface mb-0.5">${state.language === 'ms' ? 'Notifikasi E-mel' : 'Email Notifications'}</h3>
+                                <p class="text-[11px] text-on-surface-variant leading-normal max-w-xs">${state.language === 'ms' ? 'Terima pengesahan tempahan, resit, dan surat berita.' : 'Receive booking confirmations, receipts, and newsletters.'}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="notif-email" ${state.notificationPreferences.email ? 'checked' : ''} class="sr-only peer">
@@ -3726,8 +3726,8 @@ function renderNotificationsView() {
                         <!-- SMS Toggle -->
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-xs font-semibold text-on-surface mb-0.5">SMS Alerts</h3>
-                                <p class="text-[11px] text-on-surface-variant leading-normal max-w-xs">Receive real-time scheduling reminders and notifications.</p>
+                                <h3 class="text-xs font-semibold text-on-surface mb-0.5">${state.language === 'ms' ? 'Amaran SMS' : 'SMS Alerts'}</h3>
+                                <p class="text-[11px] text-on-surface-variant leading-normal max-w-xs">${state.language === 'ms' ? 'Terima peringatan dan notifikasi jadual waktu nyata.' : 'Receive real-time scheduling reminders and notifications.'}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="notif-sms" ${state.notificationPreferences.sms ? 'checked' : ''} class="sr-only peer">
@@ -3738,8 +3738,8 @@ function renderNotificationsView() {
                         <!-- Push Toggle -->
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="text-xs font-semibold text-on-surface mb-0.5">Push Notifications</h3>
-                                <p class="text-[11px] text-on-surface-variant leading-normal max-w-xs">Get alerts directly on your browser about special promos.</p>
+                                <h3 class="text-xs font-semibold text-on-surface mb-0.5">${state.language === 'ms' ? 'Notifikasi Tolak' : 'Push Notifications'}</h3>
+                                <p class="text-[11px] text-on-surface-variant leading-normal max-w-xs">${state.language === 'ms' ? 'Dapatkan amaran terus pada pelayar anda tentang promosi khas.' : 'Get alerts directly on your browser about special promos.'}</p>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" id="notif-push" ${state.notificationPreferences.push ? 'checked' : ''} class="sr-only peer">
@@ -3750,10 +3750,10 @@ function renderNotificationsView() {
                         <!-- Action Buttons -->
                         <div class="flex gap-3 justify-end pt-4 border-t border-outline-variant/30">
                             <button type="button" onclick="navigateTo('profile')" class="px-5 py-2.5 rounded-xl border border-outline text-[#50613f] hover:bg-[#50613f]/5 text-xs font-bold transition-all">
-                                Cancel
+                                ${state.language === 'ms' ? 'Batal' : 'Cancel'}
                             </button>
                             <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary hover:bg-[#3e4b30] text-white font-bold text-xs transition-all shadow-sm">
-                                Save Settings
+                                ${state.language === 'ms' ? 'Simpan Tetapan' : 'Save Settings'}
                             </button>
                         </div>
                     </form>
@@ -3763,7 +3763,7 @@ function renderNotificationsView() {
             <!-- Right Column: Notifications Log History -->
             <div class="lg:col-span-6 space-y-4">
                 <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30 h-full flex flex-col">
-                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4">Notification History</h2>
+                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4">${state.language === 'ms' ? 'Sejarah Notifikasi' : 'Notification History'}</h2>
                     <div class="divide-y divide-outline-variant/10 overflow-y-auto max-h-[400px] pr-2 flex-grow">
                         ${logHtml}
                     </div>
@@ -3784,7 +3784,7 @@ window.saveNotificationPreferences = function (event) {
     state.notificationPreferences.sms = sms;
     state.notificationPreferences.push = push;
 
-    showNotification('Notification preferences saved successfully.', 'success');
+    showNotification(state.language === 'ms' ? 'Tetapan notifikasi berjaya disimpan.' : 'Notification preferences saved successfully.', 'success');
     navigateTo('profile');
 };
 
@@ -3801,8 +3801,8 @@ function renderPrivacySecurityView() {
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
                 <div>
-                    <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block">Account Settings</span>
-                    <h1 class="font-serif text-2xl md:text-3xl text-[#1E293B] font-bold">Privacy & Security</h1>
+                    <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block">${t('settings_title')}</span>
+                    <h1 class="font-serif text-2xl md:text-3xl text-[#1E293B] font-bold">${t('setting_privacy')}</h1>
                 </div>
             </div>
 
@@ -3810,38 +3810,38 @@ function renderPrivacySecurityView() {
             <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30 space-y-8">
                 <!-- Change Password Form -->
                 <div>
-                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4 pb-2 border-b border-outline-variant/20">Change Password</h2>
+                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4 pb-2 border-b border-outline-variant/20">${state.language === 'ms' ? 'Tukar Kata Laluan' : 'Change Password'}</h2>
                     <form onsubmit="savePassword(event)" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Current Password</label>
+                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Kata Laluan Semasa' : 'Current Password'}</label>
                                 <input type="password" id="ps-current-pwd" placeholder="••••••••" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">New Password</label>
+                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Kata Laluan Baru' : 'New Password'}</label>
                                 <input type="password" id="ps-new-pwd" placeholder="••••••••" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">Confirm New Password</label>
+                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Sahkan Kata Laluan Baru' : 'Confirm New Password'}</label>
                                 <input type="password" id="ps-confirm-pwd" placeholder="••••••••" required class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                             </div>
                         </div>
                         <div class="flex justify-end mt-2">
-                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-[#3e4b30] text-white font-bold text-xs transition-all shadow-sm">Update Password</button>
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-[#3e4b30] text-white font-bold text-xs transition-all shadow-sm">${state.language === 'ms' ? 'Kemas Kini Kata Laluan' : 'Update Password'}</button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Account Security Settings -->
                 <div>
-                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4 pb-2 border-b border-outline-variant/20">Account Security</h2>
+                    <h2 class="font-serif text-base text-[#1E293B] font-bold mb-4 pb-2 border-b border-outline-variant/20">${state.language === 'ms' ? 'Keselamatan Akaun' : 'Account Security'}</h2>
                     <form onsubmit="savePrivacySettings(event)" class="space-y-4">
                         <!-- 2FA Checkbox -->
                         <div class="flex items-start gap-3">
                             <input type="checkbox" id="ps-2fa" ${state.privacySettings.twoFactor ? 'checked' : ''} class="mt-1 rounded text-primary focus:ring-primary border-outline-variant">
                             <div>
-                                <label for="ps-2fa" class="text-xs font-bold text-on-surface block cursor-pointer">Enable Two-Factor Authentication (2FA)</label>
-                                <p class="text-[11px] text-on-surface-variant leading-relaxed">Secure your account by requiring an verification code in addition to your password.</p>
+                                <label for="ps-2fa" class="text-xs font-bold text-on-surface block cursor-pointer">${state.language === 'ms' ? 'Aktifkan Pengesahan Dua Faktor (2FA)' : 'Enable Two-Factor Authentication (2FA)'}</label>
+                                <p class="text-[11px] text-on-surface-variant leading-relaxed">${state.language === 'ms' ? 'Lindungi akaun anda dengan memerlukan kod pengesahan sebagai tambahan kepada kata laluan anda.' : 'Secure your account by requiring an verification code in addition to your password.'}</p>
                             </div>
                         </div>
 
@@ -3849,18 +3849,18 @@ function renderPrivacySecurityView() {
                         <div class="flex items-start gap-3">
                             <input type="checkbox" id="ps-data" ${state.privacySettings.dataSharing ? 'checked' : ''} class="mt-1 rounded text-primary focus:ring-primary border-outline-variant">
                             <div>
-                                <label for="ps-data" class="text-xs font-bold text-on-surface block cursor-pointer">Personalized Experience & Recommendations</label>
-                                <p class="text-[11px] text-on-surface-variant leading-relaxed">Allow Serenity & Soul to analyze treatment logs to recommend curated essential oils and therapy frequencies.</p>
+                                <label for="ps-data" class="text-xs font-bold text-on-surface block cursor-pointer">${state.language === 'ms' ? 'Pengalaman & Syor Peribadi' : 'Personalized Experience & Recommendations'}</label>
+                                <p class="text-[11px] text-on-surface-variant leading-relaxed">${state.language === 'ms' ? 'Benarkan Serenity & Soul menganalisis log rawatan untuk mengesyorkan minyak pati dan kekerapan terapi yang dikurasi.' : 'Allow Serenity & Soul to analyze treatment logs to recommend curated essential oils and therapy frequencies.'}</p>
                             </div>
                         </div>
 
                         <!-- Actions -->
                         <div class="flex gap-3 justify-end pt-4 border-t border-outline-variant/30">
                             <button type="button" onclick="navigateTo('profile')" class="px-5 py-2.5 rounded-xl border border-outline text-[#50613f] hover:bg-[#50613f]/5 text-xs font-bold transition-all">
-                                Cancel
+                                ${state.language === 'ms' ? 'Batal' : 'Cancel'}
                             </button>
                             <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary hover:bg-[#3e4b30] text-white font-bold text-xs transition-all shadow-sm">
-                                Save Settings
+                                ${state.language === 'ms' ? 'Simpan Tetapan' : 'Save Settings'}
                             </button>
                         </div>
                     </form>
@@ -3869,10 +3869,10 @@ function renderPrivacySecurityView() {
                 <!-- Danger Zone -->
                 <div class="p-6 border border-red-200 bg-red-50/50 rounded-2xl">
                     <h3 class="text-xs font-bold text-red-800 flex items-center gap-1.5 mb-2">
-                        <span class="material-symbols-outlined text-sm font-bold">warning</span> Danger Zone
+                        <span class="material-symbols-outlined text-sm font-bold">warning</span> ${state.language === 'ms' ? 'Zon Bahaya' : 'Danger Zone'}
                     </h3>
-                    <p class="text-[11px] text-red-700 leading-relaxed mb-4">Permanently deactivate and delete your account data. This action is irreversible and you will forfeit any existing wallet balance (MYR ${state.walletBalance.toFixed(2)}).</p>
-                    <button type="button" onclick="deleteAccount()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow-sm">Delete Account</button>
+                    <p class="text-[11px] text-red-700 leading-relaxed mb-4">${state.language === 'ms' ? `Nyahaktifkan dan padam data akaun anda secara kekal. Tindakan ini tidak boleh ditarik balik dan anda akan kehilangan baki dompet yang ada (MYR ${state.walletBalance.toFixed(2)}).` : `Permanently deactivate and delete your account data. This action is irreversible and you will forfeit any existing wallet balance (MYR ${state.walletBalance.toFixed(2)}).`}</p>
+                    <button type="button" onclick="deleteAccount()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all shadow-sm">${state.language === 'ms' ? 'Padam Akaun' : 'Delete Account'}</button>
                 </div>
             </div>
         </div>
@@ -3887,12 +3887,12 @@ window.savePassword = function (event) {
     const confirmPwd = document.getElementById('ps-confirm-pwd').value;
 
     if (newPwd !== confirmPwd) {
-        showNotification('New password and password confirmation do not match.', 'error');
+        showNotification(state.language === 'ms' ? 'Kata laluan baru dan pengesahan kata laluan tidak sepadan.' : 'New password and password confirmation do not match.', 'error');
         return;
     }
 
     if (newPwd.length < 6) {
-        showNotification('Password must be at least 6 characters long.', 'error');
+        showNotification(state.language === 'ms' ? 'Kata laluan mestilah sekurang-kurangnya 6 aksara.' : 'Password must be at least 6 characters long.', 'error');
         return;
     }
 
@@ -3901,7 +3901,7 @@ window.savePassword = function (event) {
     document.getElementById('ps-new-pwd').value = '';
     document.getElementById('ps-confirm-pwd').value = '';
 
-    showNotification('Your password has been changed successfully.', 'success');
+    showNotification(state.language === 'ms' ? 'Kata laluan anda telah berjaya ditukar.' : 'Your password has been changed successfully.', 'success');
 };
 
 window.savePrivacySettings = function (event) {
@@ -3912,12 +3912,15 @@ window.savePrivacySettings = function (event) {
     state.privacySettings.twoFactor = twoFactor;
     state.privacySettings.dataSharing = dataSharing;
 
-    showNotification('Privacy settings saved successfully.', 'success');
+    showNotification(state.language === 'ms' ? 'Tetapan privasi berjaya disimpan.' : 'Privacy settings saved successfully.', 'success');
     navigateTo('profile');
 };
 
 window.deleteAccount = function () {
-    if (confirm("WARNING: Are you sure you want to delete your account? This is permanent and your remaining wallet balance of MYR " + state.walletBalance.toFixed(2) + " will be forfeited.")) {
+    const confirmMsg = state.language === 'ms'
+        ? "AMARAN: Adakah anda pasti mahu memadamkan akaun anda? Ini adalah kekal dan baki dompet anda yang tinggal sebanyak MYR " + state.walletBalance.toFixed(2) + " akan dilucuthakkan."
+        : "WARNING: Are you sure you want to delete your account? This is permanent and your remaining wallet balance of MYR " + state.walletBalance.toFixed(2) + " will be forfeited.";
+    if (confirm(confirmMsg)) {
         // Reset state to Guest
         state.guestInfo = {
             name: 'Guest User',
@@ -3930,7 +3933,7 @@ window.deleteAccount = function () {
         state.transactions = [];
         state.notifications = [];
         updateHeaderWalletDisplay();
-        showNotification('Account successfully deleted.', 'success');
+        showNotification(state.language === 'ms' ? 'Akaun berjaya dipadamkan.' : 'Account successfully deleted.', 'success');
         navigateTo('home');
     }
 };
