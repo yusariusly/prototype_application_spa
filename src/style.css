@@ -109,23 +109,13 @@ body {
         font-weight: 700 !important;
     }
     
-    /* Add padding at bottom of main container so it does not get cut off by bottom sticky bar */
+    /* Add padding at bottom of main container so it does not get cut off by floating button */
     main {
-        padding-bottom: 90px !important;
+        padding-bottom: 74px !important;
     }
     
-    /* Ensure user login modal fits nicely above mobile sticky bottom bar */
+    /* Ensure user login modal fits nicely */
     #user-login-modal {
-        padding-bottom: 64px;
-    }
-
-    /* Mobile Sticky Bottom Action Bar styling */
-    #mobile-sticky-bottom-bar {
-        background: rgba(255, 255, 255, 0.92) !important;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.08) !important;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-        padding-bottom: calc(env(safe-area-inset-bottom) + 12px) !important;
+        padding-bottom: 0px;
     }
 }
