@@ -992,7 +992,7 @@ function renderServicesCatalogView() {
             </div>
 
             <!-- Section 3: Facial & Body Care -->
-            <div>
+            <div class="hidden">
                 <div class="flex justify-between items-end mb-8 border-b border-slate-100 pb-4">
                     <div>
                         <h2 class="font-serif text-2xl font-bold text-[#1E293B] mb-1">Facial & Body Care</h2>
