@@ -1974,12 +1974,7 @@ function renderSuccessView() {
                     </div>
                 </div>
                 
-                <!-- Location -->
-                <div class="pt-4 border-t border-outline-variant/30">
-                    <span class="font-label-caps text-[9px] text-outline uppercase font-bold tracking-wider mb-0.5 block">LOCATION</span>
-                    <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">Serenity &amp; Soul Sanctuary</h3>
-                    <p class="font-body-sm text-xs text-on-surface-variant">12 Orchard Road, Singapore 238886</p>
-                </div>
+
             </div>
             
             <!-- Right Side Actions & QR -->
@@ -2220,11 +2215,7 @@ function renderProfileView() {
                     <span class="material-symbols-outlined text-on-surface-variant text-lg">schedule</span>
                 </div>
                 <h3 class="font-serif text-sm font-bold text-[#1E293B] mb-1">${nextApp.serviceName}</h3>
-                <p class="font-body-sm text-[11px] text-on-surface-variant mb-2">${nextApp.date} • ${nextApp.time}</p>
-                <div class="flex items-center gap-1.5 text-on-surface-variant text-[11px] mb-4">
-                    <span class="material-symbols-outlined text-xs text-primary">location_on</span>
-                    <span>${nextApp.location || 'Serenity Orchard Wing'}</span>
-                </div>
+                <p class="font-body-sm text-[11px] text-on-surface-variant mb-4">${nextApp.date} • ${nextApp.time}</p>
                 <button onclick="rescheduleBooking('${nextApp.id}')" class="text-[#B45309] hover:text-[#92400e] font-bold text-[11px] transition-colors">
                     Reschedule
                 </button>
@@ -2904,10 +2895,7 @@ function renderBookingHistoryView() {
                                     <span class="material-symbols-outlined text-sm text-[#50613f]">person</span>
                                     <span>Therapist: <strong class="text-on-surface">${booking.therapist}</strong></span>
                                 </p>
-                                <p class="font-body-sm text-[11px] text-on-surface-variant flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-sm text-[#50613f]">location_on</span>
-                                    <span>${booking.location}</span>
-                                </p>
+
                             </div>
                         </div>
                     </div>
@@ -4419,11 +4407,7 @@ window.openQrTicketModal = function (bookingId) {
                     </div>
                 </div>
                 
-                <div class="pt-4 border-t border-outline-variant/30">
-                    <span class="font-label-caps text-[9px] text-outline uppercase font-bold tracking-wider mb-0.5 block">LOCATION</span>
-                    <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">Serenity &amp; Soul Sanctuary</h3>
-                    <p class="font-body-sm text-xs text-on-surface-variant">${booking.location || '12 Orchard Road, Singapore 238886'}</p>
-                </div>
+
             </div>
             
             <!-- Right Side Actions & QR -->
