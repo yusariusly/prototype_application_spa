@@ -408,7 +408,7 @@ window.closeLoginModal = function() {
     // Restore bottom nav bar if on a booking step
     const _nav = document.getElementById('mobile-bottom-nav');
     if (_nav) {
-        const bookingViews = ['select-service', 'select-therapist', 'select-time'];
+        const bookingViews = ['select-service', 'select-therapist', 'select-time', 'confirm-booking'];
         if (bookingViews.includes(state.currentView)) {
             _nav.classList.add('show-mobile-nav');
         } else {
@@ -425,7 +425,7 @@ window.onLoginSuccess = function () {
     // Restore bottom nav bar if on a booking step
     const _nav = document.getElementById('mobile-bottom-nav');
     if (_nav) {
-        const bookingViews = ['select-service', 'select-therapist', 'select-time'];
+        const bookingViews = ['select-service', 'select-therapist', 'select-time', 'confirm-booking'];
         if (bookingViews.includes(state.currentView)) {
             _nav.classList.add('show-mobile-nav');
         } else {
@@ -493,7 +493,7 @@ function navigateTo(viewId) {
     // Update active state of navbar menu items
     updateNavbarActiveState(viewId);
 
-    // Mobile bottom nav bar: always visible on booking steps 1-3
+    // Mobile bottom nav bar: always visible on booking steps 1-4
     const _mobileNav = document.getElementById('mobile-bottom-nav');
     const _backBtn   = document.getElementById('mobile-back-btn');
     const _contBtn   = document.getElementById('mobile-continue-btn');
@@ -510,6 +510,10 @@ function navigateTo(viewId) {
             _mobileNav.classList.add('show-mobile-nav');
             _backBtn.onclick = () => navigateTo('select-therapist');
             _contBtn.onclick = () => window.nextStep(3);
+        } else if (viewId === 'confirm-booking') {
+            _mobileNav.classList.add('show-mobile-nav');
+            _backBtn.onclick = () => navigateTo('select-time');
+            _contBtn.onclick = () => confirmReservation();
         } else {
             _mobileNav.classList.remove('show-mobile-nav');
         }
