@@ -498,6 +498,188 @@
                 <!-- Rendered Dynamically by JS -->
             </div>
         </section>
+
+        <!-- ==================== VIEW 17: FAQ VIEW ==================== -->
+        <section id="view-faq" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
+            <div class="mb-8 flex items-center justify-between">
+                <div>
+                    <h1 class="font-serif text-3xl text-[#1E293B] font-bold mb-1">Frequently Asked Questions</h1>
+                    <p class="font-body-sm text-xs text-on-surface-variant">Find answers to common questions about our services and booking process.</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 rounded-xl border border-outline hover:bg-slate-50 text-secondary font-bold text-xs flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Home
+                </button>
+            </div>
+            
+            <div class="space-y-4 max-w-3xl mx-auto">
+                <details class="group glass-panel rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-outline-variant/30 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-sm text-[#1E293B]">
+                        <span>How do I book a spa treatment?</span>
+                        <span class="transition group-open:rotate-180"><span class="material-symbols-outlined">expand_more</span></span>
+                    </summary>
+                    <p class="mt-4 text-xs text-on-surface-variant leading-relaxed">
+                        Booking is simple! You can click "Book Now" in the navbar, select your preferred service, choose an available therapist, pick your desired date and time, and confirm. You can proceed without logging in initially, and you will only be asked to sign in or register at the final step to secure your reservation.
+                    </p>
+                </details>
+
+                <details class="group glass-panel rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-outline-variant/30 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-sm text-[#1E293B]">
+                        <span>What is Serenity Wallet and how does it work?</span>
+                        <span class="transition group-open:rotate-180"><span class="material-symbols-outlined">expand_more</span></span>
+                    </summary>
+                    <p class="mt-4 text-xs text-on-surface-variant leading-relaxed">
+                        Serenity Wallet is your prepaid credit account in our app. You can top up your wallet with custom amounts, and use it to instantly pay for spa treatments and packages at checkout. It makes booking fast and secure.
+                    </p>
+                </details>
+
+                <details class="group glass-panel rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-outline-variant/30 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-sm text-[#1E293B]">
+                        <span>How do Session Packages work?</span>
+                        <span class="transition group-open:rotate-180"><span class="material-symbols-outlined">expand_more</span></span>
+                    </summary>
+                    <p class="mt-4 text-xs text-on-surface-variant leading-relaxed">
+                        We offer packages of 10 sessions for signature treatments like Aromatherapy Massage and Radiance Facials. Once purchased, these packages will appear in the "Your Active Packages" section on your Home dashboard. You can click "Use Package" at any time to instantly schedule a session from your remaining quota.
+                    </p>
+                </details>
+
+                <details class="group glass-panel rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-outline-variant/30 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-sm text-[#1E293B]">
+                        <span>What is the cancellation policy?</span>
+                        <span class="transition group-open:rotate-180"><span class="material-symbols-outlined">expand_more</span></span>
+                    </summary>
+                    <p class="mt-4 text-xs text-on-surface-variant leading-relaxed">
+                        You can cancel or reschedule your reservation up to 24 hours before your scheduled treatment time directly from your Booking History profile. Cancellations made within 24 hours of the appointment may incur a late cancellation fee.
+                    </p>
+                </details>
+
+                <details class="group glass-panel rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden border border-outline-variant/30 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-sm text-[#1E293B]">
+                        <span>Do I need to select a specific therapist?</span>
+                        <span class="transition group-open:rotate-180"><span class="material-symbols-outlined">expand_more</span></span>
+                    </summary>
+                    <p class="mt-4 text-xs text-on-surface-variant leading-relaxed">
+                        No, selecting a specific therapist is optional. If you choose "No Preference", the system will automatically allocate your booking to the next available specialist for your chosen time slot.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 18: HOW TO USE VIEW ==================== -->
+        <section id="view-how-to-use" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
+            <div class="mb-8 flex items-center justify-between">
+                <div>
+                    <h1 class="font-serif text-3xl text-[#1E293B] font-bold mb-1">How to Use</h1>
+                    <p class="font-body-sm text-xs text-on-surface-variant">Learn how to easily navigate our spa booking system and packages.</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 rounded-xl border border-outline hover:bg-slate-50 text-secondary font-bold text-xs flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Home
+                </button>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-12">
+                <!-- Step grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="glass-panel rounded-3xl p-8 flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-[#50613f] text-white flex items-center justify-center font-bold shrink-0 shadow-md">1</div>
+                        <div>
+                            <h3 class="font-serif text-lg font-bold text-[#1E293B] mb-2">Browse and Pick Service</h3>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">
+                                Go to the Service catalog or explore our featured packages. Choose from massage treatments, rejuvenating skin therapies, body wraps, or pre-purchased bundles.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-8 flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-[#50613f] text-white flex items-center justify-center font-bold shrink-0 shadow-md">2</div>
+                        <div>
+                            <h3 class="font-serif text-lg font-bold text-[#1E293B] mb-2">Select Your Therapist</h3>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">
+                                View available specialists and select one that fits your treatment. Or choose "No Preference" if you want the first available professional.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-8 flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-[#50613f] text-white flex items-center justify-center font-bold shrink-0 shadow-md">3</div>
+                        <div>
+                            <h3 class="font-serif text-lg font-bold text-[#1E293B] mb-2">Pick Date and Time</h3>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">
+                                Our calendar dynamically displays available time slots based on your selected therapist's schedule and the duration of your treatment. Choose what fits your day.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-3xl p-8 flex gap-6 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-[#50613f] text-white flex items-center justify-center font-bold shrink-0 shadow-md">4</div>
+                        <div>
+                            <h3 class="font-serif text-lg font-bold text-[#1E293B] mb-2">Confirm and Secure</h3>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">
+                                Review your details at the confirmation step. When you click confirm, you will be prompted to log in or register. Once authenticated, your booking is securely saved!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package Guide -->
+                <div class="glass-panel rounded-3xl p-8 md:p-10 border border-primary/20 bg-primary-fixed/10">
+                    <h3 class="font-serif text-xl font-bold text-primary mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">stars</span> Using Purchased Multi-Session Packages
+                    </h3>
+                    <p class="text-xs text-on-surface-variant leading-relaxed mb-6">
+                        Purchasing a package saves you money and credits your account with 10 sessions. Here is how you schedule them:
+                    </p>
+                    <ol class="list-decimal list-inside space-y-3 text-xs text-on-surface-variant">
+                        <li>Ensure you are logged into your account.</li>
+                        <li>On the Home page, look at the <strong>"Your Active Packages"</strong> widget.</li>
+                        <li>Click <strong>"Use Package"</strong> next to the package you wish to schedule.</li>
+                        <li>Pick a date and time slot. Your session will be booked immediately, deducting one session from your active package balance without requiring checkout payment.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 19: LEGAL AGREEMENT VIEW ==================== -->
+        <section id="view-legal" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
+            <div class="mb-8 flex items-center justify-between">
+                <div>
+                    <h1 class="font-serif text-3xl text-[#1E293B] font-bold mb-1">Terms & Legal Agreements</h1>
+                    <p class="font-body-sm text-xs text-on-surface-variant">Read our privacy policies, guidelines, and terms of services.</p>
+                </div>
+                <button onclick="navigateTo('home')" class="px-4 py-2 rounded-xl border border-outline hover:bg-slate-50 text-secondary font-bold text-xs flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Home
+                </button>
+            </div>
+
+            <div class="max-w-3xl mx-auto glass-panel rounded-3xl p-8 md:p-10 space-y-8 text-on-surface-variant">
+                <div class="space-y-3">
+                    <h2 class="font-serif text-lg font-bold text-[#1E293B]">1. Terms of Service</h2>
+                    <p class="text-xs leading-relaxed">
+                        Welcome to Serenity & Soul. By accessing our application and booking our services, you agree to comply with and be bound by the following terms. All bookings are subject to availability and therapist schedules.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="font-serif text-lg font-bold text-[#1E293B]">2. Privacy Policy</h2>
+                    <p class="text-xs leading-relaxed">
+                        We value your privacy. We collect guest details (name, email, phone number) only to manage your appointments, wallet, and notification history. Your credit card information is processed securely through simulated payment networks and is not stored or shared.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="font-serif text-lg font-bold text-[#1E293B]">3. Wallet and Refund Policies</h2>
+                    <p class="text-xs leading-relaxed">
+                        The Serenity Wallet is a simulated account for interactive prototype testing. Funds loaded onto the wallet are for demonstration purposes and cannot be redeemed for real currency. Re-scheduling is permitted up to 24 hours prior to appointment time. Late cancellations may be subject to a fee.
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h2 class="font-serif text-lg font-bold text-[#1E293B]">4. Safety and Health Guidelines</h2>
+                    <p class="text-xs leading-relaxed">
+                        Guests are required to disclose any health issues, allergies, or physical sensitivities in the "special requests" field when finalizing their reservation. We prioritize guest comfort and safety at all times.
+                    </p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -507,7 +689,14 @@
                 <div class="font-headline-lg text-lg text-primary mb-3 font-semibold">Serenity &amp; Soul</div>
                 <p class="text-on-surface-variant">© 2024 Serenity &amp; Soul. All Rights Reserved.</p>
             </div>
-
+            <div class="flex flex-wrap gap-8 md:gap-16">
+                <div class="flex flex-col gap-3">
+                    <span class="font-bold text-[10px] uppercase tracking-wider text-outline">Information</span>
+                    <a onclick="navigateTo('faq')" class="hover:underline cursor-pointer">FAQs</a>
+                    <a onclick="navigateTo('how-to-use')" class="hover:underline cursor-pointer">How to Use</a>
+                    <a onclick="navigateTo('legal')" class="hover:underline cursor-pointer">Terms & Agreements</a>
+                </div>
+            </div>
         </div>
     </footer>
 

@@ -601,7 +601,7 @@ function updateHeaderWalletDisplay() {
     });
 
     const walletPills = document.querySelectorAll('.wallet-nav-pill');
-    const hideWallet = ['home', 'services-catalog', 'all-services'].includes(state.currentView);
+    const hideWallet = ['home', 'services-catalog', 'all-services', 'faq', 'how-to-use', 'legal'].includes(state.currentView);
     walletPills.forEach(pill => {
         if (hideWallet) {
             pill.classList.add('hidden');
