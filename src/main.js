@@ -135,37 +135,53 @@ let SERVICES = {
 };
 
 function syncServices() {
-    const adminSrvRaw = localStorage.getItem('admin_services');
-    if (adminSrvRaw) {
-        try {
-            const list = JSON.parse(adminSrvRaw);
-            const mapped = {};
-            list.forEach(s => {
-                let type = 'massage';
-                const cat = (s.category || '').toLowerCase();
-                if (cat.includes('package')) type = 'packages';
-                else if (cat.includes('skincare') || cat.includes('facial')) type = 'facial';
-                else if (cat.includes('signature')) type = 'signature';
-                else if (cat.includes('body')) type = 'body';
+    let adminSrvRaw = localStorage.getItem('admin_services');
+    if (!adminSrvRaw) {
+        const defaultServices = [
+          { id: 'radiance-bundle', name: 'Radiance Facial Bundle', price: 850, regularPrice: 950, duration: 60, category: 'Packages', desc: "Commit to your skin's health with our 10-session package. Regular treatments yield lasting, radiant results. Enjoy significant savings when booking this comprehensive care package.", img: 'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?auto=format&fit=crop&w=800&q=80', showOnHome: true, bestValue: true },
+          { id: 'aromatherapy-bundle', name: 'Aromatherapy Massage Package (10 Sessions)', price: 1000, regularPrice: 1200, duration: 60, category: 'Packages', desc: 'Pre-purchase 10 sessions of our signature Aromatherapy Massage and save. Valid for 12 months.', img: 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=800&q=80', showOnHome: false },
+          { id: 'half-day-spa-package', name: 'Half-Day Spa Package', price: 250, regularPrice: 300, duration: 180, category: 'Packages', desc: 'Enjoy a combination of aromatherapy massage, facial, and body scrub for 3 full hours of ultimate relaxation.', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80', showOnHome: true },
+          { id: 'aromatherapy-massage', name: 'Aromatherapy Massage', price: 120, duration: 60, category: 'Massage', desc: 'Deep relaxation massage using selected essential oils that soothe the nervous system and relieve muscle tension. A holistic experience.', img: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80', showOnHome: true },
+          { id: 'deep-tissue', name: 'Serenity Signature Deep Tissue', price: 150, duration: 90, category: 'Therapeutic', desc: 'Intensive treatment focusing on deep muscle layers to restore the body from chronic fatigue.', img: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=800&q=80', showOnHome: false },
+          { id: 'radiance-organic-facial', name: 'Facial Rejuvenation', price: 95, duration: 60, category: 'Skincare', desc: 'Brightening facial treatment with organic plant extracts.', img: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=800&q=80', showOnHome: true },
+          { id: 'hot-stone', name: 'Hot Stone Therapy', price: 165, duration: 90, category: 'Signature', desc: 'Basalt stones are heated and placed on key energy points to melt away tension and restore vital energy flow.', img: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=800&q=80', showOnHome: false },
+          { id: 'signature-soul', name: 'Signature Soul Massage', price: 190, duration: 120, category: 'Signature', desc: "A personalized fusion of Swedish, Shiatsu, and Reflexology techniques tailored to your body's specific needs.", img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80', showOnHome: false },
+          { id: 'illuminating-peel', name: 'Illuminating Peel', price: 95, duration: 45, category: 'Skincare', desc: 'Fruit enzymes to brighten and smooth dull skin.', img: 'https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?auto=format&fit=crop&w=800&q=80', showOnHome: false },
+          { id: 'pure-hydration', name: 'Pure Hydration', price: 120, duration: 60, category: 'Skincare', desc: 'Deep hydration facial restoring radiance.', img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80', showOnHome: false },
+          { id: 'detox-body-scrub', name: 'Body Scrub', price: 85, duration: 30, category: 'Body', desc: 'Exfoliating treatment with natural sea salts.', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=800&q=80', showOnHome: true }
+        ];
+        localStorage.setItem('admin_services', JSON.stringify(defaultServices));
+        adminSrvRaw = JSON.stringify(defaultServices);
+    }
 
-                mapped[s.id] = {
-                    id: s.id,
-                    name: s.name,
-                    type: type,
-                    price: parseFloat(s.price) || 0,
-                    regularPrice: s.regularPrice ? parseFloat(s.regularPrice) : (s.id === 'radiance-bundle' ? 950 : (s.id === 'aromatherapy-bundle' ? 1200 : (s.id === 'half-day-spa-package' ? 300 : undefined))),
-                    sessions: type === 'packages' ? (s.id === 'radiance-bundle' || s.id === 'aromatherapy-bundle' ? 10 : 1) : undefined,
-                    duration: s.duration + ' Mins',
-                    description: s.desc || '',
-                    image: s.img || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAITwrqOltnfvKuQeZY1uxmm9vb6Qdfic56l_uXZKbNu0tXzlwl1n4ejVoAdFTVx8_yqPZWtW9HW_UIcEhgKeDc95gwyChyS2Ua2e9hpiXuZNxuTDcGlKl4mu9wQyriwgoRgAjU_sYo7WYl5vLm4n97udJ4ZDhKVVehPxZ0e7GpWFZYoFPQ6IBkgV-zFzxT-jxw4_QAFdbLiAYvISsUvvT8v__rfmdQhJwNblCS5EdoXM6Wv2VNkZEE8Q',
-                    showOnHome: s.showOnHome !== false,
-                    bestValue: s.bestValue === true
-                };
-            });
-            SERVICES = mapped;
-        } catch (e) {
-            console.error('Failed to sync services:', e);
-        }
+    try {
+        const list = JSON.parse(adminSrvRaw);
+        const mapped = {};
+        list.forEach(s => {
+            let type = 'massage';
+            const cat = (s.category || '').toLowerCase();
+            if (cat.includes('package')) type = 'packages';
+            else if (cat.includes('skincare') || cat.includes('facial')) type = 'facial';
+            else if (cat.includes('signature')) type = 'signature';
+            else if (cat.includes('body')) type = 'body';
+
+            mapped[s.id] = {
+                id: s.id,
+                name: s.name,
+                type: type,
+                price: parseFloat(s.price) || 0,
+                regularPrice: s.regularPrice ? parseFloat(s.regularPrice) : (s.id === 'radiance-bundle' ? 950 : (s.id === 'aromatherapy-bundle' ? 1200 : (s.id === 'half-day-spa-package' ? 300 : undefined))),
+                sessions: type === 'packages' ? (s.id === 'radiance-bundle' || s.id === 'aromatherapy-bundle' ? 10 : 1) : undefined,
+                duration: s.duration + ' Mins',
+                description: s.desc || '',
+                image: s.img || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAITwrqOltnfvKuQeZY1uxmm9vb6Qdfic56l_uXZKbNu0tXzlwl1n4ejVoAdFTVx8_yqPZWtW9HW_UIcEhgKeDc95gwyChyS2Ua2e9hpiXuZNxuTDcGlKl4mu9wQyriwgoRgAjU_sYo7WYl5vLm4n97udJ4ZDhKVVehPxZ0e7GpWFZYoFPQ6IBkgV-zFzxT-jxw4_QAFdbLiAYvISsUvvT8v__rfmdQhJwNblCS5EdoXM6Wv2VNkZEE8Q',
+                showOnHome: s.showOnHome !== false,
+                bestValue: s.bestValue === true
+            };
+        });
+        SERVICES = mapped;
+    } catch (e) {
+        console.error('Failed to sync services:', e);
     }
 }
 
