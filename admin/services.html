@@ -97,7 +97,10 @@
         <h1>Service Management</h1>
         <p>Curate and manage your spa's treatment menu and packages.</p>
       </div>
-      <button class="btn-primary"><span class="material-symbols-outlined" style="font-size:18px">add</span>Add New Service</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-primary" onclick="openServiceModal()"><span class="material-symbols-outlined" style="font-size:18px">add</span>Add New Service</button>
+        <button class="btn-outline" onclick="openBundleModal()"><span class="material-symbols-outlined" style="font-size:18px">package_2</span>Add New Package</button>
+      </div>
     </div>
 
     <!-- Active Services & Treatments -->
@@ -119,48 +122,6 @@
       </div>
       <div class="service-grid" id="bundles-container">
         <!-- Rendered Dynamically -->
-      </div>
-    </section>
-
-    <!-- Bundle Builder -->
-    <section style="margin-top:2.5rem;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;">
-        <span class="material-symbols-outlined" style="color:#735c00;font-size:22px;">package_2</span>
-        <h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#50613f;margin:0;">Bundle &amp; Package Builder</h2>
-      </div>
-      <div class="builder-grid">
-        <form class="builder-card" id="bundle-form">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem;">
-            <div><label class="form-label">Package Name</label><input id="bundle-name" required class="form-input" type="text" placeholder="e.g. Radiance Bundle"></div>
-            <div><label class="form-label">Bundle Price (MYR)</label><input id="bundle-price" required class="form-input" type="number" placeholder="0.00"></div>
-            <div><label class="form-label">Total Sessions</label><input id="bundle-sessions" class="form-input" type="number" min="1" value="1"></div>
-          </div>
-          <div style="margin-bottom:1.5rem;">
-            <label class="form-label" style="margin-bottom:10px;">Select Services</label>
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;" id="builder-services-container">
-              <!-- Rendered Dynamically -->
-            </div>
-          </div>
-          <div style="margin-bottom:1.5rem;"><label class="form-label">Description</label><textarea id="bundle-desc" required class="form-textarea" rows="3" placeholder="Describe the experience of this package..."></textarea></div>
-          <div style="display:flex;justify-content:flex-end;"><button type="submit" class="btn-primary">Save Package</button></div>
-        </form>
-
-        <div class="preview-card">
-          <h3 style="font-size:0.85rem;font-weight:700;color:#735c00;letter-spacing:0.07em;text-transform:uppercase;margin:0 0 1.25rem;">Package Preview</h3>
-          <div id="preview-empty" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:1rem 0;">
-            <div style="width:60px;height:60px;border-radius:999px;background:#fed65b;display:flex;align-items:center;justify-content:center;"><span class="material-symbols-outlined" style="font-size:28px;color:#745c00;">auto_awesome</span></div>
-            <p style="font-size:0.78rem;color:#75786e;line-height:1.6;font-style:italic;margin:0;">Select services to preview your bundle here.</p>
-          </div>
-          <div id="preview-content" style="flex:1;display:none;flex-direction:column;gap:10px;">
-            <div><p style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;margin:0 0 4px;">Package Name</p><p id="preview-name" style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#161d1d;margin:0;">—</p></div>
-            <div id="preview-services" style="display:flex;flex-direction:column;gap:5px;"></div>
-            <div style="background:#eef5f4;border:1.5px dashed rgba(197,200,188,0.6);border-radius:10px;padding:10px 14px;"><span style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Est. Duration: <span id="preview-duration">—</span> min</span></div>
-          </div>
-          <div style="margin-top:auto;padding-top:1.25rem;border-top:1px solid rgba(197,200,188,0.35);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:0.82rem;color:#45483f;">Combined Value:</span><span id="preview-original" style="font-size:0.82rem;color:#c5c8bc;text-decoration:line-through;">MYR 0.00</span></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:0.85rem;font-weight:700;color:#50613f;">Bundle Price:</span><span id="preview-price" style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:#735c00;">MYR 0.00</span></div>
-          </div>
-        </div>
       </div>
     </section>
   </main>
@@ -211,6 +172,60 @@
         <button type="button" class="btn-outline" style="border-color:#d32f2f;color:#d32f2f;padding:8px 14px;display:none;" id="btn-delete-srv">Delete</button>
         <div style="display:flex;gap:8px;margin-left:auto;">
           <button type="button" class="btn-outline" style="padding:8px 16px;" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary" style="padding:8px 18px;">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Bundle Modal -->
+<div class="modal-overlay" id="bundle-modal">
+  <div class="modal-content" style="max-width: 580px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(197,200,188,0.3);padding-bottom:12px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:#50613f;margin:0;" id="bundle-modal-title">Edit Package</h3>
+      <button type="button" class="icon-btn" onclick="closeBundleModal()"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form id="bundle-modal-form" style="display:flex;flex-direction:column;gap:1.15rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Package Name</label>
+          <input type="text" id="bm-name" required placeholder="e.g. Radiance Bundle" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Bundle Price (MYR)</label>
+          <input type="number" id="bm-price" required placeholder="0.00" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
+        </div>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Total Sessions</label>
+          <input type="number" id="bm-sessions" required min="1" value="1" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Select Services</label>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:180px;overflow-y:auto;padding:6px;background:rgba(244,251,250,0.5);border:1px solid rgba(197,200,188,0.3);border-radius:12px;" id="bm-services-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Description</label>
+        <textarea id="bm-desc" required class="form-textarea" rows="3" placeholder="Describe the experience of this package..."></textarea>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+        <input type="checkbox" id="bm-show-on-home" style="width:16px;height:16px;accent-color:#50613f;cursor:pointer;">
+        <label for="bm-show-on-home" style="font-size:0.75rem;font-weight:700;color:#45483f;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;">Show on Home Page</label>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:1px solid rgba(197,200,188,0.3);padding-top:14px;">
+        <button type="button" class="btn-outline" style="border-color:#d32f2f;color:#d32f2f;padding:8px 14px;display:none;" id="btn-delete-bm">Delete</button>
+        <div style="display:flex;gap:8px;margin-left:auto;">
+          <button type="button" class="btn-outline" style="padding:8px 16px;" onclick="closeBundleModal()">Cancel</button>
           <button type="submit" class="btn-primary" style="padding:8px 18px;">Save</button>
         </div>
       </div>
@@ -320,7 +335,6 @@
       bundlesContainer.innerHTML += makeCard(s);
     });
 
-    renderBuilderOptions();
   }
 
   window.toggleHomeVisibility = (id) => {
@@ -332,55 +346,6 @@
     AdminState.toggleBestValue(id);
     renderServices();
   };
-
-  function renderBuilderOptions() {
-    const list = AdminState.getServices().filter(s => s.category !== 'Package' && s.category !== 'Packages');
-    const container = document.getElementById('builder-services-container');
-    container.innerHTML = list.map(s => `
-      <label class="service-check-label" id="lbl-${s.id}">
-        <input type="checkbox" class="service-checkbox" data-price="${s.price}" data-duration="${s.duration}" data-name="${s.name}" data-id="${s.id}" onchange="toggleCheckboxClass(this)">
-        <div>
-          <div style="font-weight:700;font-size:0.85rem;color:#50613f;">${s.name}</div>
-          <div style="font-size:0.72rem;color:#45483f;">MYR ${s.price} · ${s.duration}min</div>
-        </div>
-      </label>
-    `).join('');
-
-    updatePreview();
-  }
-
-  window.toggleCheckboxClass = (el) => {
-    el.closest('label').classList.toggle('checked', el.checked);
-    updatePreview();
-  };
-
-  function updatePreview() {
-    const checkboxes = document.querySelectorAll('.service-checkbox');
-    const bundleName = document.getElementById('bundle-name');
-    const bundlePrice = document.getElementById('bundle-price');
-    
-    const checked = [...checkboxes].filter(c => c.checked);
-    const totalValue = checked.reduce((s,c) => s + parseInt(c.dataset.price), 0);
-    const totalDuration = checked.reduce((s,c) => s + parseInt(c.dataset.duration), 0);
-    const price = parseFloat(bundlePrice.value) || 0;
-    const name = bundleName.value.trim() || '—';
-    
-    document.getElementById('preview-name').textContent = name;
-    document.getElementById('preview-duration').textContent = totalDuration || '—';
-    document.getElementById('preview-original').textContent = `MYR ${totalValue.toFixed(2)}`;
-    document.getElementById('preview-price').textContent = `MYR ${price.toFixed(2)}`;
-    
-    document.getElementById('preview-services').innerHTML = checked.map(c => `
-      <div style="display:flex;justify-content:space-between;font-size:0.78rem;padding:5px 0;border-bottom:1px solid rgba(197,200,188,0.3);">
-        <span style="font-weight:600;color:#161d1d">${c.dataset.name}</span>
-        <span style="color:#45483f">${c.dataset.duration}min</span>
-      </div>
-    `).join('');
-    
-    const show = checked.length > 0 || name !== '—' || price > 0;
-    document.getElementById('preview-empty').style.display = show ? 'none' : 'flex';
-    document.getElementById('preview-content').style.display = show ? 'flex' : 'none';
-  }
 
   window.openServiceModal = (serviceId = null) => {
     editingServiceId = serviceId;
@@ -426,99 +391,90 @@
     renderServices();
   };
 
-  window.openBundleEditor = (bundleId) => {
+  window.openBundleModal = (bundleId = null) => {
     editingBundleId = bundleId;
-    const list = AdminState.getServices();
-    const bundle = list.find(s => s.id === bundleId);
-    if (!bundle) return;
+    const deleteBtn = document.getElementById('btn-delete-bm');
 
-    // Populate inputs
-    document.getElementById('bundle-name').value = bundle.name;
-    document.getElementById('bundle-price').value = bundle.price;
-    document.getElementById('bundle-sessions').value = bundle.sessions || 1;
-    document.getElementById('bundle-desc').value = bundle.desc || '';
+    if (bundleId) {
+      document.getElementById('bundle-modal-title').textContent = 'Edit Package';
+      const list = AdminState.getServices();
+      const bundle = list.find(s => s.id === bundleId);
+      if (!bundle) return;
 
-    // Check services checkboxes
-    const checkboxes = document.querySelectorAll('.service-checkbox');
-    const includedServices = bundle.services || [];
-    checkboxes.forEach(cb => {
-      const isIncluded = includedServices.includes(cb.dataset.id);
-      cb.checked = isIncluded;
-      cb.closest('label').classList.toggle('checked', isIncluded);
-    });
+      document.getElementById('bm-name').value = bundle.name;
+      document.getElementById('bm-price').value = bundle.price;
+      document.getElementById('bm-sessions').value = bundle.sessions || 1;
+      document.getElementById('bm-desc').value = bundle.desc || '';
+      document.getElementById('bm-show-on-home').checked = bundle.showOnHome !== false;
+      deleteBtn.style.display = 'block';
+      
+      renderBundleModalServices(bundle.services || []);
+    } else {
+      document.getElementById('bundle-modal-title').textContent = 'Add New Package';
+      document.getElementById('bm-name').value = '';
+      document.getElementById('bm-price').value = '';
+      document.getElementById('bm-sessions').value = '1';
+      document.getElementById('bm-desc').value = '';
+      document.getElementById('bm-show-on-home').checked = true;
+      deleteBtn.style.display = 'none';
 
-    // Update the button text
-    const saveBtn = document.querySelector('#bundle-form button[type="submit"]');
-    if (saveBtn) {
-      saveBtn.textContent = 'Update Package';
-      saveBtn.style.background = '#d97706'; // a nice amber color for edit
+      renderBundleModalServices([]);
     }
 
-    // Add a cancel button if not already present
-    let cancelBtn = document.getElementById('btn-cancel-bundle-edit');
-    if (!cancelBtn) {
-      cancelBtn = document.createElement('button');
-      cancelBtn.type = 'button';
-      cancelBtn.id = 'btn-cancel-bundle-edit';
-      cancelBtn.className = 'btn-outline';
-      cancelBtn.textContent = 'Cancel Edit';
-      cancelBtn.style.marginRight = '8px';
-      cancelBtn.onclick = () => window.cancelBundleEdit();
-      saveBtn.parentNode.insertBefore(cancelBtn, saveBtn);
-    }
-
-    // Update preview
-    updatePreview();
-
-    // Scroll to the bundle builder form smoothly
-    const builderSection = document.getElementById('bundle-form').closest('section');
-    if (builderSection) {
-      builderSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById('bundle-modal').style.display = 'flex';
   };
 
-  window.cancelBundleEdit = () => {
-    editingBundleId = null;
-    document.getElementById('bundle-form').reset();
-    
-    // Clear checked checkboxes
-    const checkboxes = document.querySelectorAll('.service-checkbox');
-    checkboxes.forEach(cb => {
-      cb.checked = false;
-      cb.closest('label').classList.remove('checked');
-    });
-
-    const saveBtn = document.querySelector('#bundle-form button[type="submit"]');
-    if (saveBtn) {
-      saveBtn.textContent = 'Save Package';
-      saveBtn.style.background = ''; // restore original background
-    }
-
-    const cancelBtn = document.getElementById('btn-cancel-bundle-edit');
-    if (cancelBtn) cancelBtn.remove();
-
-    updatePreview();
+  window.closeBundleModal = () => {
+    document.getElementById('bundle-modal').style.display = 'none';
   };
+
+  window.openBundleEditor = (bundleId) => {
+    window.openBundleModal(bundleId);
+  };
+
+  function renderBundleModalServices(includedServiceIds) {
+    const list = AdminState.getServices().filter(s => s.category !== 'Package' && s.category !== 'Packages');
+    const container = document.getElementById('bm-services-container');
+    container.innerHTML = list.map(s => {
+      const isChecked = includedServiceIds.includes(s.id);
+      return `
+        <label class="service-check-label ${isChecked ? 'checked' : ''}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(197,200,188,0.4);border-radius:10px;cursor:pointer;transition:all 0.2s;" onchange="this.classList.toggle('checked', this.querySelector('input').checked)">
+          <input type="checkbox" class="bm-service-checkbox" data-price="${s.price}" data-duration="${s.duration}" data-id="${s.id}" ${isChecked ? 'checked' : ''} style="accent-color:#50613f;">
+          <div>
+            <div style="font-weight:700;font-size:0.78rem;color:#50613f;line-height:1.2;">${s.name}</div>
+            <div style="font-size:0.65rem;color:#45483f;margin-top:2px;">MYR ${s.price}</div>
+          </div>
+        </label>
+      `;
+    }).join('');
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     renderServices();
 
-    document.getElementById('bundle-name').addEventListener('input', updatePreview);
-    document.getElementById('bundle-price').addEventListener('input', updatePreview);
-
-    // Save bundle package
-    document.getElementById('bundle-form').addEventListener('submit', (e) => {
+    // Save bundle package (modal form)
+    document.getElementById('bundle-modal-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('bundle-name').value;
-      const price = parseFloat(document.getElementById('bundle-price').value) || 0;
-      const desc = document.getElementById('bundle-desc').value;
-      
-      const checkboxes = document.querySelectorAll('.service-checkbox');
+      const name = document.getElementById('bm-name').value;
+      const price = parseFloat(document.getElementById('bm-price').value) || 0;
+      const desc = document.getElementById('bm-desc').value;
+      const sessions = parseInt(document.getElementById('bm-sessions').value) || 1;
+      const showOnHome = document.getElementById('bm-show-on-home').checked;
+
+      const checkboxes = document.querySelectorAll('.bm-service-checkbox');
       const checked = [...checkboxes].filter(c => c.checked);
       const totalDuration = checked.reduce((s,c) => s + parseInt(c.dataset.duration), 0);
       const totalRegularPrice = checked.reduce((s,c) => s + parseFloat(c.dataset.price), 0);
 
       const list = AdminState.getServices();
+
+      if (showOnHome) {
+        const currentFeatured = list.filter(s => s.showOnHome && s.id !== editingBundleId).length;
+        if (currentFeatured >= 5) {
+          alert("Maximum of 5 featured services/packages can be displayed on the homepage.");
+          return;
+        }
+      }
 
       if (editingBundleId) {
         const index = list.findIndex(s => s.id === editingBundleId);
@@ -530,21 +486,14 @@
             regularPrice: totalRegularPrice || undefined,
             duration: totalDuration,
             services: checked.map(c => c.dataset.id),
-            sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
-            desc
+            sessions,
+            desc,
+            showOnHome
           };
         }
         editingBundleId = null;
       } else {
-        const currentFeatured = list.filter(s => s.showOnHome).length;
-        let showOnHome = true;
-        if (currentFeatured >= 5) {
-          showOnHome = false;
-          alert("Package created successfully. It will not be shown on the home page because you already have the maximum of 5 featured services/packages.");
-        }
-
         const id = 'srv-' + (list.length + 1);
-
         list.push({
           id,
           name,
@@ -553,7 +502,7 @@
           duration: totalDuration,
           category: 'Package',
           services: checked.map(c => c.dataset.id),
-          sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
+          sessions,
           desc,
           img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
           showOnHome
@@ -561,31 +510,19 @@
       }
 
       AdminState.saveServices(list);
-      
-      // Reset form and UI
-      document.getElementById('bundle-form').reset();
-      const saveBtn = document.querySelector('#bundle-form button[type="submit"]');
-      if (saveBtn) {
-        saveBtn.textContent = 'Save Package';
-        saveBtn.style.background = '';
-      }
-      const cancelBtn = document.getElementById('btn-cancel-bundle-edit');
-      if (cancelBtn) cancelBtn.remove();
-      
-      // Clear checked checkboxes
-      checkboxes.forEach(cb => {
-        cb.checked = false;
-        cb.closest('label').classList.remove('checked');
-      });
-
+      window.closeBundleModal();
       renderServices();
     });
 
-    // Top Right Add service button
-    const topAddBtn = document.querySelector('.page-header-row .btn-primary');
-    if (topAddBtn) {
-      topAddBtn.addEventListener('click', () => openServiceModal());
-    }
+    // Delete bundle package inside modal
+    document.getElementById('btn-delete-bm').addEventListener('click', () => {
+      if (editingBundleId) {
+        if (confirm('Are you sure you want to delete this package?')) {
+          window.deleteService(editingBundleId);
+          window.closeBundleModal();
+        }
+      }
+    });
 
     // Top Search input
     const topSearch = document.querySelector('.header-search input');
