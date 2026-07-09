@@ -130,10 +130,9 @@
       </div>
       <div class="builder-grid">
         <form class="builder-card" id="bundle-form">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:1.5rem;">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem;">
             <div><label class="form-label">Package Name</label><input id="bundle-name" required class="form-input" type="text" placeholder="e.g. Radiance Bundle"></div>
             <div><label class="form-label">Bundle Price (MYR)</label><input id="bundle-price" required class="form-input" type="number" placeholder="0.00"></div>
-            <div><label class="form-label">Original Price (optional)</label><input id="bundle-regular-price" class="form-input" type="number" placeholder="e.g. 25000"></div>
             <div><label class="form-label">Total Sessions</label><input id="bundle-sessions" class="form-input" type="number" min="1" value="1"></div>
           </div>
           <div style="margin-bottom:1.5rem;">
@@ -179,18 +178,14 @@
         <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Service Name</label>
         <input type="text" id="srv-name" required placeholder="e.g. Aromatherapy Massage" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div style="display:flex;flex-direction:column;gap:4px;">
           <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Category</label>
           <input type="text" id="srv-category" required placeholder="e.g. Massage, Skincare" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
         </div>
         <div style="display:flex;flex-direction:column;gap:4px;">
-          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Promo Price (MYR)</label>
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Price (MYR)</label>
           <input type="number" id="srv-price" required placeholder="0.00" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;">
-          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Original Price (optional)</label>
-          <input type="number" id="srv-regular-price" placeholder="e.g. 150.00" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -396,7 +391,6 @@
       document.getElementById('srv-name').value = srv.name;
       document.getElementById('srv-category').value = srv.category;
       document.getElementById('srv-price').value = srv.price;
-      document.getElementById('srv-regular-price').value = srv.regularPrice || '';
       document.getElementById('srv-duration').value = srv.duration;
       document.getElementById('srv-img').value = srv.img || '';
       document.getElementById('srv-desc').value = srv.desc || '';
@@ -407,7 +401,6 @@
       document.getElementById('srv-name').value = '';
       document.getElementById('srv-category').value = '';
       document.getElementById('srv-price').value = '';
-      document.getElementById('srv-regular-price').value = '';
       document.getElementById('srv-duration').value = '';
       document.getElementById('srv-img').value = '';
       document.getElementById('srv-desc').value = '';
@@ -442,14 +435,11 @@
       const name = document.getElementById('bundle-name').value;
       const price = parseFloat(document.getElementById('bundle-price').value) || 0;
       const desc = document.getElementById('bundle-desc').value;
-      const bundleRegularPriceEl = document.getElementById('bundle-regular-price');
-      const bundleRegularPriceVal = bundleRegularPriceEl ? bundleRegularPriceEl.value : '';
       
       const checkboxes = document.querySelectorAll('.service-checkbox');
       const checked = [...checkboxes].filter(c => c.checked);
       const totalDuration = checked.reduce((s,c) => s + parseInt(c.dataset.duration), 0);
-      const calculatedRegularPrice = checked.reduce((s,c) => s + parseFloat(c.dataset.price), 0);
-      const totalRegularPrice = bundleRegularPriceVal ? parseFloat(bundleRegularPriceVal) : calculatedRegularPrice;
+      const totalRegularPrice = checked.reduce((s,c) => s + parseFloat(c.dataset.price), 0);
 
       const list = AdminState.getServices();
       const currentFeatured = list.filter(s => s.showOnHome).length;
@@ -503,8 +493,6 @@
       const name = document.getElementById('srv-name').value;
       const category = document.getElementById('srv-category').value;
       const price = parseFloat(document.getElementById('srv-price').value) || 0;
-      const regularPriceVal = document.getElementById('srv-regular-price').value;
-      const regularPrice = regularPriceVal ? parseFloat(regularPriceVal) : undefined;
       const duration = parseInt(document.getElementById('srv-duration').value) || 60;
       const img = document.getElementById('srv-img').value;
       const desc = document.getElementById('srv-desc').value;
@@ -528,7 +516,6 @@
             name,
             category,
             price,
-            regularPrice: regularPrice || undefined,
             duration,
             img: img || undefined,
             desc,
@@ -542,7 +529,6 @@
           name,
           category,
           price,
-          regularPrice: regularPrice || undefined,
           duration,
           img: img || undefined,
           desc,
