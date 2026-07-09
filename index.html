@@ -17,6 +17,39 @@
     <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
+        const urlParams = new URLSearchParams(window.location.search);
+        const tenantId = urlParams.get('tenant') || 'serenity';
+        const DEFAULT_TENANTS = {
+          serenity: {
+            id: 'serenity',
+            name: 'Serenity & Soul',
+            logo: 'Serenity',
+            colors: {
+              primary: '#50613f',
+              secondary: '#fed65b',
+              background: '#f4fbfa',
+              surfaceContainer: '#e8efef'
+            }
+          },
+          zenith: {
+            id: 'zenith',
+            name: 'Zenith Wellness',
+            logo: 'Zenith',
+            colors: {
+              primary: '#1e40af',
+              secondary: '#f59e0b',
+              background: '#f8fafc',
+              surfaceContainer: '#f1f5f9'
+            }
+          }
+        };
+        const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
+        const currentTenant = tenants[tenantId] || tenants['serenity'];
+        const primaryColor = currentTenant.colors?.primary || '#50613f';
+        const secondaryColor = currentTenant.colors?.secondary || '#fed65b';
+        const backgroundColor = currentTenant.colors?.background || '#f4fbfa';
+        const containerColor = currentTenant.colors?.surfaceContainer || '#e8efef';
+
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -27,8 +60,8 @@
                         "on-error": "#ffffff",
                         "secondary-fixed": "#ffe088",
                         "on-primary-fixed": "#111f05",
-                        "surface-container-low": "#eef5f4",
-                        "primary": "#50613f",
+                        "surface-container-low": containerColor + 'aa',
+                        "primary": primaryColor,
                         "on-primary": "#ffffff",
                         "on-tertiary": "#ffffff",
                         "on-secondary-container": "#745c00",
@@ -37,37 +70,37 @@
                         "error-container": "#ffdad6",
                         "on-secondary-fixed": "#241a00",
                         "tertiary-fixed": "#e8e2d6",
-                        "surface-container-high": "#e3eae9",
-                        "surface-variant": "#dde4e3",
+                        "surface-container-high": containerColor + 'f0',
+                        "surface-variant": containerColor,
                         "on-background": "#161d1d",
                         "inverse-surface": "#2b3232",
-                        "primary-container": "#697a56",
+                        "primary-container": primaryColor + 'cc',
                         "on-secondary": "#ffffff",
                         "primary-fixed-dim": "#bacda3",
                         "on-tertiary-fixed-variant": "#4a473e",
                         "on-tertiary-container": "#fffbff",
                         "error": "#ba1a1a",
-                        "background": "#f4fbfa",
+                        "background": backgroundColor,
                         "on-surface-variant": "#45483f",
                         "primary-fixed": "#d6e9bd",
-                        "surface-tint": "#536441",
+                        "surface-tint": primaryColor,
                         "surface-container-lowest": "#ffffff",
-                        "surface-container": "#e8efef",
+                        "surface-container": containerColor,
                         "on-tertiary-fixed": "#1e1c14",
                         "outline-variant": "#c5c8bc",
                         "tertiary-container": "#78746a",
                         "on-error-container": "#93000a",
                         "on-surface": "#161d1d",
                         "tertiary-fixed-dim": "#cbc6ba",
-                        "secondary-container": "#fed65b",
+                        "secondary-container": secondaryColor,
                         "secondary": "#735c00",
                         "surface-dim": "#d4dbdb",
                         "on-secondary-fixed-variant": "#574500",
                         "inverse-primary": "#bacda3",
-                        "surface-bright": "#f4fbfa",
+                        "surface-bright": backgroundColor,
                         "secondary-fixed-dim": "#e9c349",
-                        "surface": "#f4fbfa",
-                        "surface-container-highest": "#dde4e3",
+                        "surface": backgroundColor,
+                        "surface-container-highest": containerColor,
                         "on-primary-container": "#f9ffeb"
                     },
                     "borderRadius": {
@@ -909,13 +942,18 @@
       </div>
     </div>
     <script>
+    // Get active tenant
+    const lmUrlParams = new URLSearchParams(window.location.search);
+    const lmTenantId = lmUrlParams.get('tenant') || 'serenity';
+
     // Initialize default demo user in localStorage
     function initDemoUser() {
-        const users = JSON.parse(localStorage.getItem('spa_registered_users') || '[]');
+        const usersKey = `${lmTenantId}_registered_users`;
+        const users = JSON.parse(localStorage.getItem(usersKey) || '[]');
         const demoExists = users.some(u => u.email === 'user@example.com');
         if (!demoExists) {
             users.push({
-                name: 'Eleanor Vance',
+                name: lmTenantId === 'serenity' ? 'Eleanor Vance' : 'Zenith Guest',
                 email: 'user@example.com',
                 phone: '+65 9123 4567',
                 dob: '1994-08-14',
@@ -923,29 +961,95 @@
                 password: 'password123',
                 createdAt: new Date().toISOString()
             });
-            localStorage.setItem('spa_registered_users', JSON.stringify(users));
+            localStorage.setItem(usersKey, JSON.stringify(users));
         }
     }
     initDemoUser();
 
-    function handleUserLogin() {
-        // Bypass validation, log in immediately as Eleanor Vance
-        localStorage.setItem('user_logged_in', 'true');
-        localStorage.setItem('user_name', 'Eleanor Vance');
-        localStorage.setItem('user_email', 'user@example.com');
-        
-        // Clear inputs
-        document.getElementById('lm-email').value = '';
-        document.getElementById('lm-password').value = '';
-        
-        if (window.onLoginSuccess) window.onLoginSuccess();
+    window.handleUserLogin = function() {
+        const emailInput = document.getElementById('lm-email').value.trim();
+        const passwordInput = document.getElementById('lm-password').value;
+        const errorEl = document.getElementById('login-modal-error');
+
+        const usersKey = `${lmTenantId}_registered_users`;
+        const users = JSON.parse(localStorage.getItem(usersKey) || '[]');
+
+        let matchedUser = null;
+
+        if (!emailInput && !passwordInput) {
+            // Instant demo login
+            matchedUser = users.find(u => u.email === 'user@example.com') || {
+                name: lmTenantId === 'serenity' ? 'Eleanor Vance' : 'Zenith Guest',
+                email: 'user@example.com'
+            };
+        } else {
+            // Look up input credentials
+            matchedUser = users.find(u => u.email.toLowerCase() === emailInput.toLowerCase() && u.password === passwordInput);
+        }
+
+        if (matchedUser) {
+            if (errorEl) errorEl.style.display = 'none';
+            localStorage.setItem(`${lmTenantId}_user_logged_in`, 'true');
+            localStorage.setItem(`${lmTenantId}_user_name`, matchedUser.name);
+            localStorage.setItem(`${lmTenantId}_user_email`, matchedUser.email);
+            
+            // Clear inputs
+            document.getElementById('lm-email').value = '';
+            document.getElementById('lm-password').value = '';
+            
+            if (window.onLoginSuccess) window.onLoginSuccess();
+        } else {
+            if (errorEl) {
+                errorEl.textContent = "Incorrect email or password for this tenant.";
+                errorEl.style.display = 'block';
+            }
+        }
     }
-    // Allow Enter key to submit
+    // Allow Enter key to submit and apply dynamic branding
     document.addEventListener('DOMContentLoaded', () => {
         ['lm-email','lm-password'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.addEventListener('keydown', e => { if(e.key==='Enter') handleUserLogin(); });
         });
+
+        // Dynamic branding update for User interface
+        document.title = `${currentTenant.name} - Spa Sanctuary`;
+
+        // Update all text occurrences of Serenity & Soul in logos
+        const logoElements = document.querySelectorAll('nav div.font-headline-lg, footer div[style*="font-family"], #user-login-modal div[style*="font-family"]');
+        logoElements.forEach(el => {
+            if (el.textContent.includes('Serenity & Soul') || el.textContent.includes('Serenity &amp; Soul')) {
+                el.textContent = currentTenant.name;
+            }
+        });
+
+        // Update login modal divider color gradient
+        const divider = document.querySelector('#user-login-modal div[style*="background:linear-gradient"]');
+        if (divider) {
+          divider.style.background = `linear-gradient(90deg, ${primaryColor}, ${secondaryColor})`;
+        }
+
+        // Apply primary color to buttons in modal and mobile bottom nav
+        const loginBtn = document.querySelector('#user-login-modal button[onclick="handleUserLogin()"]');
+        if (loginBtn) {
+            loginBtn.style.background = primaryColor;
+        }
+        
+        const registerLink = document.querySelector('#user-login-modal a[href*="register.html"]');
+        if (registerLink) {
+            registerLink.style.color = primaryColor;
+            registerLink.setAttribute('href', `register.html?tenant=${tenantId}`);
+        }
+
+        const continueBtn = document.getElementById('mobile-continue-btn');
+        if (continueBtn) {
+            continueBtn.style.backgroundColor = primaryColor;
+        }
+
+        const backBtn = document.getElementById('mobile-back-btn');
+        if (backBtn) {
+            backBtn.style.color = primaryColor;
+        }
     });
     </script>
 

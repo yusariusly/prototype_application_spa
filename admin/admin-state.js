@@ -40,40 +40,135 @@ const DEFAULT_ROOMS = [
   { id: 5, name: 'Room 5', status: 'Vacant' }
 ];
 
-// Helper to initialize local storage
-function initStorage() {
-  const existing = localStorage.getItem('admin_services');
-  // Check if existing structure has the updated Aromatherapy Package regularPrice (1200)
+// Helper to read active tenant ID
+function getTenantId() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const tenantFromUrl = urlParams.get('tenant');
+  if (tenantFromUrl) {
+    sessionStorage.setItem('admin_tenant', tenantFromUrl);
+    return tenantFromUrl;
+  }
+  const sessionTenant = sessionStorage.getItem('admin_tenant');
+  if (sessionTenant) {
+    return sessionTenant;
+  }
+  return 'serenity'; // Fallback
+}
+
+const DEFAULT_TENANTS = {
+  serenity: {
+    id: 'serenity',
+    name: 'Serenity & Soul',
+    logo: 'Serenity',
+    colors: {
+      primary: '#50613f',
+      secondary: '#fed65b',
+      background: '#f4fbfa',
+      surfaceContainer: '#e8efef'
+    },
+    adminEmail: 'admin@serenity.com',
+    adminPassword: 'admin123'
+  },
+  zenith: {
+    id: 'zenith',
+    name: 'Zenith Wellness',
+    logo: 'Zenith',
+    colors: {
+      primary: '#1e40af', // Blue
+      secondary: '#f59e0b', // Amber
+      background: '#f8fafc', // Slate
+      surfaceContainer: '#f1f5f9'
+    },
+    adminEmail: 'admin@zenith.com',
+    adminPassword: 'admin123'
+  }
+};
+
+// Helper to initialize local storage for a specific tenant
+function initStorage(tId) {
+  const activeT = tId || getTenantId();
+  const SERVICES_KEY = `${activeT}_admin_services`;
+  const STAFF_KEY = `${activeT}_admin_staff`;
+  const RESERVATIONS_KEY = `${activeT}_admin_reservations`;
+  const ROOMS_KEY = `${activeT}_admin_rooms`;
+
+  const existing = localStorage.getItem(SERVICES_KEY);
   if (!existing || !existing.includes('1200')) {
-    localStorage.setItem('admin_services', JSON.stringify(DEFAULT_SERVICES));
+    localStorage.setItem(SERVICES_KEY, JSON.stringify(DEFAULT_SERVICES));
   }
-  if (!localStorage.getItem('admin_staff')) {
-    localStorage.setItem('admin_staff', JSON.stringify(DEFAULT_STAFF));
+  if (!localStorage.getItem(STAFF_KEY)) {
+    localStorage.setItem(STAFF_KEY, JSON.stringify(DEFAULT_STAFF));
   }
-  if (!localStorage.getItem('admin_reservations')) {
-    localStorage.setItem('admin_reservations', JSON.stringify(DEFAULT_RESERVATIONS));
+  if (!localStorage.getItem(RESERVATIONS_KEY)) {
+    localStorage.setItem(RESERVATIONS_KEY, JSON.stringify(DEFAULT_RESERVATIONS));
   }
-  if (!localStorage.getItem('admin_rooms')) {
-    localStorage.setItem('admin_rooms', JSON.stringify(DEFAULT_ROOMS));
+  if (!localStorage.getItem(ROOMS_KEY)) {
+    localStorage.setItem(ROOMS_KEY, JSON.stringify(DEFAULT_ROOMS));
   }
 }
 
-// Initialize immediately
-initStorage();
-
 // Data accessor functions
 const AdminState = {
-  getServices: () => JSON.parse(localStorage.getItem('admin_services')),
-  saveServices: (data) => localStorage.setItem('admin_services', JSON.stringify(data)),
+  getTenantId: getTenantId,
   
-  getStaff: () => JSON.parse(localStorage.getItem('admin_staff')),
-  saveStaff: (data) => localStorage.setItem('admin_staff', JSON.stringify(data)),
+  getTenants: () => {
+    let tenants = localStorage.getItem('spa_tenants');
+    if (!tenants) {
+      localStorage.setItem('spa_tenants', JSON.stringify(DEFAULT_TENANTS));
+      tenants = JSON.stringify(DEFAULT_TENANTS);
+    }
+    return JSON.parse(tenants);
+  },
+  
+  saveTenants: (data) => {
+    localStorage.setItem('spa_tenants', JSON.stringify(data));
+  },
+  
+  getCurrentTenant: () => {
+    const list = AdminState.getTenants();
+    const tId = getTenantId();
+    return list[tId] || list['serenity'];
+  },
 
-  getReservations: () => JSON.parse(localStorage.getItem('admin_reservations')),
-  saveReservations: (data) => localStorage.setItem('admin_reservations', JSON.stringify(data)),
+  getServices: () => {
+    const tId = getTenantId();
+    initStorage(tId);
+    return JSON.parse(localStorage.getItem(`${tId}_admin_services`));
+  },
+  saveServices: (data) => {
+    const tId = getTenantId();
+    localStorage.setItem(`${tId}_admin_services`, JSON.stringify(data));
+  },
+  
+  getStaff: () => {
+    const tId = getTenantId();
+    initStorage(tId);
+    return JSON.parse(localStorage.getItem(`${tId}_admin_staff`));
+  },
+  saveStaff: (data) => {
+    const tId = getTenantId();
+    localStorage.setItem(`${tId}_admin_staff`, JSON.stringify(data));
+  },
 
-  getRooms: () => JSON.parse(localStorage.getItem('admin_rooms')),
-  saveRooms: (data) => localStorage.setItem('admin_rooms', JSON.stringify(data)),
+  getReservations: () => {
+    const tId = getTenantId();
+    initStorage(tId);
+    return JSON.parse(localStorage.getItem(`${tId}_admin_reservations`));
+  },
+  saveReservations: (data) => {
+    const tId = getTenantId();
+    localStorage.setItem(`${tId}_admin_reservations`, JSON.stringify(data));
+  },
+
+  getRooms: () => {
+    const tId = getTenantId();
+    initStorage(tId);
+    return JSON.parse(localStorage.getItem(`${tId}_admin_rooms`));
+  },
+  saveRooms: (data) => {
+    const tId = getTenantId();
+    localStorage.setItem(`${tId}_admin_rooms`, JSON.stringify(data));
+  },
 
   // Add Reservation
   addReservation: (res) => {
@@ -167,4 +262,297 @@ const AdminState = {
     return false;
   }
 };
+
+// Apply tenant styling and config
+function applyTenantBranding(tenant) {
+  if (!tenant) return;
+  document.title = document.title.replace(/Serenity\s*&\s*Soul/i, tenant.name);
+
+  const brandLogos = document.querySelectorAll('.brand-logo');
+  brandLogos.forEach(el => {
+    el.textContent = tenant.name;
+  });
+
+  const headerDesc = document.querySelector('.page-header p');
+  if (headerDesc) {
+    headerDesc.textContent = headerDesc.textContent.replace(/Serenity\s*&\s*Soul/gi, tenant.name);
+  }
+
+  const primaryColor = tenant.colors?.primary || '#50613f';
+  const secondaryColor = tenant.colors?.secondary || '#fed65b';
+  const backgroundColor = tenant.colors?.background || '#f4fbfa';
+
+  let r = 80, g = 97, b = 63;
+  if (primaryColor.startsWith('#')) {
+    const hex = primaryColor.substring(1);
+    if (hex.length === 6) {
+      r = parseInt(hex.substring(0, 2), 16);
+      g = parseInt(hex.substring(2, 4), 16);
+      b = parseInt(hex.substring(4, 6), 16);
+    }
+  }
+
+  let styleEl = document.getElementById('tenant-branding-styles');
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'tenant-branding-styles';
+    document.head.appendChild(styleEl);
+  }
+
+  styleEl.textContent = `
+    :root {
+      --primary-color: ${primaryColor};
+      --secondary-color: ${secondaryColor};
+      --bg-color: ${backgroundColor};
+    }
+    .brand-logo, 
+    .admin-nav a.active, 
+    .admin-nav a:hover,
+    .page-header h1,
+    .kpi-icon,
+    .settings-menu-item:hover,
+    .tbl-action-btn:hover,
+    .icon-btn:hover {
+      color: ${primaryColor} !important;
+    }
+    .btn-primary, 
+    .btn-login,
+    .page-btn.active,
+    .chip-occupied,
+    .btn-outline.active {
+      background: ${primaryColor} !important;
+      border-color: ${primaryColor} !important;
+      color: #fff !important;
+    }
+    .brand-divider {
+      background: linear-gradient(90deg, ${primaryColor}, ${secondaryColor}) !important;
+    }
+    .settings-menu-item:hover {
+      background: rgba(${r}, ${g}, ${b}, 0.05) !important;
+    }
+    #mobile-nav a[href*="dashboard.html"] {
+      background: ${secondaryColor} !important;
+      color: #745c00 !important;
+    }
+  `;
+}
+
+// Inject Tenant settings modal
+function injectTenantSettingsModal() {
+  const dropdown = document.querySelector('.settings-dropdown') || document.getElementById('settings-panel');
+  if (dropdown && !document.getElementById('tenant-settings-opt')) {
+    const opt = document.createElement('div');
+    opt.className = 'settings-menu-item';
+    opt.id = 'tenant-settings-opt';
+    opt.innerHTML = `<span class="material-symbols-outlined">settings</span>Tenant Settings`;
+    opt.onclick = () => window.openTenantSettingsModal();
+    dropdown.insertBefore(opt, dropdown.firstChild);
+  }
+
+  if (document.getElementById('tenant-settings-modal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'tenant-settings-modal';
+  modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;';
+  modal.innerHTML = `
+    <div onclick="window.closeTenantSettingsModal()" style="position:absolute;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);"></div>
+    <div style="position:relative;z-index:1;width:100%;max-width:500px;margin:16px;background:#fff;border-radius:20px;padding:32px;box-shadow:0 10px 30px rgba(0,0,0,0.15);max-height:90vh;overflow-y:auto;font-family:'Manrope',sans-serif;color:#333;">
+      <button onclick="window.closeTenantSettingsModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:#75786e;"><span class="material-symbols-outlined">close</span></button>
+      <h2 style="margin:0 0 20px;font-family:'Playfair Display',serif;color:#111;font-size:1.5rem;">Tenant & Application Settings</h2>
+      
+      <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
+        <button id="ts-tab-config" onclick="window.switchTenantTab('config')" style="flex:1;padding:8px;border:none;background:#50613f;color:#fff;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Configure Current</button>
+        <button id="ts-tab-create" onclick="window.switchTenantTab('create')" style="flex:1;padding:8px;border:none;background:#eee;color:#555;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Create New Tenant</button>
+      </div>
+
+      <div id="tenant-form-config">
+        <form onsubmit="window.saveTenantConfig(event)" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">App Name</label>
+            <input type="text" id="cfg-app-name" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Primary Color</label>
+              <input type="color" id="cfg-color-primary" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Secondary Color</label>
+              <input type="color" id="cfg-color-secondary" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Email</label>
+            <input type="email" id="cfg-admin-email" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Password</label>
+            <input type="password" id="cfg-admin-password" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <button type="submit" class="btn-login" style="padding:12px;background:#50613f;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;">Save Settings</button>
+        </form>
+      </div>
+
+      <div id="tenant-form-create" style="display:none;">
+        <form onsubmit="window.createNewTenant(event)" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Tenant ID (lowercase, e.g. "aura")</label>
+            <input type="text" id="cre-id" placeholder="aura" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">App Name</label>
+            <input type="text" id="cre-name" placeholder="Aura Spa Sanctuary" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Primary Color</label>
+              <input type="color" id="cre-color-primary" value="#6b21a8" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
+            </div>
+            <div>
+              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Secondary Color</label>
+              <input type="color" id="cre-color-secondary" value="#a855f7" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Email</label>
+            <input type="email" id="cre-admin-email" placeholder="admin@aura.com" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Password</label>
+            <input type="password" id="cre-admin-password" placeholder="admin123" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
+          </div>
+          <button type="submit" class="btn-login" style="padding:12px;background:#50613f;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;">Create Tenant</button>
+        </form>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+// Modal helper functions
+window.openTenantSettingsModal = function() {
+  const modal = document.getElementById('tenant-settings-modal');
+  if (!modal) return;
+  const current = AdminState.getCurrentTenant();
+  
+  document.getElementById('cfg-app-name').value = current.name || '';
+  document.getElementById('cfg-color-primary').value = current.colors?.primary || '#50613f';
+  document.getElementById('cfg-color-secondary').value = current.colors?.secondary || '#fed65b';
+  document.getElementById('cfg-admin-email').value = current.adminEmail || '';
+  document.getElementById('cfg-admin-password').value = current.adminPassword || '';
+
+  window.switchTenantTab('config');
+  modal.style.display = 'flex';
+};
+
+window.closeTenantSettingsModal = function() {
+  const modal = document.getElementById('tenant-settings-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.switchTenantTab = function(tab) {
+  const configTab = document.getElementById('tenant-form-config');
+  const createTab = document.getElementById('tenant-form-create');
+  const btnConfig = document.getElementById('ts-tab-config');
+  const btnCreate = document.getElementById('ts-tab-create');
+  
+  if (tab === 'config') {
+    configTab.style.display = 'block';
+    createTab.style.display = 'none';
+    btnConfig.style.background = 'var(--primary-color, #50613f)';
+    btnConfig.style.color = '#fff';
+    btnCreate.style.background = '#eee';
+    btnCreate.style.color = '#555';
+  } else {
+    configTab.style.display = 'none';
+    createTab.style.display = 'block';
+    btnConfig.style.background = '#eee';
+    btnConfig.style.color = '#555';
+    btnCreate.style.background = 'var(--primary-color, #50613f)';
+    btnCreate.style.color = '#fff';
+  }
+};
+
+window.saveTenantConfig = function(e) {
+  e.preventDefault();
+  const tenants = AdminState.getTenants();
+  const tId = getTenantId();
+  if (tenants[tId]) {
+    tenants[tId].name = document.getElementById('cfg-app-name').value;
+    tenants[tId].colors = {
+      primary: document.getElementById('cfg-color-primary').value,
+      secondary: document.getElementById('cfg-color-secondary').value,
+      background: '#f4fbfa',
+      surfaceContainer: '#e8efef'
+    };
+    tenants[tId].adminEmail = document.getElementById('cfg-admin-email').value;
+    tenants[tId].adminPassword = document.getElementById('cfg-admin-password').value;
+    
+    AdminState.saveTenants(tenants);
+    applyTenantBranding(tenants[tId]);
+    window.closeTenantSettingsModal();
+    alert("Tenant settings saved successfully! Refreshing pages will apply configurations.");
+    window.location.reload();
+  }
+};
+
+window.createNewTenant = function(e) {
+  e.preventDefault();
+  const tenants = AdminState.getTenants();
+  const newId = document.getElementById('cre-id').value.trim().toLowerCase();
+  
+  if (tenants[newId]) {
+    alert("Tenant ID already exists! Please use a different ID.");
+    return;
+  }
+
+  const name = document.getElementById('cre-name').value.trim();
+  const primary = document.getElementById('cre-color-primary').value;
+  const secondary = document.getElementById('cre-color-secondary').value;
+  const email = document.getElementById('cre-admin-email').value.trim();
+  const pass = document.getElementById('cre-admin-password').value;
+
+  tenants[newId] = {
+    id: newId,
+    name: name,
+    logo: name.split(' ')[0],
+    colors: {
+      primary: primary,
+      secondary: secondary,
+      background: '#f8fafc',
+      surfaceContainer: '#f1f5f9'
+    },
+    adminEmail: email,
+    adminPassword: pass
+  };
+
+  AdminState.saveTenants(tenants);
+  initStorage(newId); // Pre-populate default data keys for the new tenant
+  
+  window.closeTenantSettingsModal();
+  
+  const host = window.location.origin;
+  const adminUrl = `${host}/admin/login.html?tenant=${newId}`;
+  const userUrl = `${host}/index.html?tenant=${newId}`;
+  
+  alert(`Tenant "${name}" created successfully!\n\nUser Access:\n${userUrl}\n\nAdmin Access:\n${adminUrl}`);
+};
+
+// Overwrite logOut helper globally
+window.adminSignOut = function() {
+  const tId = getTenantId();
+  sessionStorage.removeItem('admin_logged_in');
+  sessionStorage.removeItem('admin_email');
+  sessionStorage.removeItem('admin_tenant');
+  window.location.replace(`login.html?tenant=${tId}`);
+};
+
+// Initialize styling and modal on load
+document.addEventListener('DOMContentLoaded', () => {
+  const current = AdminState.getCurrentTenant();
+  applyTenantBranding(current);
+  injectTenantSettingsModal();
+});
+
+export default AdminState;
 window.AdminState = AdminState;

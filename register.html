@@ -367,6 +367,109 @@
     }
   };
 
+  const DEFAULT_TENANTS = {
+    serenity: {
+      id: 'serenity',
+      name: 'Serenity & Soul',
+      logo: 'Serenity',
+      colors: {
+        primary: '#50613f',
+        secondary: '#fed65b',
+        background: '#f4fbfa',
+        surfaceContainer: '#e8efef'
+      }
+    },
+    zenith: {
+      id: 'zenith',
+      name: 'Zenith Wellness',
+      logo: 'Zenith',
+      colors: {
+        primary: '#1e40af',
+        secondary: '#f59e0b',
+        background: '#f8fafc',
+        surfaceContainer: '#f1f5f9'
+      }
+    }
+  };
+
+  function getTenantId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('tenant') || 'serenity';
+  }
+
+  const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
+  const tenantId = getTenantId();
+  const currentTenant = tenants[tenantId] || tenants['serenity'];
+
+  // Apply visual styling and replace branding references
+  function initBranding() {
+    document.title = `Register — ${currentTenant.name}`;
+    
+    // Update headers and text references to "Serenity & Soul"
+    const heading = document.querySelector('.page-header h1');
+    if (heading) heading.textContent = heading.textContent.replace(/Serenity\s*&\s*Soul/i, currentTenant.name);
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', metaDesc.getAttribute('content').replace(/Serenity\s*&\s*Soul/gi, currentTenant.name));
+
+    const brandLink = document.querySelector('.brand-logo');
+    if (brandLink) {
+      brandLink.textContent = currentTenant.name;
+      brandLink.setAttribute('href', `index.html?tenant=${tenantId}`);
+    }
+
+    const backLink = document.querySelector('.back-link');
+    if (backLink) {
+      backLink.setAttribute('href', `index.html?tenant=${tenantId}`);
+    }
+
+    const loginRedirect = document.querySelector('.login-redirect a');
+    if (loginRedirect) {
+      loginRedirect.setAttribute('href', `index.html?tenant=${tenantId}&showLogin=true`);
+    }
+
+    const primaryColor = currentTenant.colors?.primary || '#50613f';
+    const secondaryColor = currentTenant.colors?.secondary || '#fed65b';
+    const backgroundColor = currentTenant.colors?.background || '#eef4f0';
+
+    let styleEl = document.createElement('style');
+    styleEl.textContent = `
+      body {
+        background: ${backgroundColor} !important;
+      }
+      .brand-logo, .back-link, .page-header h1, .login-redirect a, [onclick="toggleRegLanguage(event)"] {
+        color: ${primaryColor} !important;
+      }
+      .btn-submit {
+        background: ${primaryColor} !important;
+      }
+      .btn-submit:hover {
+        box-shadow: 0 6px 20px ${primaryColor}44 !important;
+      }
+      .form-card {
+        border-top: 4px solid ${primaryColor} !important;
+      }
+      .form-group input:focus, .form-group select:focus {
+        border-color: ${primaryColor} !important;
+        box-shadow: 0 0 0 3px ${primaryColor}22 !important;
+      }
+      .gender-options label:hover input + span {
+        border-color: ${primaryColor} !important;
+      }
+      .gender-options input:checked + span {
+        background: ${primaryColor} !important;
+        border-color: ${primaryColor} !important;
+        color: #fff !important;
+      }
+      .pw-toggle:hover {
+        color: ${primaryColor} !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+  }
+
+  initBranding();
+
   let currentLang = localStorage.getItem('spa_language') || 'en';
 
   function applyLanguage() {
@@ -379,7 +482,10 @@
     document.querySelectorAll('[data-translate]').forEach(el => {
       const key = el.getAttribute('data-translate');
       if (t[key]) {
-        el.textContent = t[key];
+        // Dynamically replace brand names in translated strings
+        let text = t[key];
+        text = text.replace(/Serenity\s*&\s*Soul/gi, currentTenant.name).replace(/Serenity/gi, currentTenant.logo || currentTenant.name);
+        el.textContent = text;
       }
     });
 
@@ -391,7 +497,7 @@
     document.getElementById('reg-confirm').placeholder = t.placeholder_confirm;
   }
 
-  function toggleRegLanguage(event) {
+  window.toggleRegLanguage = function(event) {
     if (event) event.preventDefault();
     currentLang = currentLang === 'en' ? 'ms' : 'en';
     localStorage.setItem('spa_language', currentLang);
@@ -401,7 +507,7 @@
   // Initialize Language
   applyLanguage();
 
-  function togglePw(inputId, eyeId) {
+  window.togglePw = function(inputId, eyeId) {
     const input = document.getElementById(inputId);
     const eye = document.getElementById(eyeId);
     if (input.type === 'password') {
@@ -419,7 +525,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function handleRegister(e) {
+  window.handleRegister = function(e) {
     e.preventDefault();
     document.getElementById('form-error').classList.remove('show');
 
@@ -439,8 +545,9 @@
     if (!password || password.length < 8) return showError(t.err_password);
     if (password !== confirm) return showError(t.err_match);
 
-    // Check for existing email
-    const users = JSON.parse(localStorage.getItem('spa_registered_users') || '[]');
+    // Check for existing email under active tenant
+    const usersKey = `${tenantId}_registered_users`;
+    const users = JSON.parse(localStorage.getItem(usersKey) || '[]');
     if (users.find(u => u.email === email)) {
       return showError(t.err_exists);
     }
@@ -448,20 +555,20 @@
     // Save user
     const newUser = { name, email, phone, dob, gender, password, createdAt: new Date().toISOString() };
     users.push(newUser);
-    localStorage.setItem('spa_registered_users', JSON.stringify(users));
+    localStorage.setItem(usersKey, JSON.stringify(users));
 
-    // Auto-login
-    localStorage.setItem('user_logged_in', 'true');
-    localStorage.setItem('user_name', name);
-    localStorage.setItem('user_email', email);
+    // Auto-login under active tenant
+    localStorage.setItem(`${tenantId}_user_logged_in`, 'true');
+    localStorage.setItem(`${tenantId}_user_name`, name);
+    localStorage.setItem(`${tenantId}_user_email`, email);
 
-    // Redirect to home
+    // Redirect to home with tenant parameter
     const btn = document.getElementById('btn-submit');
     btn.textContent = t.redirecting;
     btn.disabled = true;
     btn.style.opacity = '0.8';
     setTimeout(() => {
-      window.location.replace('/');
+      window.location.replace(`index.html?tenant=${tenantId}`);
     }, 800);
   }
 </script>

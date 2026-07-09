@@ -255,8 +255,99 @@
 </div>
 
 <script>
+  const DEFAULT_TENANTS = {
+    serenity: {
+      id: 'serenity',
+      name: 'Serenity & Soul',
+      logo: 'Serenity',
+      colors: {
+        primary: '#50613f',
+        secondary: '#fed65b',
+        background: '#f4fbfa',
+        surfaceContainer: '#e8efef'
+      },
+      adminEmail: 'admin@serenity.com',
+      adminPassword: 'admin123'
+    },
+    zenith: {
+      id: 'zenith',
+      name: 'Zenith Wellness',
+      logo: 'Zenith',
+      colors: {
+        primary: '#1e40af',
+        secondary: '#f59e0b',
+        background: '#f8fafc',
+        surfaceContainer: '#f1f5f9'
+      },
+      adminEmail: 'admin@zenith.com',
+      adminPassword: 'admin123'
+    }
+  };
+
+  function getTenantId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('tenant') || 'serenity';
+  }
+
+  const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
+  const currentTenantId = getTenantId();
+  const currentTenant = tenants[currentTenantId] || tenants['serenity'];
+
+  // Apply visual styling on load
+  function initBranding() {
+    document.title = `Admin Login — ${currentTenant.name}`;
+    
+    // Update brand logos
+    const brandLogo = document.querySelector('.brand-logo');
+    if (brandLogo) brandLogo.textContent = currentTenant.name;
+    
+    // Update demo credentials text
+    const demoHint = document.querySelector('.demo-hint');
+    if (demoHint) {
+      demoHint.innerHTML = `
+        <strong>Note:</strong> You can click <strong>Sign In</strong> directly to log in as this tenant's default admin.<br><br>
+        <strong>Demo credentials:</strong><br>
+        Email: <strong>${currentTenant.adminEmail}</strong><br>
+        Password: <strong>${currentTenant.adminPassword}</strong>
+      `;
+    }
+
+    const primaryColor = currentTenant.colors?.primary || '#50613f';
+    const secondaryColor = currentTenant.colors?.secondary || '#fed65b';
+    const backgroundColor = currentTenant.colors?.background || '#eef4f0';
+
+    let styleEl = document.createElement('style');
+    styleEl.textContent = `
+      body {
+        background: ${backgroundColor} !important;
+      }
+      .brand-logo, h2 {
+        color: ${primaryColor} !important;
+      }
+      .brand-divider {
+        background: linear-gradient(90deg, ${primaryColor}, ${secondaryColor}) !important;
+      }
+      .input-wrap input:focus {
+        border-color: ${primaryColor} !important;
+        box-shadow: 0 0 0 3px ${primaryColor}22 !important;
+      }
+      .btn-login {
+        background: ${primaryColor} !important;
+      }
+      .btn-login:hover {
+        box-shadow: 0 6px 20px ${primaryColor}44 !important;
+      }
+      .toggle-pw:hover {
+        color: ${primaryColor} !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+  }
+  
+  initBranding();
+
   // If already logged in, redirect
-  if (sessionStorage.getItem('admin_logged_in') === 'true') {
+  if (sessionStorage.getItem('admin_logged_in') === 'true' && sessionStorage.getItem('admin_tenant') === currentTenantId) {
     window.location.replace('dashboard.html');
   }
 
@@ -275,13 +366,45 @@
   function handleLogin(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-login');
+    const errorMsg = document.getElementById('error-msg');
+    const errorText = document.getElementById('error-text');
 
-    btn.classList.add('loading-state');
-    sessionStorage.setItem('admin_logged_in', 'true');
-    sessionStorage.setItem('admin_email', 'admin@serenity.com');
-    setTimeout(() => {
-      window.location.replace('dashboard.html');
-    }, 400);
+    const emailInput = document.getElementById('inp-email').value.trim();
+    const passwordInput = document.getElementById('inp-password').value;
+
+    let targetTenant = currentTenant;
+    let success = false;
+
+    // Check if fields are blank for instant login
+    if (!emailInput && !passwordInput) {
+      success = true;
+      targetTenant = currentTenant;
+    } else {
+      // Find matching tenant credentials in the DB
+      const list = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
+      const foundTenant = Object.values(list).find(t => t.adminEmail.toLowerCase() === emailInput.toLowerCase() && t.adminPassword === passwordInput);
+      
+      if (foundTenant) {
+        success = true;
+        targetTenant = foundTenant;
+      }
+    }
+
+    if (success) {
+      errorMsg.classList.remove('show');
+      btn.classList.add('loading-state');
+      
+      sessionStorage.setItem('admin_tenant', targetTenant.id);
+      sessionStorage.setItem('admin_logged_in', 'true');
+      sessionStorage.setItem('admin_email', targetTenant.adminEmail);
+      
+      setTimeout(() => {
+        window.location.replace(`dashboard.html?tenant=${targetTenant.id}`);
+      }, 400);
+    } else {
+      errorText.textContent = "Incorrect email or password for this tenant.";
+      errorMsg.classList.add('show');
+    }
   }
 </script>
 </body>
