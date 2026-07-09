@@ -45,10 +45,10 @@
         };
         const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
         const currentTenant = tenants[tenantId] || tenants['serenity'];
-        const primaryColor = currentTenant.colors?.primary || '#50613f';
-        const secondaryColor = currentTenant.colors?.secondary || '#fed65b';
-        const backgroundColor = currentTenant.colors?.background || '#f4fbfa';
-        const containerColor = currentTenant.colors?.surfaceContainer || '#e8efef';
+        const primaryColor = '#50613f';
+        const secondaryColor = '#fed65b';
+        const backgroundColor = '#f4fbfa';
+        const containerColor = '#e8efef';
 
         tailwind.config = {
             darkMode: "class",
@@ -1023,32 +1023,9 @@
             }
         });
 
-        // Update login modal divider color gradient
-        const divider = document.querySelector('#user-login-modal div[style*="background:linear-gradient"]');
-        if (divider) {
-          divider.style.background = `linear-gradient(90deg, ${primaryColor}, ${secondaryColor})`;
-        }
-
-        // Apply primary color to buttons in modal and mobile bottom nav
-        const loginBtn = document.querySelector('#user-login-modal button[onclick="handleUserLogin()"]');
-        if (loginBtn) {
-            loginBtn.style.background = primaryColor;
-        }
-        
         const registerLink = document.querySelector('#user-login-modal a[href*="register.html"]');
         if (registerLink) {
-            registerLink.style.color = primaryColor;
-            registerLink.setAttribute('href', `register.html?tenant=${tenantId}`);
-        }
-
-        const continueBtn = document.getElementById('mobile-continue-btn');
-        if (continueBtn) {
-            continueBtn.style.backgroundColor = primaryColor;
-        }
-
-        const backBtn = document.getElementById('mobile-back-btn');
-        if (backBtn) {
-            backBtn.style.color = primaryColor;
+            registerLink.setAttribute('href', `register.html?tenant=${lmTenantId}`);
         }
     });
     </script>

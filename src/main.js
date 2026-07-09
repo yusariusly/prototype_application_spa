@@ -865,8 +865,7 @@ function updateNavbarAuth() {
     if (avatar) {
         if (loggedIn) {
             avatar.setAttribute('title', name ? `Hi, ${name}` : 'My Account');
-            const primaryColor = currentTenant.colors?.primary || '#50613f';
-            avatar.style.background = `${primaryColor}24`;
+            avatar.style.background = 'rgba(80,97,63,0.15)';
         } else {
             avatar.setAttribute('title', 'Login / Register');
             avatar.style.background = '';

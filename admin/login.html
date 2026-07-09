@@ -311,37 +311,6 @@
         Password: <strong>${currentTenant.adminPassword}</strong>
       `;
     }
-
-    const primaryColor = currentTenant.colors?.primary || '#50613f';
-    const secondaryColor = currentTenant.colors?.secondary || '#fed65b';
-    const backgroundColor = currentTenant.colors?.background || '#eef4f0';
-
-    let styleEl = document.createElement('style');
-    styleEl.textContent = `
-      body {
-        background: ${backgroundColor} !important;
-      }
-      .brand-logo, h2 {
-        color: ${primaryColor} !important;
-      }
-      .brand-divider {
-        background: linear-gradient(90deg, ${primaryColor}, ${secondaryColor}) !important;
-      }
-      .input-wrap input:focus {
-        border-color: ${primaryColor} !important;
-        box-shadow: 0 0 0 3px ${primaryColor}22 !important;
-      }
-      .btn-login {
-        background: ${primaryColor} !important;
-      }
-      .btn-login:hover {
-        box-shadow: 0 6px 20px ${primaryColor}44 !important;
-      }
-      .toggle-pw:hover {
-        color: ${primaryColor} !important;
-      }
-    `;
-    document.head.appendChild(styleEl);
   }
   
   initBranding();

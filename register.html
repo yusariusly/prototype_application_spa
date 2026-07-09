@@ -428,44 +428,6 @@
       loginRedirect.setAttribute('href', `index.html?tenant=${tenantId}&showLogin=true`);
     }
 
-    const primaryColor = currentTenant.colors?.primary || '#50613f';
-    const secondaryColor = currentTenant.colors?.secondary || '#fed65b';
-    const backgroundColor = currentTenant.colors?.background || '#eef4f0';
-
-    let styleEl = document.createElement('style');
-    styleEl.textContent = `
-      body {
-        background: ${backgroundColor} !important;
-      }
-      .brand-logo, .back-link, .page-header h1, .login-redirect a, [onclick="toggleRegLanguage(event)"] {
-        color: ${primaryColor} !important;
-      }
-      .btn-submit {
-        background: ${primaryColor} !important;
-      }
-      .btn-submit:hover {
-        box-shadow: 0 6px 20px ${primaryColor}44 !important;
-      }
-      .form-card {
-        border-top: 4px solid ${primaryColor} !important;
-      }
-      .form-group input:focus, .form-group select:focus {
-        border-color: ${primaryColor} !important;
-        box-shadow: 0 0 0 3px ${primaryColor}22 !important;
-      }
-      .gender-options label:hover input + span {
-        border-color: ${primaryColor} !important;
-      }
-      .gender-options input:checked + span {
-        background: ${primaryColor} !important;
-        border-color: ${primaryColor} !important;
-        color: #fff !important;
-      }
-      .pw-toggle:hover {
-        color: ${primaryColor} !important;
-      }
-    `;
-    document.head.appendChild(styleEl);
   }
 
   initBranding();

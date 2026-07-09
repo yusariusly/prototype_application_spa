@@ -277,64 +277,6 @@ function applyTenantBranding(tenant) {
   if (headerDesc) {
     headerDesc.textContent = headerDesc.textContent.replace(/Serenity\s*&\s*Soul/gi, tenant.name);
   }
-
-  const primaryColor = tenant.colors?.primary || '#50613f';
-  const secondaryColor = tenant.colors?.secondary || '#fed65b';
-  const backgroundColor = tenant.colors?.background || '#f4fbfa';
-
-  let r = 80, g = 97, b = 63;
-  if (primaryColor.startsWith('#')) {
-    const hex = primaryColor.substring(1);
-    if (hex.length === 6) {
-      r = parseInt(hex.substring(0, 2), 16);
-      g = parseInt(hex.substring(2, 4), 16);
-      b = parseInt(hex.substring(4, 6), 16);
-    }
-  }
-
-  let styleEl = document.getElementById('tenant-branding-styles');
-  if (!styleEl) {
-    styleEl = document.createElement('style');
-    styleEl.id = 'tenant-branding-styles';
-    document.head.appendChild(styleEl);
-  }
-
-  styleEl.textContent = `
-    :root {
-      --primary-color: ${primaryColor};
-      --secondary-color: ${secondaryColor};
-      --bg-color: ${backgroundColor};
-    }
-    .brand-logo, 
-    .admin-nav a.active, 
-    .admin-nav a:hover,
-    .page-header h1,
-    .kpi-icon,
-    .settings-menu-item:hover,
-    .tbl-action-btn:hover,
-    .icon-btn:hover {
-      color: ${primaryColor} !important;
-    }
-    .btn-primary, 
-    .btn-login,
-    .page-btn.active,
-    .chip-occupied,
-    .btn-outline.active {
-      background: ${primaryColor} !important;
-      border-color: ${primaryColor} !important;
-      color: #fff !important;
-    }
-    .brand-divider {
-      background: linear-gradient(90deg, ${primaryColor}, ${secondaryColor}) !important;
-    }
-    .settings-menu-item:hover {
-      background: rgba(${r}, ${g}, ${b}, 0.05) !important;
-    }
-    #mobile-nav a[href*="dashboard.html"] {
-      background: ${secondaryColor} !important;
-      color: #745c00 !important;
-    }
-  `;
 }
 
 // Inject Tenant settings modal
