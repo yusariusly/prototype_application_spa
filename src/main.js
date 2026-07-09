@@ -224,13 +224,30 @@ function syncServices() {
             else if (cat.includes('signature')) type = 'signature';
             else if (cat.includes('body')) type = 'body';
 
+            let regularPrice = s.regularPrice ? parseFloat(s.regularPrice) : undefined;
+            const sessionsCount = s.sessions || (type === 'packages' ? (s.id === 'radiance-bundle' || s.id === 'aromatherapy-bundle' ? 10 : 1) : undefined);
+            if (!regularPrice && type === 'packages') {
+                if (s.id === 'radiance-bundle') regularPrice = 950;
+                else if (s.id === 'aromatherapy-bundle') regularPrice = 1200;
+                else if (s.id === 'half-day-spa-package') regularPrice = 300;
+                else if (s.services && s.services.length > 0) {
+                    let sum = 0;
+                    s.services.forEach(subId => {
+                        const base = list.find(x => x.id === subId);
+                        if (base) sum += (parseFloat(base.price) || 0);
+                    });
+                    regularPrice = sum * (sessionsCount || 1);
+                }
+            }
+
             mapped[s.id] = {
                 id: s.id,
                 name: s.name,
                 type: type,
                 price: parseFloat(s.price) || 0,
-                regularPrice: s.regularPrice ? parseFloat(s.regularPrice) : (s.id === 'radiance-bundle' ? 950 : (s.id === 'aromatherapy-bundle' ? 1200 : (s.id === 'half-day-spa-package' ? 300 : undefined))),
-                sessions: type === 'packages' ? (s.id === 'radiance-bundle' || s.id === 'aromatherapy-bundle' ? 10 : 1) : undefined,
+                regularPrice: regularPrice,
+                sessions: sessionsCount,
+                services: s.services || [],
                 duration: s.duration + ' Mins',
                 description: s.desc || '',
                 image: s.img || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80',
@@ -1372,6 +1389,26 @@ function renderServicesCatalogView() {
                 <!-- Grid 2 Columns (Flex scroll on mobile, Grid on desktop) -->
                 <div class="flex overflow-x-auto pb-4 gap-6 hide-scrollbar md:grid md:grid-cols-2 md:overflow-visible">
                     ${(() => {
+                        const getIncludesHtml = (p) => {
+                            if (!p || !p.services || p.services.length === 0) return '';
+                            const subNames = p.services.map(subId => {
+                                const subSrv = SERVICES[subId];
+                                return subSrv ? subSrv.name : subId;
+                            });
+                            const sessStr = p.sessions && p.sessions > 1 ? ` (${p.sessions}x)` : '';
+                            return `
+                                <div class="mt-2 mb-4 p-2.5 bg-slate-50 rounded-xl border border-slate-100/70">
+                                    <div class="text-[9px] font-bold uppercase tracking-wider text-[#50613f] mb-1 flex items-center gap-1 font-semibold">
+                                        <span class="material-symbols-outlined text-[12px] text-primary">featured_play_list</span>
+                                        ${state.language === 'ms' ? 'Pakej Termasuk:' : 'Package Includes:'}
+                                    </div>
+                                    <ul class="text-[9.5px] text-slate-600 space-y-1 font-medium">
+                                        ${subNames.map(name => `<li class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#50613f]/70 shrink-0"></span><span class="truncate">${name}</span>${sessStr}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        };
+
                         const p1 = SERVICES['radiance-bundle'];
                         if (!p1) return '';
                         const discountPercent = (p1.regularPrice && p1.regularPrice > p1.price) ? Math.round(((p1.regularPrice - p1.price) / p1.regularPrice) * 100) : 0;
@@ -1385,18 +1422,8 @@ function renderServicesCatalogView() {
                                 <div class="p-6 flex flex-col justify-between flex-grow">
                                     <div>
                                         <h3 class="font-serif text-lg font-bold text-[#1E293B] mb-2">${getServiceTranslation(p1.id, 'name', p1.name)}</h3>
-                                        <p class="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-3">${getServiceTranslation(p1.id, 'desc', p1.description)}</p>
-                                        
-                                        <div class="flex flex-wrap gap-4 text-slate-500 mb-6">
-                                            <div class="flex items-center gap-1.5 text-[11px]">
-                                                <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
-                                                <span>${state.language === 'ms' ? '60m / sesi' : '60m / session'}</span>
-                                            </div>
-                                            <div class="flex items-center gap-1.5 text-[11px]">
-                                                <span class="material-symbols-outlined text-[16px] text-slate-400">layers</span>
-                                                <span>${state.language === 'ms' ? '10 Sesi' : '10 Sessions'}</span>
-                                            </div>
-                                        </div>
+                                        <p class="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-3">${getServiceTranslation(p1.id, 'desc', p1.description)}</p>
+                                        ${getIncludesHtml(p1)}
                                     </div>
                                     
                                     <div class="flex justify-between items-center mt-auto border-t border-slate-50 pt-4">
@@ -1412,6 +1439,26 @@ function renderServicesCatalogView() {
                     })()}
 
                     ${(() => {
+                        const getIncludesHtml = (p) => {
+                            if (!p || !p.services || p.services.length === 0) return '';
+                            const subNames = p.services.map(subId => {
+                                const subSrv = SERVICES[subId];
+                                return subSrv ? subSrv.name : subId;
+                            });
+                            const sessStr = p.sessions && p.sessions > 1 ? ` (${p.sessions}x)` : '';
+                            return `
+                                <div class="mt-2 mb-4 p-2.5 bg-slate-50 rounded-xl border border-slate-100/70">
+                                    <div class="text-[9px] font-bold uppercase tracking-wider text-[#50613f] mb-1 flex items-center gap-1 font-semibold">
+                                        <span class="material-symbols-outlined text-[12px] text-primary">featured_play_list</span>
+                                        ${state.language === 'ms' ? 'Pakej Termasuk:' : 'Package Includes:'}
+                                    </div>
+                                    <ul class="text-[9.5px] text-slate-600 space-y-1 font-medium">
+                                        ${subNames.map(name => `<li class="flex items-center gap-1.5"><span class="w-1 h-1 rounded-full bg-[#50613f]/70 shrink-0"></span><span class="truncate">${name}</span>${sessStr}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        };
+
                         const p2 = SERVICES['aromatherapy-bundle'];
                         if (!p2) return '';
                         const discountPercent = (p2.regularPrice && p2.regularPrice > p2.price) ? Math.round(((p2.regularPrice - p2.price) / p2.regularPrice) * 100) : 0;
@@ -1425,18 +1472,8 @@ function renderServicesCatalogView() {
                                 <div class="p-6 flex flex-col justify-between flex-grow">
                                     <div>
                                         <h3 class="font-serif text-lg font-bold text-[#1E293B] mb-2">${getServiceTranslation(p2.id, 'name', p2.name)}</h3>
-                                        <p class="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-3">${getServiceTranslation(p2.id, 'desc', p2.description)}</p>
-                                        
-                                        <div class="flex flex-wrap gap-4 text-slate-500 mb-6">
-                                            <div class="flex items-center gap-1.5 text-[11px]">
-                                                <span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span>
-                                                <span>${state.language === 'ms' ? '60m / sesi' : '60m / session'}</span>
-                                            </div>
-                                            <div class="flex items-center gap-1.5 text-[11px]">
-                                                <span class="material-symbols-outlined text-[16px] text-slate-400">layers</span>
-                                                <span>${state.language === 'ms' ? '10 Sesi' : '10 Sessions'}</span>
-                                            </div>
-                                        </div>
+                                        <p class="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-3">${getServiceTranslation(p2.id, 'desc', p2.description)}</p>
+                                        ${getIncludesHtml(p2)}
                                     </div>
                                     
                                     <div class="flex justify-between items-center mt-auto border-t border-slate-50 pt-4">
@@ -4204,6 +4241,26 @@ function renderAllServicesView() {
                 ? `<div class="absolute top-4 left-4 bg-[#EAB308] text-white px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm z-10">SAVE ${discountPercent}%</div>`
                 : `<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-full font-bold text-[9px] uppercase tracking-wider shadow-sm border border-outline-variant/20">${badgeLabel}</div>`;
 
+            let includesHtml = '';
+            if (isPackage && srv.services && srv.services.length > 0) {
+                const subNames = srv.services.map(subId => {
+                    const subSrv = SERVICES[subId];
+                    return subSrv ? subSrv.name : subId;
+                });
+                const sessStr = srv.sessions && srv.sessions > 1 ? ` (${srv.sessions}x)` : '';
+                includesHtml = `
+                    <div class="mt-3 mb-5 p-3.5 bg-slate-50 rounded-2xl border border-slate-100/70">
+                        <div class="text-[10px] font-bold uppercase tracking-wider text-[#50613f] mb-2 flex items-center gap-1 font-semibold">
+                            <span class="material-symbols-outlined text-[14px] text-primary">featured_play_list</span>
+                            Package Includes:
+                        </div>
+                        <ul class="text-[10.5px] text-slate-600 space-y-1.5 font-medium">
+                            ${subNames.map(name => `<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-[#50613f]/70 shrink-0"></span><span class="truncate">${name}</span>${sessStr}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
             gridHtml += `
                 <div class="bg-white border border-outline-variant/30 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between relative">
                     ${srv.bestValue ? `<div class="absolute top-0 right-0 bg-[#EAB308] text-white px-4 py-1 rounded-bl-lg font-label-caps text-[9px] font-bold uppercase tracking-wider z-10">BEST VALUE</div>` : ''}
@@ -4214,7 +4271,8 @@ function renderAllServicesView() {
                     <div class="p-6 flex flex-col justify-between flex-grow">
                         <div>
                             <h3 class="font-serif text-base font-bold text-[#1E293B] mb-2 line-clamp-1 leading-snug">${srv.name}</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-3">${srv.description}</p>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-4 line-clamp-3">${srv.description}</p>
+                            ${includesHtml}
                         </div>
                         
                         <div class="flex justify-between items-center border-t border-slate-100 pt-4 mt-auto">

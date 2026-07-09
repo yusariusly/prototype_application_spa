@@ -468,6 +468,8 @@
         regularPrice: totalRegularPrice || undefined,
         duration: totalDuration,
         category: 'Package',
+        services: checked.map(c => c.dataset.id),
+        sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
         desc,
         img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
         showOnHome
