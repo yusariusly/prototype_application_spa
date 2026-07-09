@@ -288,7 +288,12 @@ function injectTenantSettingsModal() {
     opt.id = 'tenant-settings-opt';
     opt.innerHTML = `<span class="material-symbols-outlined">settings</span>Tenant Settings`;
     opt.onclick = () => window.openTenantSettingsModal();
-    dropdown.insertBefore(opt, dropdown.firstChild);
+    const signOutBtn = dropdown.querySelector('[onclick="adminSignOut()"]');
+    if (signOutBtn) {
+      dropdown.insertBefore(opt, signOutBtn);
+    } else {
+      dropdown.insertBefore(opt, dropdown.firstChild);
+    }
   }
 
   if (document.getElementById('tenant-settings-modal')) return;
