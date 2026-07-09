@@ -241,6 +241,7 @@
 <script type="module">
   let searchQuery = '';
   let editingServiceId = null;
+  let editingBundleId = null;
 
   function renderServices() {
     const list = AdminState.getServices();
@@ -281,6 +282,9 @@
         </button>
       ` : '';
 
+      const isBundle = s.category === 'Package' || s.category === 'Packages';
+      const editAction = isBundle ? `openBundleEditor('${s.id}')` : `openServiceModal('${s.id}')`;
+
       return `
         <div class="service-card">
           <div class="service-img">
@@ -299,7 +303,7 @@
               <div style="display:flex;gap:4px;">
                 ${starButton}
                 <button class="tbl-action-btn" onclick="toggleHomeVisibility('${s.id}')" title="${homeTitle}"><span class="material-symbols-outlined" style="font-size:18px;color:${homeColor};" ${homeFill}>${homeIcon}</span></button>
-                <button class="tbl-action-btn" onclick="openServiceModal('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>
+                <button class="tbl-action-btn" onclick="${editAction}"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>
                 <button class="tbl-action-btn danger" onclick="deleteService('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">delete</span></button>
               </div>
             </div>
@@ -422,10 +426,83 @@
     renderServices();
   };
 
+  window.openBundleEditor = (bundleId) => {
+    editingBundleId = bundleId;
+    const list = AdminState.getServices();
+    const bundle = list.find(s => s.id === bundleId);
+    if (!bundle) return;
+
+    // Populate inputs
+    document.getElementById('bundle-name').value = bundle.name;
+    document.getElementById('bundle-price').value = bundle.price;
+    document.getElementById('bundle-sessions').value = bundle.sessions || 1;
+    document.getElementById('bundle-desc').value = bundle.desc || '';
+
+    // Check services checkboxes
+    const checkboxes = document.querySelectorAll('.service-checkbox');
+    const includedServices = bundle.services || [];
+    checkboxes.forEach(cb => {
+      const isIncluded = includedServices.includes(cb.dataset.id);
+      cb.checked = isIncluded;
+      cb.closest('label').classList.toggle('checked', isIncluded);
+    });
+
+    // Update the button text
+    const saveBtn = document.querySelector('#bundle-form button[type="submit"]');
+    if (saveBtn) {
+      saveBtn.textContent = 'Update Package';
+      saveBtn.style.background = '#d97706'; // a nice amber color for edit
+    }
+
+    // Add a cancel button if not already present
+    let cancelBtn = document.getElementById('btn-cancel-bundle-edit');
+    if (!cancelBtn) {
+      cancelBtn = document.createElement('button');
+      cancelBtn.type = 'button';
+      cancelBtn.id = 'btn-cancel-bundle-edit';
+      cancelBtn.className = 'btn-outline';
+      cancelBtn.textContent = 'Cancel Edit';
+      cancelBtn.style.marginRight = '8px';
+      cancelBtn.onclick = () => window.cancelBundleEdit();
+      saveBtn.parentNode.insertBefore(cancelBtn, saveBtn);
+    }
+
+    // Update preview
+    updatePreview();
+
+    // Scroll to the bundle builder form smoothly
+    const builderSection = document.getElementById('bundle-form').closest('section');
+    if (builderSection) {
+      builderSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  window.cancelBundleEdit = () => {
+    editingBundleId = null;
+    document.getElementById('bundle-form').reset();
+    
+    // Clear checked checkboxes
+    const checkboxes = document.querySelectorAll('.service-checkbox');
+    checkboxes.forEach(cb => {
+      cb.checked = false;
+      cb.closest('label').classList.remove('checked');
+    });
+
+    const saveBtn = document.querySelector('#bundle-form button[type="submit"]');
+    if (saveBtn) {
+      saveBtn.textContent = 'Save Package';
+      saveBtn.style.background = ''; // restore original background
+    }
+
+    const cancelBtn = document.getElementById('btn-cancel-bundle-edit');
+    if (cancelBtn) cancelBtn.remove();
+
+    updatePreview();
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     renderServices();
 
-    // Bundle Form listeners
     document.getElementById('bundle-name').addEventListener('input', updatePreview);
     document.getElementById('bundle-price').addEventListener('input', updatePreview);
 
@@ -442,33 +519,65 @@
       const totalRegularPrice = checked.reduce((s,c) => s + parseFloat(c.dataset.price), 0);
 
       const list = AdminState.getServices();
-      const currentFeatured = list.filter(s => s.showOnHome).length;
-      let showOnHome = true;
-      if (currentFeatured >= 5) {
-        showOnHome = false;
-        alert("Package created successfully. It will not be shown on the home page because you already have the maximum of 5 featured services/packages.");
+
+      if (editingBundleId) {
+        const index = list.findIndex(s => s.id === editingBundleId);
+        if (index !== -1) {
+          list[index] = {
+            ...list[index],
+            name,
+            price,
+            regularPrice: totalRegularPrice || undefined,
+            duration: totalDuration,
+            services: checked.map(c => c.dataset.id),
+            sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
+            desc
+          };
+        }
+        editingBundleId = null;
+      } else {
+        const currentFeatured = list.filter(s => s.showOnHome).length;
+        let showOnHome = true;
+        if (currentFeatured >= 5) {
+          showOnHome = false;
+          alert("Package created successfully. It will not be shown on the home page because you already have the maximum of 5 featured services/packages.");
+        }
+
+        const id = 'srv-' + (list.length + 1);
+
+        list.push({
+          id,
+          name,
+          price,
+          regularPrice: totalRegularPrice || undefined,
+          duration: totalDuration,
+          category: 'Package',
+          services: checked.map(c => c.dataset.id),
+          sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
+          desc,
+          img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
+          showOnHome
+        });
       }
-
-      const id = 'srv-' + (list.length + 1);
-
-      list.push({
-        id,
-        name,
-        price,
-        regularPrice: totalRegularPrice || undefined,
-        duration: totalDuration,
-        category: 'Package',
-        services: checked.map(c => c.dataset.id),
-        sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
-        desc,
-        img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
-        showOnHome
-      });
 
       AdminState.saveServices(list);
       
-      // Reset form
+      // Reset form and UI
       document.getElementById('bundle-form').reset();
+      const saveBtn = document.querySelector('#bundle-form button[type="submit"]');
+      if (saveBtn) {
+        saveBtn.textContent = 'Save Package';
+        saveBtn.style.background = '';
+      }
+      const cancelBtn = document.getElementById('btn-cancel-bundle-edit');
+      if (cancelBtn) cancelBtn.remove();
+      
+      // Clear checked checkboxes
+      checkboxes.forEach(cb => {
+        cb.checked = false;
+        cb.closest('label').classList.remove('checked');
+      });
+
       renderServices();
     });
 
