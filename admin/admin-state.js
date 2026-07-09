@@ -313,16 +313,8 @@ function injectTenantSettingsModal() {
             <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">App Name</label>
             <input type="text" id="cfg-app-name" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div>
-              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Primary Color</label>
-              <input type="color" id="cfg-color-primary" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
-            </div>
-            <div>
-              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Secondary Color</label>
-              <input type="color" id="cfg-color-secondary" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
-            </div>
-          </div>
+          <input type="hidden" id="cfg-color-primary">
+          <input type="hidden" id="cfg-color-secondary">
           <div>
             <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Email</label>
             <input type="email" id="cfg-admin-email" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
@@ -345,16 +337,8 @@ function injectTenantSettingsModal() {
             <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">App Name</label>
             <input type="text" id="cre-name" placeholder="Aura Spa Sanctuary" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div>
-              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Primary Color</label>
-              <input type="color" id="cre-color-primary" value="#6b21a8" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
-            </div>
-            <div>
-              <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Secondary Color</label>
-              <input type="color" id="cre-color-secondary" value="#a855f7" style="width:100%;height:38px;padding:2px;border:1px solid #ccc;border-radius:8px;cursor:pointer;">
-            </div>
-          </div>
+          <input type="hidden" id="cre-color-primary" value="#50613f">
+          <input type="hidden" id="cre-color-secondary" value="#fed65b">
           <div>
             <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Email</label>
             <input type="email" id="cre-admin-email" placeholder="admin@aura.com" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
