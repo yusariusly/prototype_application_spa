@@ -284,40 +284,37 @@
     }
   };
 
-  function getTenantId() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('tenant') || 'serenity';
-  }
-
   const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
-  const currentTenantId = getTenantId();
-  const currentTenant = tenants[currentTenantId] || tenants['serenity'];
 
   // Apply visual styling on load
   function initBranding() {
-    document.title = `Admin Login — ${currentTenant.name}`;
+    document.title = `SPA Admin Portal`;
     
     // Update brand logos
     const brandLogo = document.querySelector('.brand-logo');
-    if (brandLogo) brandLogo.textContent = currentTenant.name;
+    if (brandLogo) brandLogo.textContent = 'SPA Admin Portal';
     
     // Update demo credentials text
     const demoHint = document.querySelector('.demo-hint');
     if (demoHint) {
       demoHint.innerHTML = `
-        <strong>Note:</strong> You can click <strong>Sign In</strong> directly to log in as this tenant's default admin.<br><br>
-        <strong>Demo credentials:</strong><br>
-        Email: <strong>${currentTenant.adminEmail}</strong><br>
-        Password: <strong>${currentTenant.adminPassword}</strong>
+        <strong>Demo Admin Credentials:</strong><br><br>
+        <strong>Serenity & Soul:</strong><br>
+        Email: <strong>admin@serenity.com</strong><br>
+        Password: <strong>admin123</strong><br><br>
+        <strong>Zenith Wellness:</strong><br>
+        Email: <strong>admin@zenith.com</strong><br>
+        Password: <strong>admin123</strong>
       `;
     }
   }
   
   initBranding();
 
-  // If already logged in, redirect
-  if (sessionStorage.getItem('admin_logged_in') === 'true' && sessionStorage.getItem('admin_tenant') === currentTenantId) {
-    window.location.replace('dashboard.html');
+  // If already logged in, redirect to active dashboard
+  if (sessionStorage.getItem('admin_logged_in') === 'true') {
+    const activeTenantId = sessionStorage.getItem('admin_tenant') || 'serenity';
+    window.location.replace(`dashboard.html?tenant=${activeTenantId}`);
   }
 
   function togglePw() {
@@ -341,25 +338,23 @@
     const emailInput = document.getElementById('inp-email').value.trim();
     const passwordInput = document.getElementById('inp-password').value;
 
-    let targetTenant = currentTenant;
+    let targetTenant = null;
     let success = false;
 
-    // Check if fields are blank for instant login
+    // Check if fields are blank for instant login (default to Serenity)
     if (!emailInput && !passwordInput) {
       success = true;
-      targetTenant = currentTenant;
+      targetTenant = tenants['serenity'] || DEFAULT_TENANTS['serenity'];
     } else {
-      // Find matching tenant credentials in the DB
-      const list = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
-      const foundTenant = Object.values(list).find(t => t.adminEmail.toLowerCase() === emailInput.toLowerCase() && t.adminPassword === passwordInput);
+      // Find matching tenant credentials across ALL tenants
+      targetTenant = Object.values(tenants).find(t => t.adminEmail.toLowerCase() === emailInput.toLowerCase() && t.adminPassword === passwordInput);
       
-      if (foundTenant) {
+      if (targetTenant) {
         success = true;
-        targetTenant = foundTenant;
       }
     }
 
-    if (success) {
+    if (success && targetTenant) {
       errorMsg.classList.remove('show');
       btn.classList.add('loading-state');
       
@@ -371,7 +366,7 @@
         window.location.replace(`dashboard.html?tenant=${targetTenant.id}`);
       }, 400);
     } else {
-      errorText.textContent = "Incorrect email or password for this tenant.";
+      errorText.textContent = "Incorrect email or password. Please try again.";
       errorMsg.classList.add('show');
     }
   }
