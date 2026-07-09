@@ -130,10 +130,11 @@
       </div>
       <div class="builder-grid">
         <form class="builder-card" id="bundle-form">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:1.5rem;">
             <div><label class="form-label">Package Name</label><input id="bundle-name" required class="form-input" type="text" placeholder="e.g. Radiance Bundle"></div>
             <div><label class="form-label">Bundle Price (MYR)</label><input id="bundle-price" required class="form-input" type="number" placeholder="0.00"></div>
             <div><label class="form-label">Total Sessions</label><input id="bundle-sessions" class="form-input" type="number" min="1" value="1"></div>
+            <div><label class="form-label">Image URL (optional)</label><input id="bundle-img" class="form-input" type="text" placeholder="https://..."></div>
           </div>
           <div style="margin-bottom:1.5rem;">
             <label class="form-label" style="margin-bottom:10px;">Select Services</label>
@@ -237,10 +238,14 @@
         </div>
       </div>
       
-      <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div style="display:flex;flex-direction:column;gap:4px;">
           <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Total Sessions</label>
           <input type="number" id="bm-sessions" required min="1" value="1" style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#45483f;">Image URL (optional)</label>
+          <input type="text" id="bm-img" placeholder="https://..." style="background:none;border:none;border-bottom:1.5px solid rgba(197,200,188,0.6);padding:8px 0;font-family:'Manrope',sans-serif;font-size:0.9rem;outline:none;">
         </div>
       </div>
 
@@ -495,6 +500,7 @@
       document.getElementById('bm-name').value = bundle.name;
       document.getElementById('bm-price').value = bundle.price;
       document.getElementById('bm-sessions').value = bundle.sessions || 1;
+      document.getElementById('bm-img').value = bundle.img || '';
       document.getElementById('bm-desc').value = bundle.desc || '';
       document.getElementById('bm-show-on-home').checked = bundle.showOnHome !== false;
       deleteBtn.style.display = 'block';
@@ -505,6 +511,7 @@
       document.getElementById('bm-name').value = '';
       document.getElementById('bm-price').value = '';
       document.getElementById('bm-sessions').value = '1';
+      document.getElementById('bm-img').value = '';
       document.getElementById('bm-desc').value = '';
       document.getElementById('bm-show-on-home').checked = true;
       deleteBtn.style.display = 'none';
@@ -571,6 +578,7 @@
         }
 
         const id = 'srv-' + (list.length + 1);
+        const bundleImgVal = document.getElementById('bundle-img').value;
 
         list.push({
           id,
@@ -582,7 +590,7 @@
           services: checked.map(c => c.dataset.id),
           sessions: parseInt(document.getElementById('bundle-sessions').value) || 1,
           desc,
-          img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
+          img: bundleImgVal || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
           showOnHome
         });
 
@@ -623,6 +631,8 @@
         }
       }
 
+      const img = document.getElementById('bm-img').value;
+
       if (editingBundleId) {
         const index = list.findIndex(s => s.id === editingBundleId);
         if (index !== -1) {
@@ -635,6 +645,7 @@
             services: checked.map(c => c.dataset.id),
             sessions,
             desc,
+            img: img || undefined,
             showOnHome
           };
         }
@@ -651,7 +662,7 @@
           services: checked.map(c => c.dataset.id),
           sessions,
           desc,
-          img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
+          img: img || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQmElNu7sUqoPsrT6pXQGkaROVE-lxrwld4VBffrGVoW8TMbhCN_shByBn0DF-OjMHRM5PwThF2H-T9pqKIP-HE2TASSDsbik-NdKAbSgUDJxRAi-jbCZ6uL35AZkrLsyOZoHWSenKk4QMoj6HCk8cE5tpG371S_RQ3wHbCV6lnDUWUzTaV71ovsiu2P-ERMHSgRCoulDsk8wRtlfYYx2CF6uThj9qURCP2IA9I-d3O3AV-_yBHm5KhQ',
           showOnHome
         });
       }
