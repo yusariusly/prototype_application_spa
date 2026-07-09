@@ -902,7 +902,7 @@
         </button>
         <!-- Brand -->
         <div style="text-align:center;margin-bottom:24px;">
-          <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#50613f;">Serenity &amp; Soul</div>
+          <div id="login-modal-brand" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#50613f;">Serenity &amp; Soul</div>
           <div style="width:28px;height:2px;background:linear-gradient(90deg,#50613f,#fed65b);border-radius:2px;margin:8px auto 0;"></div>
         </div>
         <h2 style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:#161d1d;margin:0 0 4px;" data-translate="login_modal_title">Welcome back</h2>
@@ -1007,8 +1007,8 @@
         // Dynamic branding update for User interface
         document.title = `${currentTenant.name} - Spa Sanctuary`;
 
-        // Update all text occurrences of Serenity & Soul in logos
-        const logoElements = document.querySelectorAll('nav div.font-headline-lg, footer div[style*="font-family"], #user-login-modal div[style*="font-family"]');
+        // Update all text occurrences of Serenity & Soul in logos safely
+        const logoElements = document.querySelectorAll('nav div.font-headline-lg, footer div.font-headline-lg, #login-modal-brand');
         logoElements.forEach(el => {
             if (el.textContent.includes('Serenity & Soul') || el.textContent.includes('Serenity &amp; Soul')) {
                 el.textContent = currentTenant.name;
