@@ -442,7 +442,8 @@
       const name = document.getElementById('bundle-name').value;
       const price = parseFloat(document.getElementById('bundle-price').value) || 0;
       const desc = document.getElementById('bundle-desc').value;
-      const bundleRegularPriceVal = document.getElementById('bundle-regular-price').value;
+      const bundleRegularPriceEl = document.getElementById('bundle-regular-price');
+      const bundleRegularPriceVal = bundleRegularPriceEl ? bundleRegularPriceEl.value : '';
       
       const checkboxes = document.querySelectorAll('.service-checkbox');
       const checked = [...checkboxes].filter(c => c.checked);
