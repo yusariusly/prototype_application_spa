@@ -976,16 +976,8 @@
 
         let matchedUser = null;
 
-        if (!emailInput && !passwordInput) {
-            // Instant demo login
-            matchedUser = users.find(u => u.email === 'user@example.com') || {
-                name: lmTenantId === 'serenity' ? 'Eleanor Vance' : 'Zenith Guest',
-                email: 'user@example.com'
-            };
-        } else {
-            // Look up input credentials
-            matchedUser = users.find(u => u.email.toLowerCase() === emailInput.toLowerCase() && u.password === passwordInput);
-        }
+        // Look up input credentials
+        matchedUser = users.find(u => u.email.toLowerCase() === emailInput.toLowerCase() && u.password === passwordInput);
 
         if (matchedUser) {
             if (errorEl) errorEl.style.display = 'none';

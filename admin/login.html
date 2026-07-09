@@ -341,17 +341,11 @@
     let targetTenant = null;
     let success = false;
 
-    // Check if fields are blank for instant login (default to Serenity)
-    if (!emailInput && !passwordInput) {
+    // Find matching tenant credentials across ALL tenants
+    targetTenant = Object.values(tenants).find(t => t.adminEmail.toLowerCase() === emailInput.toLowerCase() && t.adminPassword === passwordInput);
+    
+    if (targetTenant) {
       success = true;
-      targetTenant = tenants['serenity'] || DEFAULT_TENANTS['serenity'];
-    } else {
-      // Find matching tenant credentials across ALL tenants
-      targetTenant = Object.values(tenants).find(t => t.adminEmail.toLowerCase() === emailInput.toLowerCase() && t.adminPassword === passwordInput);
-      
-      if (targetTenant) {
-        success = true;
-      }
     }
 
     if (success && targetTenant) {
