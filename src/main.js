@@ -879,6 +879,12 @@ function updateNavbarAuth() {
 
 // 3. CORE ROUTING & VIEW CONTROLLER
 function navigateTo(viewId) {
+    const wizardViews = ['select-therapist', 'select-time', 'confirm-booking'];
+    if (wizardViews.includes(viewId) && (!state.booking || !state.booking.service)) {
+        navigateTo('select-service');
+        return;
+    }
+
     state.currentView = viewId;
 
     // Hide all view sections
@@ -2126,8 +2132,9 @@ function renderPaymentMethodSelection() {
     const container = document.getElementById('payment-methods-container');
     if (!container) return;
 
+    const walletName = currentTenant.logo ? `${currentTenant.logo} Wallet` : `${currentTenant.name} Wallet`;
     const methods = [
-        { id: 'wallet', name: 'Serenity Wallet', icon: 'account_balance_wallet' }
+        { id: 'wallet', name: walletName, icon: 'account_balance_wallet' }
     ];
 
     const selectedMethod = methods.find(m => m.id === selectedPaymentMethod) || methods[0];
