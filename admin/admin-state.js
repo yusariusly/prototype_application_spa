@@ -376,7 +376,12 @@ function injectTenantSettingsModal() {
             <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:4px;">Admin Password</label>
             <input type="password" id="cfg-admin-password" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
           </div>
-          <button type="submit" class="btn-login" style="padding:12px;background:#50613f;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;">Save Settings</button>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button type="submit" class="btn-login" style="flex:1; padding:12px;background:#50613f;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Save Settings</button>
+            <a href="../index.html?tenant=${getTenantId()}" target="_blank" style="display:inline-flex; align-items:center; justify-content:center; padding:12px; border:1px solid #50613f; color:#50613f; border-radius:8px; text-decoration:none; font-weight:700; cursor:pointer; flex:1; gap:6px;">
+              <span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span> Client Portal
+            </a>
+          </div>
         </form>
       </div>
 
