@@ -87,9 +87,21 @@
   <main class="admin-main">
 
     <!-- Page Header -->
-    <div class="page-header">
-      <h1 style="font-family:'Playfair Display',serif;font-size:2rem;color:#50613f;margin:0;">Today's Summary</h1>
-      <p style="font-size:0.85rem;color:#45483f;margin:4px 0 0;">Overview of daily operations for Serenity &amp; Soul.</p>
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h1 style="font-family:'Playfair Display',serif;font-size:2rem;color:#50613f;margin:0;">Today's Summary</h1>
+        <p style="font-size:0.85rem;color:#45483f;margin:4px 0 0;">Overview of daily operations for Serenity &amp; Soul.</p>
+      </div>
+      <a href="#" id="view-client-portal-btn" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#50613f;color:#fff;border-radius:8px;font-weight:600;font-size:0.85rem;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(80,97,63,0.2);">
+        <span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span>
+        View Client Portal
+      </a>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const tId = localStorage.getItem('spa_admin_tenant') || 'serenity';
+          document.getElementById('view-client-portal-btn').href = `../index.html?tenant=${tId}`;
+        });
+      </script>
     </div>
 
     <!-- KPI Cards -->
