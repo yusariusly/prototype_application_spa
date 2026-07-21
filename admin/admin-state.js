@@ -533,6 +533,22 @@ window.switchTenantTab = function(tab) {
   }
 };
 
+window.showCustomToast = function(message, type = 'success', onDismiss = null) {
+  const toast = document.createElement('div');
+  const bg = type === 'success' ? '#50613f' : '#ba1a1a';
+  toast.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:${bg};color:#fff;padding:12px 24px;border-radius:30px;font-family:'Manrope',sans-serif;font-size:0.9rem;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:999999;opacity:0;transition:opacity 0.3s ease;display:flex;align-items:center;gap:8px;text-align:center;`;
+  toast.innerHTML = `<span class="material-symbols-outlined" style="font-size:18px;">${type === 'success' ? 'check_circle' : 'error'}</span><span>${message.replace(/\n/g, '<br>')}</span>`;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => { toast.style.opacity = '1'; });
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      if (document.body.contains(toast)) document.body.removeChild(toast);
+      if (onDismiss) onDismiss();
+    }, 300);
+  }, 2000);
+};
+
 window.saveTenantConfig = function(e) {
   e.preventDefault();
   const tenants = AdminState.getTenants();
@@ -551,8 +567,9 @@ window.saveTenantConfig = function(e) {
     AdminState.saveTenants(tenants);
     applyTenantBranding(tenants[tId]);
     window.closeTenantSettingsModal();
-    alert("Tenant settings saved successfully! Refreshing pages will apply configurations.");
-    window.location.reload();
+    window.showCustomToast("Tenant settings saved successfully!", "success", () => {
+      window.location.reload();
+    });
   }
 };
 
@@ -580,8 +597,9 @@ window.saveSharingConfig = function(e) {
     
     AdminState.saveTenants(tenants);
     window.closeTenantSettingsModal();
-    alert("Sharing configurations saved successfully! Pages will refresh to apply settings.");
-    window.location.reload();
+    window.showCustomToast("Sharing configurations saved successfully!", "success", () => {
+      window.location.reload();
+    });
   }
 };
 
@@ -591,7 +609,7 @@ window.createNewTenant = function(e) {
   const newId = document.getElementById('cre-id').value.trim().toLowerCase();
   
   if (tenants[newId]) {
-    alert("Tenant ID already exists! Please use a different ID.");
+    window.showCustomToast("Tenant ID already exists! Please use a different ID.", "error");
     return;
   }
 
@@ -624,7 +642,9 @@ window.createNewTenant = function(e) {
   const adminUrl = `${host}/admin/login.html?tenant=${newId}`;
   const userUrl = `${host}/index.html?tenant=${newId}`;
   
-  alert(`Tenant "${name}" created successfully!\n\nUser Access:\n${userUrl}\n\nAdmin Access:\n${adminUrl}`);
+  window.showCustomToast(`Tenant "${name}" created successfully!`, "success", () => {
+    window.location.reload();
+  });
 };
 
 // Overwrite logOut helper globally
