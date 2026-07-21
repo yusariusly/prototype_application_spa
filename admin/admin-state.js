@@ -124,6 +124,8 @@ function getSharedData(type) {
             const items = JSON.parse(rawData);
             if (Array.isArray(items)) {
               items.forEach(item => {
+                item.originalId = item.id;
+                item.id = `${tId}_${item.id}`;
                 item.isShared = true;
                 item.sharedFromId = tId;
                 item.sharedFromName = t.name;
