@@ -274,6 +274,16 @@
       
       const tagsHtml = s.tags ? s.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : '';
 
+      const isShared = s.isShared === true;
+      const sharedBadge = isShared ? `<span class="chip" style="font-size:0.6rem;padding:2px 8px;margin-top:4px;display:inline-block;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;border-radius:4px;font-weight:700;">Shared: ${s.sharedFromName}</span>` : '';
+
+      const actionsHtml = isShared ? `
+        <span style="font-size: 0.72rem; color: #888; font-style: italic; font-weight: 700; align-self: center;">Read-Only</span>
+      ` : `
+        <button class="card-action-btn" title="Edit" onclick="openStaffModal('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>
+        <button class="card-action-btn" title="Schedule" onclick="openAvailModal('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">calendar_month</span></button>
+      `;
+
       const card = `
         <div class="${cardClass}">
           <div style="display:flex;align-items:center;gap:14px;">
@@ -287,6 +297,7 @@
             <div>
               <h3 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:#161d1d;margin:0;">${s.name}</h3>
               <p style="font-size:0.78rem;color:#45483f;margin:3px 0 0;">${s.specialization}</p>
+              ${sharedBadge}
             </div>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;">
@@ -295,8 +306,7 @@
           <div class="staff-footer">
             <span class="status-pill"><span class="dot" style="background:${statusPillColor};"></span><span style="color:${statusPillColor};">${s.status}</span></span>
             <div class="card-actions">
-              <button class="card-action-btn" title="Edit" onclick="openStaffModal('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>
-              <button class="card-action-btn" title="Schedule" onclick="openAvailModal('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">calendar_month</span></button>
+              ${actionsHtml}
             </div>
           </div>
         </div>

@@ -167,6 +167,39 @@ let SERVICES = {
     }
 };
 
+function getSharedData(type) {
+    const currentTId = window.currentTenantId || 'serenity';
+    const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
+    let sharedItems = [];
+    
+    Object.keys(tenants).forEach(tId => {
+        if (tId === currentTId) return;
+        const t = tenants[tId];
+        if (t.sharing && Array.isArray(t.sharing.sharedWith) && t.sharing.sharedWith.includes(currentTId)) {
+            if (Array.isArray(t.sharing.sharedTypes) && t.sharing.sharedTypes.includes(type)) {
+                const storageKey = `${tId}_admin_${type}`;
+                const rawData = localStorage.getItem(storageKey);
+                if (rawData) {
+                    try {
+                        const items = JSON.parse(rawData);
+                        if (Array.isArray(items)) {
+                            items.forEach(item => {
+                                item.isShared = true;
+                                item.sharedFromId = tId;
+                                item.sharedFromName = t.name;
+                            });
+                            sharedItems = sharedItems.concat(items);
+                        }
+                    } catch (e) {
+                        console.error(`Failed to parse shared data for ${tId} type ${type}`, e);
+                    }
+                }
+            }
+        }
+    });
+    return sharedItems;
+}
+
 function syncServices() {
     const servicesKey = `${window.currentTenantId}_admin_services`;
     let adminSrvRaw = localStorage.getItem(servicesKey);
@@ -215,8 +248,12 @@ function syncServices() {
         if (hasChanges) {
             localStorage.setItem(servicesKey, JSON.stringify(list));
         }
+
+        const shared = getSharedData('services');
+        const combinedList = list.concat(shared);
+
         const mapped = {};
-        list.forEach(s => {
+        combinedList.forEach(s => {
             let type = 'massage';
             const cat = (s.category || '').toLowerCase();
             if (cat.includes('package')) type = 'packages';
@@ -279,8 +316,11 @@ function syncTherapists() {
     }
     try {
         const list = JSON.parse(adminStaffRaw);
+        const shared = getSharedData('staff');
+        const combinedList = list.concat(shared);
+
         const mapped = {};
-        list.forEach(s => {
+        combinedList.forEach(s => {
             let imgUrl = s.img;
             if (!imgUrl) {
                 if (s.id === 'stf-1') imgUrl = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDCyGpGMCc0s6-2cZr0NlDqaewuY-I9V_tOS8-XEbzthk_cjPBnUWtYTnWzH3nKaivNuirBu4tNgHsUWKNNS3g4Besm6fNOCnSOYNA5tE5lQiFyryHkMi17UVHZdVUe3pfIxNL1UexF0lWLCBJsFj_lt_rWfPnZvDwLKQg8NwJMX4UPtJHqxLiIu_HrCIKlIQPC4NU6MarRT2m6ZaUUWttG4qHgDH3pnGLTZxeUXRhC2t6y0a38c1Y2aA';

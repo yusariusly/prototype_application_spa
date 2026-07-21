@@ -107,6 +107,39 @@ function initStorage(tId) {
   }
 }
 
+function getSharedData(type) {
+  const currentTId = getTenantId();
+  const tenants = JSON.parse(localStorage.getItem('spa_tenants')) || DEFAULT_TENANTS;
+  let sharedItems = [];
+  
+  Object.keys(tenants).forEach(tId => {
+    if (tId === currentTId) return;
+    const t = tenants[tId];
+    if (t.sharing && Array.isArray(t.sharing.sharedWith) && t.sharing.sharedWith.includes(currentTId)) {
+      if (Array.isArray(t.sharing.sharedTypes) && t.sharing.sharedTypes.includes(type)) {
+        const storageKey = `${tId}_admin_${type}`;
+        const rawData = localStorage.getItem(storageKey);
+        if (rawData) {
+          try {
+            const items = JSON.parse(rawData);
+            if (Array.isArray(items)) {
+              items.forEach(item => {
+                item.isShared = true;
+                item.sharedFromId = tId;
+                item.sharedFromName = t.name;
+              });
+              sharedItems = sharedItems.concat(items);
+            }
+          } catch (e) {
+            console.error(`Failed to parse shared data for ${tId} type ${type}`, e);
+          }
+        }
+      }
+    }
+  });
+  return sharedItems;
+}
+
 // Data accessor functions
 const AdminState = {
   getTenantId: getTenantId,
@@ -133,41 +166,53 @@ const AdminState = {
   getServices: () => {
     const tId = getTenantId();
     initStorage(tId);
-    return JSON.parse(localStorage.getItem(`${tId}_admin_services`));
+    const own = JSON.parse(localStorage.getItem(`${tId}_admin_services`)) || [];
+    const shared = getSharedData('services');
+    return own.concat(shared);
   },
   saveServices: (data) => {
     const tId = getTenantId();
-    localStorage.setItem(`${tId}_admin_services`, JSON.stringify(data));
+    const own = data.filter(s => !s.isShared);
+    localStorage.setItem(`${tId}_admin_services`, JSON.stringify(own));
   },
   
   getStaff: () => {
     const tId = getTenantId();
     initStorage(tId);
-    return JSON.parse(localStorage.getItem(`${tId}_admin_staff`));
+    const own = JSON.parse(localStorage.getItem(`${tId}_admin_staff`)) || [];
+    const shared = getSharedData('staff');
+    return own.concat(shared);
   },
   saveStaff: (data) => {
     const tId = getTenantId();
-    localStorage.setItem(`${tId}_admin_staff`, JSON.stringify(data));
+    const own = data.filter(s => !s.isShared);
+    localStorage.setItem(`${tId}_admin_staff`, JSON.stringify(own));
   },
 
   getReservations: () => {
     const tId = getTenantId();
     initStorage(tId);
-    return JSON.parse(localStorage.getItem(`${tId}_admin_reservations`));
+    const own = JSON.parse(localStorage.getItem(`${tId}_admin_reservations`)) || [];
+    const shared = getSharedData('reservations');
+    return own.concat(shared);
   },
   saveReservations: (data) => {
     const tId = getTenantId();
-    localStorage.setItem(`${tId}_admin_reservations`, JSON.stringify(data));
+    const own = data.filter(r => !r.isShared);
+    localStorage.setItem(`${tId}_admin_reservations`, JSON.stringify(own));
   },
 
   getRooms: () => {
     const tId = getTenantId();
     initStorage(tId);
-    return JSON.parse(localStorage.getItem(`${tId}_admin_rooms`));
+    const own = JSON.parse(localStorage.getItem(`${tId}_admin_rooms`)) || [];
+    const shared = getSharedData('rooms');
+    return own.concat(shared);
   },
   saveRooms: (data) => {
     const tId = getTenantId();
-    localStorage.setItem(`${tId}_admin_rooms`, JSON.stringify(data));
+    const own = data.filter(r => !r.isShared);
+    localStorage.setItem(`${tId}_admin_rooms`, JSON.stringify(own));
   },
 
   // Add Reservation
@@ -308,8 +353,9 @@ function injectTenantSettingsModal() {
       <h2 style="margin:0 0 20px;font-family:'Playfair Display',serif;color:#111;font-size:1.5rem;">Tenant & Application Settings</h2>
       
       <div style="display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px;">
-        <button id="ts-tab-config" onclick="window.switchTenantTab('config')" style="flex:1;padding:8px;border:none;background:#50613f;color:#fff;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Configure Current</button>
-        <button id="ts-tab-create" onclick="window.switchTenantTab('create')" style="flex:1;padding:8px;border:none;background:#eee;color:#555;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Create New Tenant</button>
+        <button id="ts-tab-config" onclick="window.switchTenantTab('config')" style="flex:1;padding:8px;border:none;background:#50613f;color:#fff;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Configure Current</button>
+        <button id="ts-tab-sharing" onclick="window.switchTenantTab('sharing')" style="flex:1;padding:8px;border:none;background:#eee;color:#555;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Data Sharing</button>
+        <button id="ts-tab-create" onclick="window.switchTenantTab('create')" style="flex:1;padding:8px;border:none;background:#eee;color:#555;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Create New Tenant</button>
       </div>
 
       <div id="tenant-form-config">
@@ -329,6 +375,38 @@ function injectTenantSettingsModal() {
             <input type="password" id="cfg-admin-password" style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;outline:none;" required>
           </div>
           <button type="submit" class="btn-login" style="padding:12px;background:#50613f;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;">Save Settings</button>
+        </form>
+      </div>
+
+      <div id="tenant-form-sharing" style="display:none;">
+        <form onsubmit="window.saveSharingConfig(event)" style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:6px;">Select Data to Share</label>
+            <div style="display:flex;flex-direction:column;gap:8px;background:#f8fafc;padding:12px;border-radius:8px;border:1px solid #e2e8f0;">
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;margin:0;">
+                <input type="checkbox" id="share-services" style="cursor:pointer;margin:0;"> Services & Packages
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;margin:0;">
+                <input type="checkbox" id="share-staff" style="cursor:pointer;margin:0;"> Staff & Therapists
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;margin:0;">
+                <input type="checkbox" id="share-reservations" style="cursor:pointer;margin:0;"> Reservations & Appointments
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;margin:0;">
+                <input type="checkbox" id="share-rooms" style="cursor:pointer;margin:0;"> Spa Rooms
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#94a3b8;cursor:not-allowed;margin:0;" title="Revenue cannot be shared with other tenants for privacy reasons.">
+                <input type="checkbox" id="share-revenue" disabled style="cursor:not-allowed;margin:0;"> Revenue (Restricted 🔒)
+              </label>
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:0.72rem;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:6px;">Share With Tenants</label>
+            <div id="share-tenants-list" style="display:flex;flex-direction:column;gap:8px;max-height:150px;overflow-y:auto;background:#f8fafc;padding:12px;border-radius:8px;border:1px solid #e2e8f0;">
+              <!-- Dynamically populated checkbox list of other tenants -->
+            </div>
+          </div>
+          <button type="submit" class="btn-login" style="padding:12px;background:#50613f;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;">Save Sharing Settings</button>
         </form>
       </div>
 
@@ -365,12 +443,38 @@ window.openTenantSettingsModal = function() {
   const modal = document.getElementById('tenant-settings-modal');
   if (!modal) return;
   const current = AdminState.getCurrentTenant();
+  const tId = getTenantId();
   
   document.getElementById('cfg-app-name').value = current.name || '';
   document.getElementById('cfg-color-primary').value = current.colors?.primary || '#50613f';
   document.getElementById('cfg-color-secondary').value = current.colors?.secondary || '#fed65b';
   document.getElementById('cfg-admin-email').value = current.adminEmail || '';
   document.getElementById('cfg-admin-password').value = current.adminPassword || '';
+
+  // Load Data Sharing tab checkboxes
+  const currentSharing = current.sharing || { sharedTypes: [], sharedWith: [] };
+  document.getElementById('share-services').checked = (currentSharing.sharedTypes || []).includes('services');
+  document.getElementById('share-staff').checked = (currentSharing.sharedTypes || []).includes('staff');
+  document.getElementById('share-reservations').checked = (currentSharing.sharedTypes || []).includes('reservations');
+  document.getElementById('share-rooms').checked = (currentSharing.sharedTypes || []).includes('rooms');
+
+  const tenantsList = AdminState.getTenants();
+  const otherTenants = Object.values(tenantsList).filter(t => t.id !== tId);
+  const tenantsContainer = document.getElementById('share-tenants-list');
+  if (tenantsContainer) {
+    if (otherTenants.length === 0) {
+      tenantsContainer.innerHTML = '<span style="font-size:0.8rem;color:#888;font-style:italic;">No other tenants available. Create one to share data.</span>';
+    } else {
+      tenantsContainer.innerHTML = otherTenants.map(t => {
+        const checked = (currentSharing.sharedWith || []).includes(t.id) ? 'checked' : '';
+        return `
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;cursor:pointer;margin:0;">
+            <input type="checkbox" name="share-tenant-cb" value="${t.id}" ${checked} style="cursor:pointer;margin:0;"> ${t.name} (${t.id})
+          </label>
+        `;
+      }).join('');
+    }
+  }
 
   window.switchTenantTab('config');
   modal.style.display = 'flex';
@@ -383,22 +487,40 @@ window.closeTenantSettingsModal = function() {
 
 window.switchTenantTab = function(tab) {
   const configTab = document.getElementById('tenant-form-config');
+  const sharingTab = document.getElementById('tenant-form-sharing');
   const createTab = document.getElementById('tenant-form-create');
   const btnConfig = document.getElementById('ts-tab-config');
+  const btnSharing = document.getElementById('ts-tab-sharing');
   const btnCreate = document.getElementById('ts-tab-create');
   
   if (tab === 'config') {
     configTab.style.display = 'block';
+    sharingTab.style.display = 'none';
     createTab.style.display = 'none';
     btnConfig.style.background = 'var(--primary-color, #50613f)';
     btnConfig.style.color = '#fff';
+    btnSharing.style.background = '#eee';
+    btnSharing.style.color = '#555';
+    btnCreate.style.background = '#eee';
+    btnCreate.style.color = '#555';
+  } else if (tab === 'sharing') {
+    configTab.style.display = 'none';
+    sharingTab.style.display = 'block';
+    createTab.style.display = 'none';
+    btnConfig.style.background = '#eee';
+    btnConfig.style.color = '#555';
+    btnSharing.style.background = 'var(--primary-color, #50613f)';
+    btnSharing.style.color = '#fff';
     btnCreate.style.background = '#eee';
     btnCreate.style.color = '#555';
   } else {
     configTab.style.display = 'none';
+    sharingTab.style.display = 'none';
     createTab.style.display = 'block';
     btnConfig.style.background = '#eee';
     btnConfig.style.color = '#555';
+    btnSharing.style.background = '#eee';
+    btnSharing.style.color = '#555';
     btnCreate.style.background = 'var(--primary-color, #50613f)';
     btnCreate.style.color = '#fff';
   }
@@ -423,6 +545,35 @@ window.saveTenantConfig = function(e) {
     applyTenantBranding(tenants[tId]);
     window.closeTenantSettingsModal();
     alert("Tenant settings saved successfully! Refreshing pages will apply configurations.");
+    window.location.reload();
+  }
+};
+
+window.saveSharingConfig = function(e) {
+  e.preventDefault();
+  const tenants = AdminState.getTenants();
+  const tId = getTenantId();
+  if (tenants[tId]) {
+    const sharedTypes = [];
+    if (document.getElementById('share-services').checked) sharedTypes.push('services');
+    if (document.getElementById('share-staff').checked) sharedTypes.push('staff');
+    if (document.getElementById('share-reservations').checked) sharedTypes.push('reservations');
+    if (document.getElementById('share-rooms').checked) sharedTypes.push('rooms');
+    
+    const sharedWith = [];
+    const checkboxes = document.getElementsByName('share-tenant-cb');
+    checkboxes.forEach(cb => {
+      if (cb.checked) sharedWith.push(cb.value);
+    });
+    
+    tenants[tId].sharing = {
+      sharedTypes,
+      sharedWith
+    };
+    
+    AdminState.saveTenants(tenants);
+    window.closeTenantSettingsModal();
+    alert("Sharing configurations saved successfully! Pages will refresh to apply settings.");
     window.location.reload();
   }
 };

@@ -418,11 +418,17 @@
             slotIcon = 'cancel';
           }
 
+          const isShared = res.isShared === true;
+          const dragAttr = (isPending && !isShared) ? `draggable="true" ondragstart="handleDragStart(event, '${res.id}')"` : '';
+          const clickAttr = isShared ? `alert('This is a read-only shared reservation and cannot be modified.')` : `openEditModal('${res.id}')`;
+          const cursorStyle = (isPending && !isShared) ? 'cursor: grab;' : '';
+          const sharedName = isShared ? ` [Shared: ${res.sharedFromName}]` : '';
+
           html += `
             <td colspan="${slotsNeeded}">
-              <div class="slot-box ${slotClass}" ${isPending ? `draggable="true" ondragstart="handleDragStart(event, '${res.id}')"` : ''} onclick="openEditModal('${res.id}')" style="${isPending ? 'cursor: grab;' : ''}">
+              <div class="slot-box ${slotClass}" ${dragAttr} onclick="${clickAttr}" style="${cursorStyle}">
                 <div style="display:flex;justify-content:space-between;align-items:center;">
-                  <span class="slot-name">${res.customer}</span>
+                  <span class="slot-name">${res.customer}${sharedName}</span>
                   <span class="material-symbols-outlined" style="font-size:16px;">${slotIcon}</span>
                 </div>
                 <span class="slot-meta">${res.duration} Mins · ${res.service}</span>

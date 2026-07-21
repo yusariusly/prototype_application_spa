@@ -323,6 +323,9 @@
       const defaultImg = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAITwrqOltnfvKuQeZY1uxmm9vb6Qdfic56l_uXZKbNu0tXzlwl1n4ejVoAdFTVx8_yqPZWtW9HW_UIcEhgKeDc95gwyChyS2Ua2e9hpiXuZNxuTDcGlKl4mu9wQyriwgoRgAjU_sYo7WYl5vLm4n97udJ4ZDhKVVehPxZ0e7GpWFZYoFPQ6IBkgV-zFzxT-jxw4_QAFdbLiAYvISsUvvT8v__rfmdQhJwNblCS5EdoXM6Wv2VNkZEE8Q';
       const srvImg = s.img || defaultImg;
       
+      const isShared = s.isShared === true;
+      const sharedBadge = isShared ? `<span class="chip" style="font-size:0.6rem;padding:2px 8px;margin-left:6px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;font-weight:700;">Shared: ${s.sharedFromName}</span>` : '';
+
       const homeIcon = s.showOnHome ? 'home' : 'home';
       const homeColor = s.showOnHome ? '#50613f' : '#b2b5a9';
       const homeFill = s.showOnHome ? 'style="font-variation-settings:\'FILL\' 1;"' : '';
@@ -335,7 +338,7 @@
       const starTitle = s.bestValue ? 'Clear Best Value (Star)' : 'Set as Best Value (Star)';
       const starBadge = s.bestValue ? '<span class="chip" style="font-size:0.6rem;padding:2px 8px;margin-left:6px;background:#fffbeb;color:#b45309;border:1px solid #fde68a;">Best Value</span>' : '';
       
-      const starButton = s.showOnHome ? `
+      const starButton = (s.showOnHome && !isShared) ? `
         <button class="tbl-action-btn" onclick="toggleBestValue('${s.id}')" title="${starTitle}">
           <span class="material-symbols-outlined" style="font-size:18px;color:${starColor};" ${starFill}>${starIcon}</span>
         </button>
@@ -343,6 +346,15 @@
 
       const isBundle = s.category === 'Package' || s.category === 'Packages';
       const editAction = isBundle ? `openBundleEditor('${s.id}')` : `openServiceModal('${s.id}')`;
+
+      const actionsHtml = isShared ? `
+        <span style="font-size: 0.72rem; color: #888; font-style: italic; font-weight: 700; align-self: center; margin-right: 4px;">Read-Only</span>
+      ` : `
+        ${starButton}
+        <button class="tbl-action-btn" onclick="toggleHomeVisibility('${s.id}')" title="${homeTitle}"><span class="material-symbols-outlined" style="font-size:18px;color:${homeColor};" ${homeFill}>${homeIcon}</span></button>
+        <button class="tbl-action-btn" onclick="${editAction}"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>
+        <button class="tbl-action-btn danger" onclick="deleteService('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">delete</span></button>
+      `;
 
       return `
         <div class="service-card">
@@ -358,12 +370,9 @@
             </div>
             <p class="service-desc">${s.desc || ''}</p>
             <div class="service-footer">
-              <span class="service-tag">${s.category}${homeBadge}${starBadge}</span>
+              <span class="service-tag">${s.category}${homeBadge}${starBadge}${sharedBadge}</span>
               <div style="display:flex;gap:4px;">
-                ${starButton}
-                <button class="tbl-action-btn" onclick="toggleHomeVisibility('${s.id}')" title="${homeTitle}"><span class="material-symbols-outlined" style="font-size:18px;color:${homeColor};" ${homeFill}>${homeIcon}</span></button>
-                <button class="tbl-action-btn" onclick="${editAction}"><span class="material-symbols-outlined" style="font-size:18px">edit</span></button>
-                <button class="tbl-action-btn danger" onclick="deleteService('${s.id}')"><span class="material-symbols-outlined" style="font-size:18px">delete</span></button>
+                ${actionsHtml}
               </div>
             </div>
           </div>

@@ -120,7 +120,7 @@
           <span class="kpi-label">Revenue (MYR)</span>
           <span class="material-symbols-outlined kpi-icon">payments</span>
         </div>
-        <div class="kpi-value">3.2K</div>
+        <div class="kpi-value" id="kpi-revenue">3.2K</div>
       </div>
     </div>
 
@@ -182,6 +182,25 @@
       // Active Staff
       const activeStaff = staff.filter(s => s.status === 'Active').length;
       document.getElementById('kpi-active-staff').textContent = activeStaff;
+
+      // Dynamic Revenue Calculation (Private & isolated per tenant)
+      const tId = AdminState.getTenantId();
+      const ownReservations = JSON.parse(localStorage.getItem(`${tId}_admin_reservations`)) || [];
+      const services = AdminState.getServices();
+      let totalRevenue = 0;
+      ownReservations.forEach(r => {
+        if (r.status === 'Confirmed' || r.status === 'Completed') {
+          const s = services.find(x => x.name === r.service || x.id === r.service);
+          if (s) {
+            totalRevenue += (parseFloat(s.price) || 0);
+          }
+        }
+      });
+      if (totalRevenue >= 1000) {
+        document.getElementById('kpi-revenue').textContent = `${(totalRevenue / 1000).toFixed(1)}K`;
+      } else {
+        document.getElementById('kpi-revenue').textContent = `${totalRevenue}`;
+      }
 
       // Dynamic Room Status
       const roomsContainer = document.getElementById('rooms-container');
