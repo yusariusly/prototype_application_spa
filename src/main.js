@@ -490,7 +490,21 @@ const TRANSLATIONS = {
         cat_massage: "Massage",
         cat_facial: "Facial",
         cat_body: "Body Treatments",
-        cat_packages: "Packages"
+        cat_packages: "Packages",
+
+        // About Us Section
+        about_tag: "Our Sanctuary Story",
+        about_title: "Harmonizing Body, Mind, & Soul Through Natural Healing",
+        about_desc: "Founded with a deep commitment to holistic wellness, Serenity & Soul is more than a spa—it is a sacred retreat designed to restore equilibrium to your daily life. We blend ancient Eastern touch therapies with pure organic botanical formulations to provide a transformative sensory experience.",
+        about_vision_title: "Our Vision",
+        about_vision_desc: "To be the region's leading eco-conscious holistic sanctuary, empowering individuals to cultivate lifelong physical vitality and mental tranquility.",
+        about_mission_title: "Our Mission",
+        about_mission_desc: "Delivering tailored, ethical therapeutic treatments with certified practitioners, sustainable organic oils, and uncompromised personal care.",
+
+        // Blog Section
+        blog_subtitle: "Insights & Inspiration",
+        blog_title: "Sanctuary Wellness Journal",
+        blog_desc: "Explore expert insights on stress relief, holistic therapies, aftercare advice, and mindful living routines curated by our master practitioners."
     },
     ms: {
         // Nav & General Buttons
@@ -518,41 +532,41 @@ const TRANSLATIONS = {
         why_choose_us_title: "Mengapa Memilih Kami?",
         why_choose_us_feat1_title: "Terapis Pakar",
         why_choose_us_feat1_desc: "Kumpulan profesional kami terlatih untuk memberikan sentuhan penyembuhan yang disesuaikan untuk setiap sesi.",
-        why_choose_us_feat2_title: "Produk Semulajadi",
-        why_choose_us_feat2_desc: "Kami hanya menggunakan bahan organik berkualiti tinggi yang mesra kulit dan mesra alam sekitar.",
+        why_choose_us_feat2_title: "Bahan Semula Jadi",
+        why_choose_us_feat2_desc: "Kami hanya menggunakan bahan organik berkualiti tinggi yang mesra kulit dan alam sekitar.",
         why_choose_us_feat3_title: "Suasana Tenang",
-        why_choose_us_feat3_desc: "Reka bentuk dalaman minimalis kami mencipta oasis kedamaian di tengah-tengah kesibukan kota.",
+        why_choose_us_feat3_desc: "Reka bentuk dalaman minimalis kami mencipta oasis ketenangan di tengah-tengah kesibukan kota.",
 
         // Headers & Stepper Titles
         step1_title: "Pilih Perkhidmatan (Langkah 1)",
-        step1_subtitle: "Temui rawatan yang sempurna untuk keperluan anda.",
+        step1_subtitle: "Cari rawatan yang sesuai untuk keperluan anda.",
         step2_title: "Pilih Terapis Anda",
-        step2_subtitle: "Pilih daripada pengamal berpengalaman kami untuk sesi yang sangat menenangkan.",
-        step3_title: "Tempahan Baru",
+        step2_subtitle: "Pilih daripada pengamal berpengalaman kami untuk sesi santai anda.",
+        step3_title: "Tempahan Baharu",
         step3_subtitle: "Ikuti langkah di bawah untuk menjadualkan janji temu anda.",
         step4_title: "Semak & Sahkan",
-        step4_subtitle: "Sila semak butiran tempahan anda di bawah sebelum mengesahkan tempahan anda.",
-        guest_info_title: "Maklumat Pelanggan",
+        step4_subtitle: "Sila semak butiran tempahan anda di bawah sebelum memuktamadkan tempahan.",
+        guest_info_title: "Maklumat Tetamu",
         payment_method_title: "Kaedah Pembayaran",
         booking_summary_title: "Ringkasan Tempahan",
         lbl_service: "PERKHIDMATAN",
         lbl_therapist: "TERAPIS",
         lbl_date_time: "TARIKH & MASA",
-        lbl_subtotal: "Subjumlah",
+        lbl_subtotal: "Jumlah Kecil",
         lbl_tax: "Cukai (7%)",
         lbl_total: "Jumlah",
         lbl_est_total: "Anggaran Jumlah",
 
         // Success View
         success_title: "Perjalanan Ketenangan Anda Telah Disahkan!",
-        success_subtitle: "Kami gembira untuk menyambut anda di tempat ketenangan kami. Butiran tempahan anda berada di bawah.",
-        prep_tips_title: "Tip Persediaan",
+        success_subtitle: "Kami tidak sabar untuk menyambut anda di suaka ketenangan kami. Butiran tempahan anda ada di bawah.",
+        prep_tips_title: "Petua Persediaan",
         tip1_title: "Tiba Awal",
-        tip1_desc: "Sila tiba 15 minit sebelum rawatan anda untuk melengkapkan borang dan berehat.",
-        tip2_title: "Kekal Hidrat",
-        tip2_desc: "Minum banyak air sebelum dan selepas sesi rawatan tisu mendalam anda.",
-        tip3_title: "Tutup Peranti",
-        tip3_desc: "Kami menggalakkan anda untuk membisukan peranti anda agar dapat menikmati pengalaman ini sepenuhnya.",
+        tip1_desc: "Sila tiba 15 minit sebelum rawatan anda untuk melengkapkan daftar dan berehat.",
+        tip2_title: "Kekal Terhidrat",
+        tip2_desc: "Minum banyak air sebelum dan selepas sesi urutan anda.",
+        tip3_title: "Berehat daripada Peranti",
+        tip3_desc: "Kami menggalakkan anda mematikan peranti untuk menikmati pengalaman sepenuhnya.",
         btn_return_home: "Kembali ke Laman Utama",
 
         // Profile & Wallet Views
@@ -561,7 +575,7 @@ const TRANSLATIONS = {
         btn_manage_wallet: "Urus Dompet",
         btn_history: "Sejarah",
         perk_title: "Kelebihan Keahlian",
-        perk_desc: "Anda mendapat bonus 5% Mata Soul untuk setiap tambah nilai pada bulan ini.",
+        perk_desc: "Anda mendapat 5% Mata Soul untuk setiap tambah nilai bulan ini.",
         settings_title: "Tetapan Akaun",
         setting_personal: "Butiran Peribadi",
         setting_history: "Sejarah Tempahan",
@@ -569,24 +583,24 @@ const TRANSLATIONS = {
         setting_privacy: "Privasi & Keselamatan",
         next_appointment_title: "Janji Temu Seterusnya",
         no_upcoming_appts: "Tiada janji temu akan datang",
-        appt_book_today: "Tempah sesi menenangkan anda yang seterusnya hari ini.",
+        appt_book_today: "Tempah sesi santai anda yang seterusnya hari ini.",
         btn_book_now_arrow: "Tempah Sekarang &rarr;",
         wallet_header_title: "Dompet & Transaksi",
         wallet_header_subtitle: "Urus kredit spa Serenity & Soul anda dan lihat sejarah pembayaran.",
         quick_recharge_title: "Tambah Nilai Pantas",
-        quick_recharge_subtitle: "Pilih jumlah pratetap untuk dimasukkan ke dompet kesihatan anda dengan segera.",
+        quick_recharge_subtitle: "Pilih jumlah pratetap untuk ditambah serta-merta ke dompet kesejahteraan anda.",
         popular_badge: "Popular",
-        topup_title: "Tambah Nilai Dompet Anda",
-        topup_subtitle: "Tambah dana dengan selamat untuk tempahan lancar dan rawatan spa eksklusif.",
+        topup_title: "Tambah Nilai Dompet Spa Anda",
+        topup_subtitle: "Tambah dana dengan selamat untuk tempahan mudah dan rawatan spa eksklusif.",
         btn_back_to_wallet: "Kembali ke Dompet",
 
         // Booking History
         tab_upcoming: "Janji Temu Akan Datang",
-        tab_past: "Selesai & Dibatalkan",
+        tab_past: "Lalu & Dibatalkan",
         status_confirmed: "Disahkan",
         status_completed: "Selesai",
         status_cancelled: "Dibatalkan",
-        no_history_found: "Tiada rekod janji temu ditemui.",
+        no_history_found: "Tiada janji temu ditemui.",
         btn_explore_services: "Teroka Perkhidmatan",
         lbl_therapist_strong: "Terapis:",
 
@@ -610,7 +624,21 @@ const TRANSLATIONS = {
         cat_massage: "Urutan",
         cat_facial: "Rawatan Muka",
         cat_body: "Rawatan Badan",
-        cat_packages: "Pakej"
+        cat_packages: "Pakej",
+
+        // About Us Section
+        about_tag: "Kisah Suaka Kami",
+        about_title: "Menyelaraskan Badan, Minda, & Jiwa Melalui Penyembuhan Semula Jadi",
+        about_desc: "Diasaskan dengan komitmen mendalam terhadap kesejahteraan holistik, Serenity & Soul lebih daripada sekadar spa—ia adalah tempat perlindungan untuk memulihkan keseimbangan hidup anda. Kami menggabungkan terapi sentuhan Timur kuno dengan formulasi botanikal organik tulen untuk pengalaman sensori yang luar biasa.",
+        about_vision_title: "Visi Kami",
+        about_vision_desc: "Menjadi suaka holistik mesra alam terkemuka di rantau ini, membolehkan individu memupuk kecergasan fizikal dan ketenangan minda berpanjangan.",
+        about_mission_title: "Misi Kami",
+        about_mission_desc: "Menyajikan rawatan terapeutik yang disesuaikan dan beretika bersama terapis bersertifikat, minyak organik mampan, dan penjagaan peribadi terbaik.",
+
+        // Blog Section
+        blog_subtitle: "Panduan & Inspirasi",
+        blog_title: "Jurnal Kesejahteraan Spa",
+        blog_desc: "Terokai ulasan pakar mengenai pelegaan tekanan, terapi holistik, petua penjagaan selepas spa, dan amalan hidup tenang daripada terapis pakar kami."
     }
 };
 
