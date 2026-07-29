@@ -504,7 +504,12 @@ const TRANSLATIONS = {
         // Blog Section
         blog_subtitle: "Insights & Inspiration",
         blog_title: "Sanctuary Wellness Journal",
-        blog_desc: "Explore expert insights on stress relief, holistic therapies, aftercare advice, and mindful living routines curated by our master practitioners."
+        blog_desc: "Explore expert insights on stress relief, holistic therapies, aftercare advice, and mindful living routines curated by our master practitioners.",
+
+        // Testimonials Section
+        testimonials_tag: "Guest Experiences",
+        testimonials_title: "Loved & Trusted by Over 1,200+ Guests",
+        testimonials_desc: "Discover how our certified practitioners bring pure relaxation, stress relief, and holistic healing to life."
     },
     ms: {
         // Nav & General Buttons
@@ -638,7 +643,12 @@ const TRANSLATIONS = {
         // Blog Section
         blog_subtitle: "Panduan & Inspirasi",
         blog_title: "Jurnal Kesejahteraan Spa",
-        blog_desc: "Terokai ulasan pakar mengenai pelegaan tekanan, terapi holistik, petua penjagaan selepas spa, dan amalan hidup tenang daripada terapis pakar kami."
+        blog_desc: "Terokai ulasan pakar mengenai pelegaan tekanan, terapi holistik, petua penjagaan selepas spa, dan amalan hidup tenang daripada terapis pakar kami.",
+
+        // Testimonials Section
+        testimonials_tag: "Pengalaman Tetamu",
+        testimonials_title: "Disukai & Dipercayai Oleh Lebih 1,200+ Tetamu",
+        testimonials_desc: "Ketahui bagaimana terapis bersertifikat kami membawa ketenangan mutlak, pelepasan tekanan, dan penyembuhan holistik."
     }
 };
 
@@ -3507,7 +3517,21 @@ function renderBookingHistoryView() {
                             <button onclick="rescheduleBooking('${booking.id}')" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-lg border border-outline text-on-surface-variant hover:bg-slate-50 text-[10px] font-bold transition-all text-center">${t('btn_reschedule')}</button>
                             <button onclick="cancelBooking('${booking.id}')" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-bold transition-all text-center">${t('btn_cancel')}</button>
                         </div>
-                        ` : ''}
+                        ` : (booking.status === 'Completed' ? `
+                        <div class="flex gap-2 w-full md:w-auto justify-start md:justify-end">
+                            ${booking.hasReviewed ? `
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-bold border border-amber-200">
+                                    <span class="material-symbols-outlined text-sm fill-current text-amber-500">star</span>
+                                    ${state.language === 'ms' ? 'Ulasan Terkirim' : 'Reviewed'} (${booking.review ? booking.review.rating : 5}★)
+                                </span>
+                            ` : `
+                                <button onclick="openLeaveReviewModal('${booking.id}')" class="px-4 py-2 rounded-xl bg-[#50613f] hover:bg-[#3e4b30] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                                    <span class="material-symbols-outlined text-sm">rate_review</span>
+                                    ${state.language === 'ms' ? 'Beri Ulasan' : 'Leave Review'}
+                                </button>
+                            `}
+                        </div>
+                        ` : '')}
                     </div>
                 </div>
             `;
@@ -5385,5 +5409,100 @@ window.closeTherapistBio = function () {
     const modal = document.getElementById('therapist-bio-modal');
     if (modal) {
         modal.classList.add('hidden');
+    }
+};
+
+// ── LEAVE REVIEW / RATING MODAL HANDLERS ─────────────────────
+let activeReviewBookingId = null;
+let currentReviewRating = 5;
+
+window.openLeaveReviewModal = function (bookingId) {
+    const booking = state.bookings.find(b => b.id === bookingId);
+    if (!booking) return;
+
+    activeReviewBookingId = bookingId;
+    currentReviewRating = 5;
+
+    const modal = document.getElementById('leave-review-modal');
+    const subtitle = document.getElementById('review-modal-subtitle');
+    const input = document.getElementById('review-comments-input');
+
+    if (modal) {
+        if (subtitle) {
+            subtitle.textContent = `Share your feedback for ${booking.serviceName} with ${booking.therapist}`;
+        }
+        if (input) input.value = '';
+        setReviewRating(5);
+        modal.classList.remove('hidden');
+    }
+};
+
+window.closeLeaveReviewModal = function () {
+    const modal = document.getElementById('leave-review-modal');
+    if (modal) modal.classList.add('hidden');
+};
+
+window.setReviewRating = function (rating) {
+    currentReviewRating = rating;
+    const picker = document.getElementById('review-star-picker');
+    const label = document.getElementById('review-rating-label');
+
+    const labels = {
+        1: '1.0 - Needs Improvement',
+        2: '2.0 - Fair Session',
+        3: '3.0 - Satisfactory',
+        4: '4.0 - Very Good',
+        5: '5.0 - Outstanding'
+    };
+
+    if (picker) {
+        const btns = picker.querySelectorAll('button');
+        btns.forEach((btn, index) => {
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (icon) {
+                if (index < rating) {
+                    icon.classList.add('fill-current');
+                    btn.className = 'star-btn hover:scale-110 transition-transform text-amber-400';
+                } else {
+                    icon.classList.remove('fill-current');
+                    btn.className = 'star-btn hover:scale-110 transition-transform text-slate-300';
+                }
+            }
+        });
+    }
+
+    if (label) {
+        label.textContent = labels[rating] || `${rating}.0`;
+    }
+};
+
+window.submitTreatmentReview = function () {
+    if (!activeReviewBookingId) return;
+
+    const booking = state.bookings.find(b => b.id === activeReviewBookingId);
+    const input = document.getElementById('review-comments-input');
+    const commentText = input ? input.value.trim() : '';
+
+    if (booking) {
+        booking.hasReviewed = true;
+        booking.review = {
+            rating: currentReviewRating,
+            comment: commentText || 'Wonderful session and deeply relaxing experience!',
+            date: 'Just now'
+        };
+
+        saveState();
+        closeLeaveReviewModal();
+
+        showNotification(
+            state.language === 'ms' 
+                ? 'Terima kasih! Ulasan anda telah berjaya dihantar.' 
+                : 'Thank you! Your treatment review has been submitted successfully.', 
+            'success'
+        );
+
+        if (state.currentView === 'booking-history') {
+            renderBookingHistoryView();
+        }
     }
 };

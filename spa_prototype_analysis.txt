@@ -46,10 +46,10 @@ TABEL ANALISIS KELAYAKAN FITUR (WEBSITE VS DOKUMEN OWNER)
    - Status Riil di Kode: Sesuai (UI Ada)
    - Keterangan & Lokasi: Tampilan grid galeri foto suasana dan ruang terapi spa sudah tersemat di halaman utama.
 
-9. TESTIMONI & ULASAN
+9. TESTIMONI & ULASAN PELANGGAN
    - Status di Dokumen: Tidak
-   - Status Riil di Kode: Belum Sesuai
-   - Rencana Penyelesaian UI: Buat seksi testimoni di halaman depan, dan buat modal "Beri Ulasan" bintang + komentar teks pada halaman riwayat booking user yang sudah selesai.
+   - Status Riil di Kode: Sesuai (UI Ada)
+   - Keterangan & Lokasi: Seksi ulasan/testimoni "Guest Experiences" 5-bintang dipasang di landing page, serta modal "Rate Your Spa Experience" (leave-review-modal) tersedia pada halaman histori booking untuk item yang Completed.
 
 10. INTEGRASI WHATSAPP & PETA LOKASI
     - Status di Dokumen: Tidak
