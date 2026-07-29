@@ -363,6 +363,7 @@ const TRANSLATIONS = {
         // Nav & General Buttons
         nav_home: "Home",
         nav_service: "Service",
+        nav_blog: "Blog",
         btn_book_now: "Book Now",
         nav_profile: "Profile",
         btn_sign_out: "Sign Out",
@@ -482,6 +483,7 @@ const TRANSLATIONS = {
         // Nav & General Buttons
         nav_home: "Laman Utama",
         nav_service: "Perkhidmatan",
+        nav_blog: "Blog",
         btn_book_now: "Tempah Sekarang",
         nav_profile: "Profil",
         btn_sign_out: "Log Keluar",
@@ -5162,3 +5164,114 @@ function updateMobileBottomNav(viewId) {
 }
 // Expose so navigateTo (declared before this function) can call it
 window.updateMobileBottomNav = updateMobileBottomNav;
+
+// ── BLOG ARTICLE VIEW LOGIC ──────────────────────────────────
+const BLOG_ARTICLES = {
+    1: {
+        title: {
+            en: "The Science of Relaxation: How Spa Treatments Lower Cortisol",
+            ms: "Sains Relaksasi: Bagaimana Rawatan Spa Mengurangkan Kortisol"
+        },
+        meta: {
+            en: "Mindfulness • 5 min read",
+            ms: "Minda Sedar • 5 min baca"
+        },
+        img: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600&auto=format&fit=crop",
+        content: {
+            en: `
+                <p>Cortisol, often referred to as the "stress hormone," is essential for managing our fight-or-flight response. However, chronically high levels of cortisol due to work stress, lack of sleep, and busy lifestyles can lead to sleep disorders, immune system suppression, and muscle tension.</p>
+                <p>Scientific studies show that tactile stimulation, such as moderate-pressure massage, prompts a physiological shift in the body. When you receive a deep tissue massage or stone therapy, sensory receptors under the skin send signals to the brain to decrease active sympathetic nervous activity (the flight response) and activate the parasympathetic nervous system (the rest-and-digest response).</p>
+                <p>In addition, specialized spa experiences incorporate elements of aromatherapy (such as lavender and chamomile) and soundscapes, which trigger emotional calming centers in the amygdala. This holistic approach has been measured to reduce salivary cortisol levels by up to 31% after a single 60-minute session, while simultaneously increasing dopamine and serotonin levels. Taking time for a spa treatment isn't just pampering—it's a clinically supported path to hormonal balance and peace of mind.</p>
+            `,
+            ms: `
+                <p>Kortisol, sering disebut sebagai "hormon stres," adalah penting untuk menguruskan respon lawan-atau-lari kita. Walau bagaimanapun, tahap kortisol yang kronik tinggi akibat tekanan kerja, kurang tidur, dan gaya hidup sibuk boleh menyebabkan gangguan tidur, kelemahan sistem imun, dan ketegangan otot.</p>
+                <p>Kajian saintifik menunjukkan bahawa rangsangan sentuhan, seperti urutan tekanan sederhana, mencetuskan perubahan fisiologi dalam badan. Apabila anda menerima urutan tisu mendalam atau terapi batu, reseptor deria di bawah kulit menghantar isyarat ke otak untuk mengurangkan aktiviti saraf simpatetik aktif dan mengaktifkan sistem saraf parasimpatetik (respon rehat-dan-cerna).</p>
+                <p>Di samping itu, pengalaman spa khusus menggabungkan elemen aromaterapi (seperti lavender dan chamomile) dan bunyi tenang, yang merangsang pusat penenang emosi di amigdala. Pendekatan holistik ini telah terbukti mengurangkan tahap kortisol air liur sehingga 31% selepas satu sesi 60 minit, sambil meningkatkan tahap dopamin dan serotonin secara serentak. Meluangkan masa untuk rawatan spa bukan sekadar memanjakan diri—ia adalah langkah yang disokong secara klinikal untuk keseimbangan hormon dan ketenangan fikiran.</p>
+            `
+        }
+    },
+    2: {
+        title: {
+            en: "Deep Tissue vs. Aromatherapy: Which Massage is Right for You?",
+            ms: "Urutan Tisu Mendalam vs. Aromaterapi: Mana Satu Sesuai Untuk Anda?"
+        },
+        meta: {
+            en: "Therapy Guide • 4 min read",
+            ms: "Panduan Terapi • 4 min baca"
+        },
+        img: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=600&auto=format&fit=crop",
+        content: {
+            en: `
+                <p>Choosing the right massage can significantly impact your spa experience. Two of our most popular offerings, Deep Tissue Massage and Aromatherapy Massage, target completely different aspects of your well-being.</p>
+                <p><strong>Deep Tissue Massage</strong> focuses on realigning deep layers of muscles and connective tissue. It is highly recommended for individuals experiencing chronic aches, pain, or stiffness in areas like the neck, upper back, and shoulders. During this therapy, the therapist uses slow, deliberate strokes and intense direct pressure to break down adhesions (muscle knots).</p>
+                <p><strong>Aromatherapy Massage</strong>, on the other hand, is designed for emotional and physical relaxation. It uses light, sweeping strokes combined with customized essential oil blends extracted from herbs and flowers. If you are struggling with emotional stress, anxiety, or insomnia, Aromatherapy is the perfect choice to soothe your senses and melt away daily tension without intense muscle manipulation.</p>
+            `,
+            ms: `
+                <p>Memilih urutan yang betul boleh memberi kesan ketara kepada pengalaman spa anda. Dua daripada tawaran paling popular kami, Urutan Tisu Mendalam dan Urutan Aromaterapi, menyasarkan aspek kesejahteraan diri yang berbeza.</p>
+                <p><strong>Urutan Tisu Mendalam</strong> menumpukan pada menyelaraskan semula lapisan dalam otot dan tisu penghubung. Ia sangat disyorkan untuk individu yang mengalami sakit kronik, ketegangan atau kekakuan di bahagian leher, belakang bahagian atas, dan bahu. Semasa terapi ini, terapis menggunakan tekanan langsung yang kuat untuk merungkaikan simpulan otot.</p>
+                <p><strong>Urutan Aromaterapi</strong> pula direka untuk relaksasi emosi dan fizikal. Ia menggunakan sapuan ringan yang digabungkan dengan campuran minyak pati tersuai yang diekstrak daripada herba dan bunga. Jika anda bergelut dengan tekanan emosi, kebimbangan atau insomnia, Aromaterapi adalah pilihan terbaik untuk menenangkan deria anda tanpa manipulasi otot yang kuat.</p>
+            `
+        }
+    },
+    3: {
+        title: {
+            en: "Post-Spa Aftercare: 5 Habits to Maximize Treatment Benefits",
+            ms: "Penjagaan Selepas Spa: 5 Tabiat Memaksimumkan Manfaat Rawatan"
+        },
+        meta: {
+            en: "Wellness Tips • 6 min read",
+            ms: "Tips Kesihatan • 6 min baca"
+        },
+        img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=600&auto=format&fit=crop",
+        content: {
+            en: `
+                <p>To prolong the post-spa glow and muscular relief, what you do after your session is just as important as the treatment itself. Follow these five aftercare habits:</p>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li><strong>1. Rehydrate Immediately:</strong> Massages release metabolic waste from muscle tissues into your circulation. Drinking plenty of water helps flush out these toxins and prevents soreness.</li>
+                    <li><strong>2. Take a Warm Bath:</strong> Continuing the heat therapy at home with Epsom salts helps relax remaining muscle fibers and softens the skin.</li>
+                    <li><strong>3. Eat a Light Meal:</strong> Since digestion slows down during deep relaxation, avoid heavy, greasy meals. Opt for fresh fruits, salads, or clear soups.</li>
+                    <li><strong>4. Postpone Intense Workouts:</strong> Give your muscles at least 24 hours to recover before engaging in heavy lifting or high-intensity training.</li>
+                    <li><strong>5. Unplug and Rest:</strong> Allow your mind to stay calm by limiting screen time and getting at least 8 hours of sleep.</li>
+                </ul>
+            `,
+            ms: `
+                <p>Untuk memanjakan diri lebih lama dan mengekalkan kelegaan otot selepas spa, apa yang anda lakukan selepas sesi anda adalah sama pentingnya dengan rawatan itu sendiri. Ikuti lima tabiat penjagaan selepas spa ini:</p>
+                <ul class="list-disc pl-4 space-y-1">
+                    <li><strong>1. Hidrat Semula Segera:</strong> Urutan melepaskan bahan buangan metabolik dari tisu otot ke dalam peredaran darah anda. Minum banyak air membantu menyingkirkan toksin ini dan mengelakkan lenguh.</li>
+                    <li><strong>2. Mandi Air Hangat:</strong> Meneruskan terapi haba di rumah dengan garam Epsom membantu melegakan baki serat otot dan melembutkan kulit.</li>
+                    <li><strong>3. Makan Makanan Ringan:</strong> Memandangkan pencernaan menjadi perlahan semasa relaksasi mendalam, elakkan makanan berat yang berminyak. Pilih buah-buahan segar, salad, atau sup kosong.</li>
+                    <li><strong>4. Tangguhkan Senaman Berat:</strong> Beri otot anda sekurang-kurangnya 24 jam untuk pulih sebelum melakukan aktiviti angkat berat atau latihan berintensiti tinggi.</li>
+                    <li><strong>5. Berehat dan Lapang Fikiran:</strong> Biarkan minda anda kekal tenang dengan mengehadkan masa skrin dan mendapatkan sekurang-kurangnya 8 jam tidur.</li>
+                </ul>
+            `
+        }
+    }
+};
+
+window.openBlogArticle = function (id) {
+    const article = BLOG_ARTICLES[id];
+    if (!article) return;
+
+    const modal = document.getElementById('blog-article-modal');
+    const img = document.getElementById('blog-modal-img');
+    const meta = document.getElementById('blog-modal-meta');
+    const title = document.getElementById('blog-modal-title');
+    const content = document.getElementById('blog-modal-content');
+
+    const lang = state.language || 'en';
+
+    if (modal && img && meta && title && content) {
+        img.src = article.img;
+        meta.textContent = article.meta[lang] || article.meta['en'];
+        title.textContent = article.title[lang] || article.title['en'];
+        content.innerHTML = article.content[lang] || article.content['en'];
+        modal.classList.remove('hidden');
+    }
+};
+
+window.closeBlogArticle = function () {
+    const modal = document.getElementById('blog-article-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+};

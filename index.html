@@ -154,6 +154,7 @@
         <div class="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             <a onclick="resetBookingFlow()" class="text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_home">Home</a>
             <a onclick="navigateTo('services-catalog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_service">Service</a>
+            <a onclick="navigateTo('blog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_blog">Blog</a>
         </div>
 
         <!-- Desktop Header Buttons (Hidden on Mobile) -->
@@ -202,6 +203,10 @@
                 <a onclick="closeMobileMenu(); navigateTo('services-catalog');" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">spa</span>
                     <span data-translate="nav_service">Services</span>
+                </a>
+                <a onclick="closeMobileMenu(); navigateTo('blog');" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">rss_feed</span>
+                    <span data-translate="nav_blog">Blog</span>
                 </a>
                 <a onclick="closeMobileMenu(); startBookingWithService(null);" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">calendar_month</span>
@@ -560,6 +565,87 @@
             </div>
         </section>
 
+        <!-- ==================== VIEW: BLOG VIEW ==================== -->
+        <section id="view-blog" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8" style="font-family:'Manrope',sans-serif;">
+            <div class="text-center max-w-2xl mx-auto mb-12 animate-fade-in">
+                <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block mb-2" data-translate="blog_subtitle">Wellness Insights</span>
+                <h1 class="font-serif text-3xl md:text-4xl text-[#1E293B] font-black tracking-tight" data-translate="blog_title">Serenity &amp; Soul Journal</h1>
+                <p class="text-xs text-on-surface-variant leading-relaxed mt-2" data-translate="blog_desc">Explore our curated collection of articles, tips, and insights on holistic wellness, skincare, and spa treatments.</p>
+            </div>
+
+            <!-- Blog Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Blog Card 1 -->
+                <div class="bg-white rounded-3xl overflow-hidden border border-outline-variant/35 shadow-sm hover:shadow-md transition-all flex flex-col h-full group">
+                    <div class="relative overflow-hidden aspect-video bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Meditation and Relaxation">
+                        <span class="absolute top-4 left-4 bg-[#50613f] text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Mindfulness</span>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-left">
+                        <span class="text-[10px] text-slate-400 font-bold mb-2">October 24, 2025 • 5 min read</span>
+                        <h3 class="font-serif text-base font-bold text-slate-800 line-clamp-2 leading-snug mb-2 group-hover:text-[#50613f] transition-colors">The Science of Relaxation: How Spa Treatments Lower Cortisol</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-6">Discover how professional massage and spa therapies trigger your parasympathetic nervous system, actively lowering cortisol levels and reducing chronic stress.</p>
+                        <button onclick="openBlogArticle(1)" class="mt-auto flex items-center gap-1.5 text-xs font-bold text-[#50613f] hover:underline self-start cursor-pointer">
+                            Read Full Article <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Blog Card 2 -->
+                <div class="bg-white rounded-3xl overflow-hidden border border-outline-variant/35 shadow-sm hover:shadow-md transition-all flex flex-col h-full group">
+                    <div class="relative overflow-hidden aspect-video bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Spa Therapy Selection">
+                        <span class="absolute top-4 left-4 bg-[#B45309] text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Therapy Guide</span>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-left">
+                        <span class="text-[10px] text-slate-400 font-bold mb-2">October 18, 2025 • 4 min read</span>
+                        <h3 class="font-serif text-base font-bold text-slate-800 line-clamp-2 leading-snug mb-2 group-hover:text-[#50613f] transition-colors">Deep Tissue vs. Aromatherapy: Which Massage is Right for You?</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-6">Struggling to choose between muscle-release pressure and sensory relaxation? We break down the structural and holistic differences to help you select the ideal treatment.</p>
+                        <button onclick="openBlogArticle(2)" class="mt-auto flex items-center gap-1.5 text-xs font-bold text-[#50613f] hover:underline self-start cursor-pointer">
+                            Read Full Article <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Blog Card 3 -->
+                <div class="bg-white rounded-3xl overflow-hidden border border-outline-variant/35 shadow-sm hover:shadow-md transition-all flex flex-col h-full group">
+                    <div class="relative overflow-hidden aspect-video bg-slate-100">
+                        <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Post-Spa Aftercare">
+                        <span class="absolute top-4 left-4 bg-[#50613f] text-white text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Wellness Tips</span>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-left">
+                        <span class="text-[10px] text-slate-400 font-bold mb-2">October 12, 2025 • 6 min read</span>
+                        <h3 class="font-serif text-base font-bold text-slate-800 line-clamp-2 leading-snug mb-2 group-hover:text-[#50613f] transition-colors">Post-Spa Aftercare: 5 Habits to Maximize Treatment Benefits</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-6">Your relaxation shouldn't end when you walk out the door. Learn the critical steps to hydrate, rest, and care for your skin to prolong the positive effects of your spa session.</p>
+                        <button onclick="openBlogArticle(3)" class="mt-auto flex items-center gap-1.5 text-xs font-bold text-[#50613f] hover:underline self-start cursor-pointer">
+                            Read Full Article <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Detail Modal -->
+        <div id="blog-article-modal" class="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[9999] flex items-center justify-center hidden p-4" style="font-family:'Manrope',sans-serif;">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-xl w-full mx-4 shadow-xl border border-outline-variant/30 flex flex-col gap-4 relative max-h-[85vh] overflow-hidden">
+                <button onclick="closeBlogArticle()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors z-10 cursor-pointer">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                <div class="overflow-y-auto pr-2 flex flex-col gap-4 text-left">
+                    <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-100 shrink-0">
+                        <img id="blog-modal-img" src="" class="w-full h-full object-cover" alt="Article Cover">
+                    </div>
+                    <div>
+                        <span id="blog-modal-meta" class="text-[10px] text-slate-400 font-bold block mb-1">Category</span>
+                        <h2 id="blog-modal-title" class="font-serif text-lg md:text-xl text-[#1E293B] font-bold leading-tight">Article Title</h2>
+                    </div>
+                    <div id="blog-modal-content" class="text-xs text-slate-600 leading-relaxed space-y-4 font-medium">
+                        <!-- Content populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ==================== VIEW 13: PRIVACY & SECURITY VIEW ==================== -->
         <section id="view-privacy-security" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8">
             <div id="privacy-security-container" class="w-full">
@@ -801,6 +887,20 @@
                     <a onclick="navigateTo('how-to-use')" class="hover:underline cursor-pointer">How to Use</a>
                     <a onclick="navigateTo('legal')" class="hover:underline cursor-pointer">Terms & Agreements</a>
                 </div>
+                <div class="flex flex-col gap-3">
+                    <span class="font-bold text-[10px] uppercase tracking-wider text-outline" data-translate="footer_location">Our Location</span>
+                    <div class="rounded-xl overflow-hidden shadow-sm border border-outline-variant/30 w-[180px] h-[100px] md:w-[220px] md:h-[120px]">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.784992523293!2d101.69176317454932!3d3.1517983535560662!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc37d12d62d667%3A0x6b7d34190c1f6ec0!2sKuala%20Lumpur%20City%20Centre%2C%2050088%20Kuala%20Lumpur%2C%20Federal%20Territory%20of%20Kuala%20Lumpur%2C%20Malaysia!5e0!3m2!1sen!2s!4v1717904000000!5m2!1sen!2s" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -1035,6 +1135,21 @@
         </button>
     </div>
 
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/628123456789?text=Hi%20Serenity%20%26%20Soul,%20I%20would%20like%20to%20ask%20about%20spa%20treatments!" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="fixed bottom-24 right-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:bg-[#20ba5a] hover:scale-105 active:scale-95 transition-all duration-300 group"
+       title="Chat via WhatsApp">
+        <svg class="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.528 2.01 14.069.835 11.5.835c-5.441 0-9.87 4.372-9.874 9.802-.001 1.734.469 3.426 1.36 4.966L2.012 21.84l6.096-1.597.539.311zM16.91 14.88c-.27-.135-1.591-.785-1.838-.875-.246-.09-.426-.135-.606.135-.18.27-.696.875-.853 1.053-.157.178-.315.202-.585.067-.27-.135-1.14-.42-2.172-1.341-.803-.715-1.344-1.6-1.502-1.87-.157-.271-.017-.417.118-.552.122-.121.27-.315.405-.471.135-.158.18-.27.27-.45.09-.18.045-.337-.023-.472-.067-.135-.606-1.458-.83-2.001-.219-.527-.44-.455-.606-.464-.157-.008-.337-.008-.517-.008-.18 0-.472.067-.719.337-.247.27-.942.921-.942 2.247 0 1.326.966 2.607 1.101 2.787.135.18 1.902 2.904 4.607 4.069.643.277 1.145.443 1.536.567.646.206 1.233.177 1.697.108.517-.077 1.591-.65 1.816-1.277.225-.628.225-1.166.157-1.277-.067-.111-.247-.202-.517-.337z"/>
+        </svg>
+        <!-- Tooltip -->
+        <span class="absolute right-16 bg-slate-800 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            Chat via WhatsApp
+        </span>
+    </a>
 
     <script type="module" src="/src/main.js"></script>
 </body>
