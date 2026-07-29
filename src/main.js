@@ -5416,33 +5416,7 @@ window.closeTherapistBio = function () {
 let activeReviewBookingId = null;
 let currentReviewRating = 5;
 
-window.openLeaveReviewModal = function (bookingId) {
-    const booking = state.bookings.find(b => b.id === bookingId);
-    if (!booking) return;
-
-    activeReviewBookingId = bookingId;
-    currentReviewRating = 5;
-
-    const modal = document.getElementById('leave-review-modal');
-    const subtitle = document.getElementById('review-modal-subtitle');
-    const input = document.getElementById('review-comments-input');
-
-    if (modal) {
-        if (subtitle) {
-            subtitle.textContent = `Share your feedback for ${booking.serviceName} with ${booking.therapist}`;
-        }
-        if (input) input.value = '';
-        setReviewRating(5);
-        modal.classList.remove('hidden');
-    }
-};
-
-window.closeLeaveReviewModal = function () {
-    const modal = document.getElementById('leave-review-modal');
-    if (modal) modal.classList.add('hidden');
-};
-
-window.setReviewRating = function (rating) {
+function setReviewRating(rating) {
     currentReviewRating = rating;
     const picker = document.getElementById('review-star-picker');
     const label = document.getElementById('review-rating-label');
@@ -5474,9 +5448,38 @@ window.setReviewRating = function (rating) {
     if (label) {
         label.textContent = labels[rating] || `${rating}.0`;
     }
-};
+}
+window.setReviewRating = setReviewRating;
 
-window.submitTreatmentReview = function () {
+function openLeaveReviewModal(bookingId) {
+    const booking = state.bookings.find(b => b.id === bookingId);
+    if (!booking) return;
+
+    activeReviewBookingId = bookingId;
+    currentReviewRating = 5;
+
+    const modal = document.getElementById('leave-review-modal');
+    const subtitle = document.getElementById('review-modal-subtitle');
+    const input = document.getElementById('review-comments-input');
+
+    if (modal) {
+        if (subtitle) {
+            subtitle.textContent = `Share your feedback for ${booking.serviceName} with ${booking.therapist}`;
+        }
+        if (input) input.value = '';
+        setReviewRating(5);
+        modal.classList.remove('hidden');
+    }
+}
+window.openLeaveReviewModal = openLeaveReviewModal;
+
+function closeLeaveReviewModal() {
+    const modal = document.getElementById('leave-review-modal');
+    if (modal) modal.classList.add('hidden');
+}
+window.closeLeaveReviewModal = closeLeaveReviewModal;
+
+function submitTreatmentReview() {
     if (!activeReviewBookingId) return;
 
     const booking = state.bookings.find(b => b.id === activeReviewBookingId);
@@ -5505,4 +5508,5 @@ window.submitTreatmentReview = function () {
             renderBookingHistoryView();
         }
     }
-};
+}
+window.submitTreatmentReview = submitTreatmentReview;
