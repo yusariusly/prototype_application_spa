@@ -667,6 +667,10 @@ window.t = function(key) {
     return text;
 };
 
+function t(key) {
+    return window.t(key);
+}
+
 window.getServiceTranslation = function(serviceId, field, fallback) {
     const dict = {
         'radiance-bundle': {
@@ -871,11 +875,21 @@ function loadState() {
     const saved = localStorage.getItem(`${tenantId}_state`);
     if (saved) {
         try {
-            state = JSON.parse(saved);
+            const parsed = JSON.parse(saved);
+            state = { ...DEFAULT_STATE, ...parsed };
+            state.guestInfo = { ...DEFAULT_STATE.guestInfo, ...(parsed.guestInfo || {}) };
+            if (typeof state.walletBalance !== 'number' || isNaN(state.walletBalance)) {
+                state.walletBalance = 250.00;
+            }
+            if (typeof state.loyaltyPoints !== 'number' || isNaN(state.loyaltyPoints)) {
+                state.loyaltyPoints = 350;
+            }
+            if (!Array.isArray(state.transactions)) {
+                state.transactions = [...DEFAULT_STATE.transactions];
+            }
             if (!state.language) {
                 state.language = 'en';
             }
-            // Ensure runtime booking info is reset on reload to avoid invalid wizard states
             state.booking = {
                 service: null,
                 therapist: null,
@@ -1215,45 +1229,70 @@ function updateStepperUI(viewId) {
 
 // 4. RENDERERS
 function renderActiveViewContents(viewId) {
-    // Selalu perbarui header wallet di setiap navigasi
-    updateHeaderWalletDisplay();
+    try {
+        // Selalu perbarui header wallet di setiap navigasi
+        updateHeaderWalletDisplay();
 
-    if (viewId === 'home') {
-        renderHomeView();
-    } else if (viewId === 'services-catalog') {
-        renderServicesCatalogView();
-    } else if (viewId === 'select-service') {
-        renderSelectServiceView();
-    } else if (viewId === 'select-therapist') {
-        renderSelectTherapistView();
-    } else if (viewId === 'select-time') {
-        renderSelectTimeView();
-    } else if (viewId === 'confirm-booking') {
-        renderConfirmBookingView();
-    } else if (viewId === 'success') {
-        renderSuccessView();
-    } else if (viewId === 'profile') {
-        renderProfileView();
-    } else if (viewId === 'wallet') {
-        renderWalletView();
-    } else if (viewId === 'topup') {
-        renderTopupView();
-    } else if (viewId === 'personal-details') {
-        renderPersonalDetailsView();
-    } else if (viewId === 'booking-history') {
-        renderBookingHistoryView();
-    } else if (viewId === 'notifications') {
-        renderNotificationsView();
-    } else if (viewId === 'privacy-security') {
-        renderPrivacySecurityView();
-    } else if (viewId === 'all-services') {
-        renderAllServicesView();
-    } else if (viewId === 'book-package') {
-        renderBookPackageView();
-    } else if (viewId === 'active-packages') {
-        renderActivePackagesView();
-    } else if (viewId === 'reschedule') {
-        renderRescheduleView();
+        if (viewId === 'home') {
+            renderHomeView();
+        } else if (viewId === 'services-catalog') {
+            renderServicesCatalogView();
+        } else if (viewId === 'select-service') {
+            renderSelectServiceView();
+        } else if (viewId === 'select-therapist') {
+            renderSelectTherapistView();
+        } else if (viewId === 'select-time') {
+            renderSelectTimeView();
+        } else if (viewId === 'confirm-booking') {
+            renderConfirmBookingView();
+        } else if (viewId === 'success') {
+            renderSuccessView();
+        } else if (viewId === 'profile') {
+            renderProfileView();
+        } else if (viewId === 'wallet') {
+            renderWalletView();
+        } else if (viewId === 'topup') {
+            renderTopupView();
+        } else if (viewId === 'personal-details') {
+            renderPersonalDetailsView();
+        } else if (viewId === 'booking-history') {
+            renderBookingHistoryView();
+        } else if (viewId === 'notifications') {
+            renderNotificationsView();
+        } else if (viewId === 'privacy-security') {
+            renderPrivacySecurityView();
+        } else if (viewId === 'all-services') {
+            renderAllServicesView();
+        } else if (viewId === 'book-package') {
+            renderBookPackageView();
+        } else if (viewId === 'active-packages') {
+            renderActivePackagesView();
+        } else if (viewId === 'reschedule') {
+            renderRescheduleView();
+        }
+    } catch (err) {
+        console.error(`[SPA Error] Failed to render view '${viewId}':`, err);
+        const container = document.getElementById(`${viewId}-container`) || document.getElementById(`view-${viewId}`);
+        if (container) {
+            container.innerHTML = `
+                <div class="max-w-xl mx-auto my-12 p-8 bg-red-50 border border-red-200 rounded-3xl text-center shadow-sm">
+                    <span class="material-symbols-outlined text-red-500 text-5xl mb-3">error_outline</span>
+                    <h3 class="font-serif text-xl font-bold text-red-900 mb-2">Gagal Memuat Halaman (${viewId})</h3>
+                    <p class="text-xs text-red-700 font-medium mb-4">${err.message || err}</p>
+                    <div class="bg-white p-3 rounded-xl border border-red-200 text-left mb-6 overflow-x-auto">
+                        <code class="text-[11px] text-red-800 font-mono block whitespace-pre-wrap">${err.stack || err}</code>
+                    </div>
+                    <div class="flex items-center justify-center gap-3">
+                        <button onclick="location.reload()" class="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm">
+                            Muat Ulang Halaman
+                        </button>
+                        <button onclick="navigateTo('home')" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
+                            Kembali ke Beranda
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
     }
 }
 
@@ -1270,13 +1309,8 @@ function updateHeaderWalletDisplay() {
     });
 
     const walletPills = document.querySelectorAll('.wallet-nav-pill');
-    const hideWallet = ['home', 'services-catalog', 'all-services', 'faq', 'how-to-use', 'legal'].includes(state.currentView);
     walletPills.forEach(pill => {
-        if (hideWallet) {
-            pill.classList.add('hidden');
-        } else {
-            pill.classList.remove('hidden');
-        }
+        pill.classList.remove('hidden');
     });
 }
 
@@ -2445,10 +2479,27 @@ function renderSidebarSummary() {
                 <span>${t('lbl_tax')}</span>
                 <span>MYR ${(isServiceSelected ? (service.price * 0.07) : 0).toFixed(2)}</span>
             </div>
-            <div class="flex justify-between items-center pt-3 border-t border-outline-variant/30">
-                <span class="font-semibold text-xs text-on-surface">${isConfirmOrTime ? t('lbl_total') : t('lbl_est_total')}</span>
+            <div class="flex justify-between items-center pt-3 border-t border-outline-variant/30 font-semibold text-xs">
+                <span class="text-on-surface">${isConfirmOrTime ? t('lbl_total') : t('lbl_est_total')}</span>
                 <span class="font-serif text-base text-[#1E293B] font-bold">MYR ${total.toFixed(2)}</span>
             </div>
+
+            ${state.currentView === 'confirm-booking' ? `
+                <div class="mt-4 p-3 bg-amber-50 rounded-2xl border border-amber-200/70 text-left space-y-2">
+                    <div class="flex justify-between items-center text-xs text-amber-900 font-bold">
+                        <span>${state.language === 'ms' ? 'Deposit 50% Hari Ini:' : '50% Deposit Due Today:'}</span>
+                        <span class="text-amber-700 font-serif text-sm font-bold">MYR ${(total * 0.5).toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] text-slate-600 font-semibold border-t border-amber-200/50 pt-1.5">
+                        <span>${state.language === 'ms' ? 'Baki Dibayar di Spa:' : 'Remaining Balance at Spa:'}</span>
+                        <span>MYR ${(total * 0.5).toFixed(2)}</span>
+                    </div>
+                    <div class="text-[10px] text-amber-800 leading-tight pt-1.5 border-t border-amber-200/50 flex items-start gap-1">
+                        <span class="material-symbols-outlined text-[13px] shrink-0 text-amber-600">info</span>
+                        <span><strong>${state.language === 'ms' ? 'Polisi Pembatalan:' : 'Cancellation Policy:'}</strong> ${state.language === 'ms' ? 'Pembatalan percuma sehingga 24j sebelum slot. Pembatalan dalam 24j merampas deposit 50%.' : 'Free cancellation up to 24h prior. Cancellations within 24h forfeit the 50% deposit.'}</span>
+                    </div>
+                </div>
+            ` : ''}
         </div>
     `;
 
@@ -2693,28 +2744,34 @@ window.confirmReservation = function () {
         const subtotal = service.price;
         const tax = subtotal * 0.07;
         const total = subtotal + tax;
+        const depositAmount = total * 0.5;
+        const balanceDue = total * 0.5;
 
         if (selectedPaymentMethod === 'wallet') {
-            if (state.walletBalance < total) {
+            if (state.walletBalance < depositAmount) {
                 const errorMsg = state.language === 'ms'
-                    ? `Baki dompet tidak mencukupi (Jumlah: MYR ${total.toFixed(2)}). Mengarah ke Tambah Nilai...`
-                    : `Insufficient wallet balance (Total: MYR ${total.toFixed(2)}). Redirecting to Top Up...`;
+                    ? `Baki dompet tidak mencukupi untuk deposit 50% (MYR ${depositAmount.toFixed(2)}). Mengarah ke Tambah Nilai...`
+                    : `Insufficient wallet balance for 50% deposit (MYR ${depositAmount.toFixed(2)}). Redirecting to Top Up...`;
                 showNotification(errorMsg, 'error');
                 setTimeout(() => {
                     navigateTo('topup');
                 }, 1500);
                 return;
             }
-            state.walletBalance -= total;
+            state.walletBalance -= depositAmount;
 
             // Add wallet transaction log
             state.transactions.unshift({
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                description: state.language === 'ms' ? `Pembayaran ${getServiceTranslation(service.id, 'name', service.name)}` : `${service.name} Payment`,
-                amount: -total,
+                description: state.language === 'ms' ? `Deposit 50%: ${getServiceTranslation(service.id, 'name', service.name)}` : `50% Deposit: ${service.name}`,
+                amount: -depositAmount,
                 status: 'Completed'
             });
         }
+
+        // Earn Loyalty Points (10 pts per MYR 10 deposit)
+        const earnedPoints = Math.max(10, Math.floor(depositAmount / 10) * 10);
+        state.loyaltyPoints = (state.loyaltyPoints || 350) + earnedPoints;
 
         const resId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
 
@@ -2729,6 +2786,8 @@ window.confirmReservation = function () {
             therapist: state.booking.therapist ? state.booking.therapist.name : 'Sari',
             location: 'Serenity & Soul Sanctuary, 12 Orchard Road, Singapore 238886',
             price: total,
+            depositPaid: depositAmount,
+            balanceDue: balanceDue,
             status: 'Upcoming'
         });
 
@@ -2737,8 +2796,8 @@ window.confirmReservation = function () {
             id: 'notif-' + Date.now(),
             date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
             text: state.language === 'ms'
-                ? `Janji Temu Disahkan: ${getServiceTranslation(service.id, 'name', service.name)} anda telah berjaya ditempah.`
-                : `Appointment Confirmed: Your ${service.name} has been booked successfully.`
+                ? `Janji Temu Disahkan: Deposit 50% (MYR ${depositAmount.toFixed(2)}) dibayar. +${earnedPoints} Poin Kesetiaan ditambah!`
+                : `Appointment Confirmed: 50% deposit (MYR ${depositAmount.toFixed(2)}) paid. +${earnedPoints} Loyalty Points earned!`
         });
 
         state.successResId = resId;
@@ -3025,6 +3084,9 @@ function renderWalletView() {
         if (tx.description.toLowerCase().includes('top up')) {
             iconHtml = `<div class="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-base">add</span></div>`;
             translatedDesc = state.language === 'ms' ? 'Tambah Nilai Dompet' : 'Wallet Top Up';
+        } else if (tx.description.toLowerCase().includes('gift card')) {
+            iconHtml = `<div class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-base">card_giftcard</span></div>`;
+            translatedDesc = tx.description;
         } else if (tx.description.toLowerCase().includes('facial')) {
             iconHtml = `<div class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-base">face</span></div>`;
             translatedDesc = state.language === 'ms' ? 'Bayaran Rawatan Muka Pilihan' : 'Signature Facial Payment';
@@ -3053,6 +3115,8 @@ function renderWalletView() {
         `;
     });
 
+    const loyaltyPoints = state.loyaltyPoints || 350;
+
     container.innerHTML = `
         <div class="max-w-container-max mx-auto py-8">
             <!-- Header Title -->
@@ -3061,49 +3125,67 @@ function renderWalletView() {
                 <p class="font-body-sm text-xs text-on-surface-variant">${t('wallet_header_subtitle')}</p>
             </div>
             
-            <!-- Cards Grid (Left: Balance, Right: Quick Recharge) -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8">
+            <!-- Cards Grid (Left: Balance, Middle: Loyalty Points, Right: Quick Recharge) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
                 <!-- Available Balance Card -->
-                <div class="md:col-span-6 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30 flex flex-col justify-center gap-6">
+                <div class="md:col-span-5 bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/30 flex flex-col justify-between gap-4">
                     <div>
                         <span class="font-label-caps text-[10px] text-outline font-bold uppercase tracking-wider block mb-1">${t('wallet_balance_title')}</span>
-                        <span class="font-serif text-4xl text-[#1E293B] font-bold block mt-2">MYR ${state.walletBalance.toFixed(2)}</span>
+                        <span class="font-serif text-3xl text-[#1E293B] font-bold block mt-1">MYR ${state.walletBalance.toFixed(2)}</span>
                     </div>
-                    <div class="flex gap-4">
-                        <button onclick="navigateToTopUp(100)" class="w-full md:w-auto bg-[#50613f] text-white hover:bg-[#3e4b30] font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-base">add_circle</span> ${t('btn_topup')}
+                    <div class="flex flex-wrap gap-2.5">
+                        <button onclick="navigateToTopUp(100)" class="flex-1 bg-[#50613f] text-white hover:bg-[#3e4b30] font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">add_circle</span> ${t('btn_topup')}
                         </button>
-                        <button onclick="openPaymentMethodsModal()" class="hidden bg-white border border-outline text-[#50613f] hover:bg-[#50613f]/5 font-bold text-xs px-6 py-3 rounded-xl transition-all flex items-center gap-2">
-                            <span class="material-symbols-outlined text-base">credit_card</span> Payment Methods
+                        <button onclick="openSendGiftCardModal()" class="flex-1 bg-amber-600 text-white hover:bg-amber-700 font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">card_giftcard</span> ${state.language === 'ms' ? 'Kirim Gift Card' : 'Send Gift Card'}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loyalty Rewards Points Card -->
+                <div class="md:col-span-3 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-3xl p-6 shadow-md flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 opacity-15">
+                        <span class="material-symbols-outlined text-8xl">stars</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-100 block mb-1">Serenity Rewards</span>
+                        <h3 class="font-serif text-2xl font-bold flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-xl">stars</span> ${loyaltyPoints} Pts
+                        </h3>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-amber-100 font-medium leading-tight my-2">
+                            Earn 10 points for every MYR 10 spent on deposits.
+                        </p>
+                        <button onclick="openRedeemPointsModal()" class="w-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-xs py-2 rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">workspace_premium</span> Redeem Points
                         </button>
                     </div>
                 </div>
                 
                 <!-- Quick Recharge Card -->
-                <div class="md:col-span-6 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+                <div class="md:col-span-4 bg-white rounded-3xl p-6 shadow-sm border border-outline-variant/30 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="material-symbols-outlined text-[#B45309] text-lg">bolt</span>
-                            <h2 class="font-serif text-lg text-[#1E293B] font-bold">${t('quick_recharge_title')}</h2>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="material-symbols-outlined text-[#B45309] text-base">bolt</span>
+                            <h2 class="font-serif text-base text-[#1E293B] font-bold">${t('quick_recharge_title')}</h2>
                         </div>
-                        <p class="font-body-sm text-xs text-on-surface-variant mb-6">${t('quick_recharge_subtitle')}</p>
                     </div>
                     
                     <!-- Presets Grid -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="navigateToTopUp(50)" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-4 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f]">
-                            <span class="font-serif text-base font-bold text-[#1E293B]">MYR 50</span>
+                    <div class="grid grid-cols-2 gap-2.5 mt-3">
+                        <button onclick="navigateToTopUp(50)" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-2.5 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f]">
+                            <span class="font-serif text-xs font-bold text-[#1E293B]">MYR 50</span>
                         </button>
-                        <button onclick="navigateToTopUp(100)" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-4 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f] relative overflow-visible">
-                            <div class="absolute -top-2.5 bg-[#B45309] text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">${t('popular_badge')}</div>
-                            <span class="font-serif text-base font-bold text-[#1E293B]">MYR 100</span>
+                        <button onclick="navigateToTopUp(100)" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-2.5 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f] relative overflow-visible">
+                            <span class="font-serif text-xs font-bold text-[#1E293B]">MYR 100</span>
                         </button>
-                        <button onclick="navigateToTopUp(200)" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-4 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f]">
-                            <span class="font-serif text-base font-bold text-[#1E293B]">MYR 200</span>
-                            <span class="text-[9px] text-[#2e7d32] font-semibold mt-0.5">+ MYR 10 Bonus</span>
+                        <button onclick="navigateToTopUp(200)" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-2.5 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f]">
+                            <span class="font-serif text-xs font-bold text-[#1E293B]">MYR 200</span>
                         </button>
-                        <button onclick="navigateToTopUp('custom')" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-4 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f]">
-                            <span class="font-serif text-base font-bold text-[#1E293B] flex items-center gap-1">${state.language === 'ms' ? 'Kustom' : 'Custom'} <span class="material-symbols-outlined text-xs">edit</span></span>
+                        <button onclick="navigateToTopUp('custom')" class="bg-white hover:bg-slate-50 border border-outline-variant/60 rounded-xl p-2.5 flex flex-col items-center justify-center transition-all group hover:border-[#50613f] hover:text-[#50613f]">
+                            <span class="font-serif text-xs font-bold text-[#1E293B] flex items-center gap-0.5">${state.language === 'ms' ? 'Kustom' : 'Custom'}</span>
                         </button>
                     </div>
                 </div>
@@ -3145,25 +3227,138 @@ function renderTopupView() {
     const container = document.getElementById('topup-container');
     if (!container) return;
 
-    const currentBalance = state.walletBalance;
+    state.topupPaymentMethod = state.topupPaymentMethod || 'card';
+    state.selectedEWallet = state.selectedEWallet || 'tng';
+
+    const currentBalance = (typeof state.walletBalance === 'number' && !isNaN(state.walletBalance)) ? state.walletBalance : 250.00;
     const selectedAmount = state.selectedTopUpAmount !== undefined ? state.selectedTopUpAmount : 100;
+    const method = state.topupPaymentMethod;
+    const ewallet = state.selectedEWallet;
+
+    let displayAmount = selectedAmount === 'custom' ? (parseFloat(document.getElementById('custom-topup-input')?.value) || 150) : parseFloat(selectedAmount);
+
+    let paymentFieldsHtml = '';
+
+    if (method === 'card') {
+        paymentFieldsHtml = `
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">${state.language === 'ms' ? 'Nombor Kad' : 'Card Number'}</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">credit_card</span>
+                        <input type="text" id="stripe-card-number" placeholder="4532 0000 0000 0000" value="4532 8890 1234 5678" class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">${state.language === 'ms' ? 'Tarikh Luput' : 'Expiry Date'}</label>
+                        <input type="text" id="stripe-card-expiry" placeholder="MM/YY" value="12/28" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">CVC</label>
+                        <input type="text" id="stripe-card-cvc" placeholder="123" value="888" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">${state.language === 'ms' ? 'Nama Pada Kad' : 'Name on Card'}</label>
+                    <input type="text" id="stripe-card-name" placeholder="e.g. Jane Doe" value="${state.guestInfo.name}" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
+                </div>
+
+                <button type="button" onclick="submitTopUpProcess('card')" class="w-full mt-6 bg-[#50613f] text-white hover:bg-[#3e4b30] font-bold text-xs py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 hover:shadow-lg">
+                    <span class="material-symbols-outlined text-sm">lock</span> ${state.language === 'ms' ? 'Bayar Melalui Kad' : 'Pay with Card'} (MYR ${displayAmount.toFixed(2)})
+                </button>
+            </div>
+        `;
+    } else if (method === 'qr') {
+        paymentFieldsHtml = `
+            <div class="text-center py-2">
+                <div class="bg-gradient-to-br from-pink-500 via-rose-600 to-rose-700 text-white font-bold text-[11px] py-1.5 px-4 rounded-t-2xl tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-sm">
+                    <span class="material-symbols-outlined text-sm">qr_code_2</span> DuitNow QR / QRIS Instant Payment
+                </div>
+                
+                <div class="bg-stone-50 border-x border-b border-stone-200 rounded-b-2xl p-6 flex flex-col items-center">
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-stone-200 mb-3 relative group">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=DuitNow-Serenity-Soul-Spa-MYR-${displayAmount}" alt="DuitNow QR Code" class="w-44 h-44 rounded-lg object-contain">
+                        <div class="absolute inset-0 bg-white/90 backdrop-blur-xs flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                            <span class="material-symbols-outlined text-emerald-600 text-3xl mb-1">center_focus_strong</span>
+                            <span class="text-[10px] font-bold text-stone-700">Imbas Menggunakan Aplikasi Bank</span>
+                        </div>
+                    </div>
+
+                    <div class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-[11px] font-bold mb-3 border border-amber-300">
+                        <span class="material-symbols-outlined text-xs">payments</span> Total: MYR ${displayAmount.toFixed(2)}
+                    </div>
+
+                    <p class="text-xs text-stone-600 font-medium max-w-xs leading-relaxed mb-4">
+                        ${state.language === 'ms' 
+                            ? 'Buka mana-mana aplikasi Bank (Maybank2u, CIMB, RHB) atau E-Wallet (Touch \'n Go, GrabPay, ShopeePay) lalu imbas kod QR di atas.' 
+                            : 'Open any Banking App (Maybank2u, CIMB, RHB) or E-Wallet (Touch \'n Go, GrabPay, ShopeePay) and scan the QR code above.'}
+                    </p>
+
+                    <button type="button" onclick="submitTopUpProcess('qr')" class="w-full bg-[#50613f] text-white hover:bg-[#3e4b30] font-bold text-xs py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-sm">verified</span> ${state.language === 'ms' ? 'Simulasi Bayar QR' : 'Simulate QR Scan & Pay'} (MYR ${displayAmount.toFixed(2)})
+                    </button>
+                </div>
+            </div>
+        `;
+    } else if (method === 'ewallet') {
+        paymentFieldsHtml = `
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-2">${state.language === 'ms' ? 'Pilih E-Wallet' : 'Choose E-Wallet Provider'}</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" onclick="setEWalletBrand('tng')" class="flex items-center gap-3 p-3 rounded-xl border transition-all ${ewallet === 'tng' ? 'border-blue-600 bg-blue-50 text-blue-900 font-bold ring-1 ring-blue-600' : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'}">
+                            <div class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-xs flex items-center justify-center shrink-0">TnG</div>
+                            <div class="text-left"><div class="text-xs font-bold">Touch 'n Go</div><div class="text-[9px] opacity-75">eWallet</div></div>
+                        </button>
+                        <button type="button" onclick="setEWalletBrand('grabpay')" class="flex items-center gap-3 p-3 rounded-xl border transition-all ${ewallet === 'grabpay' ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-bold ring-1 ring-emerald-600' : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'}">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0">Grab</div>
+                            <div class="text-left"><div class="text-xs font-bold">GrabPay</div><div class="text-[9px] opacity-75">Instant Wallet</div></div>
+                        </button>
+                        <button type="button" onclick="setEWalletBrand('shopeepay')" class="flex items-center gap-3 p-3 rounded-xl border transition-all ${ewallet === 'shopeepay' ? 'border-orange-600 bg-orange-50 text-orange-900 font-bold ring-1 ring-orange-600' : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'}">
+                            <div class="w-8 h-8 rounded-lg bg-orange-500 text-white font-black text-xs flex items-center justify-center shrink-0">Shopee</div>
+                            <div class="text-left"><div class="text-xs font-bold">ShopeePay</div><div class="text-[9px] opacity-75">Coins Bonus</div></div>
+                        </button>
+                        <button type="button" onclick="setEWalletBrand('boost')" class="flex items-center gap-3 p-3 rounded-xl border transition-all ${ewallet === 'boost' ? 'border-red-600 bg-red-50 text-red-900 font-bold ring-1 ring-red-600' : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'}">
+                            <div class="w-8 h-8 rounded-lg bg-red-600 text-white font-black text-xs flex items-center justify-center shrink-0">Boost</div>
+                            <div class="text-left"><div class="text-xs font-bold">Boost eWallet</div><div class="text-[9px] opacity-75">Cashback</div></div>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">${state.language === 'ms' ? 'Nombor Telefon E-Wallet' : 'E-Wallet Registered Phone Number'}</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">smartphone</span>
+                        <input type="text" id="ewallet-phone-input" placeholder="+60 12-345 6789" value="+60 12-345 6789" class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
+                    </div>
+                </div>
+
+                <button type="button" onclick="submitTopUpProcess('ewallet')" class="w-full mt-6 bg-[#50613f] text-white hover:bg-[#3e4b30] font-bold text-xs py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">smartphone</span> ${state.language === 'ms' ? 'Bayar Melalui E-Wallet' : 'Pay via E-Wallet'} (MYR ${displayAmount.toFixed(2)})
+                </button>
+            </div>
+        `;
+    }
 
     container.innerHTML = `
         <div class="max-w-xl mx-auto py-8">
             <!-- Back to Wallet Link -->
             <button onclick="navigateTo('wallet')" class="flex items-center gap-1.5 text-xs font-semibold text-[#B45309] hover:underline mb-6">
-                <span class="material-symbols-outlined text-sm font-bold">arrow_back</span> Back to Wallet
+                <span class="material-symbols-outlined text-sm font-bold">arrow_back</span> ${state.language === 'ms' ? 'Kembali ke Dompet' : 'Back to Wallet'}
             </button>
             
             <!-- Page Title & Subtitle -->
             <div class="text-center mb-8">
-                <h1 class="font-serif text-3xl md:text-4xl text-[#1E293B] font-bold mb-2">Top-Up Your Sanctuary Wallet</h1>
-                <p class="font-body-sm text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed">Add funds securely for seamless bookings and exclusive spa treatments.</p>
+                <h1 class="font-serif text-3xl md:text-4xl text-[#1E293B] font-bold mb-2">${state.language === 'ms' ? 'Tambah Nilai Dompet Spa Anda' : 'Top-Up Your Sanctuary Wallet'}</h1>
+                <p class="font-body-sm text-xs text-on-surface-variant max-w-md mx-auto leading-relaxed">${state.language === 'ms' ? 'Tambah dana dengan selamat menggunakan Kad Kredit, DuitNow QR, atau E-Wallet.' : 'Add funds securely using Credit Card, DuitNow QR, or E-Wallets.'}</p>
             </div>
             
             <!-- Current Balance Card -->
             <div class="bg-white rounded-3xl p-6 border border-outline-variant/30 shadow-sm text-center mb-6">
-                <span class="font-label-caps text-[9px] text-[#B45309] font-bold uppercase tracking-wider block mb-1">Current Balance</span>
+                <span class="font-label-caps text-[9px] text-[#B45309] font-bold uppercase tracking-wider block mb-1">${state.language === 'ms' ? 'Baki Semasa' : 'Current Balance'}</span>
                 <div class="font-serif text-2xl text-[#1E293B] font-bold">
                     MYR <span class="font-serif text-3xl font-bold">${currentBalance.toFixed(2)}</span>
                 </div>
@@ -3173,7 +3368,7 @@ function renderTopupView() {
             <div class="bg-white rounded-3xl p-6 md:p-8 border border-outline-variant/30 shadow-sm">
                 <!-- Select Amount Section -->
                 <div class="mb-6">
-                    <h3 class="font-serif text-sm font-bold text-[#1E293B] mb-3">Select Amount</h3>
+                    <h3 class="font-serif text-sm font-bold text-[#1E293B] mb-3">${state.language === 'ms' ? 'Pilih Jumlah Top Up' : 'Select Top Up Amount'}</h3>
                     <div class="grid grid-cols-4 gap-3 mb-4">
                         <button type="button" onclick="selectTopUpAmount(50)" id="topup-amt-50" class="topup-amount-btn border rounded-xl py-3 font-semibold text-xs transition-all text-center">
                             MYR 50
@@ -3185,66 +3380,48 @@ function renderTopupView() {
                             MYR 200
                         </button>
                         <button type="button" onclick="selectTopUpAmount('custom')" id="topup-amt-custom" class="topup-amount-btn border rounded-xl py-3 font-semibold text-xs transition-all text-center">
-                            Custom
+                            ${state.language === 'ms' ? 'Lain-lain' : 'Custom'}
                         </button>
                     </div>
                     
                     <!-- Custom Amount Input Field -->
-                    <div id="custom-amount-wrapper" class="hidden">
-                        <label class="block text-[11px] font-bold text-outline uppercase tracking-wider mb-1">Custom Amount (MYR)</label>
+                    <div id="custom-amount-wrapper" class="${selectedAmount === 'custom' ? '' : 'hidden'}">
+                        <label class="block text-[11px] font-bold text-outline uppercase tracking-wider mb-1">${state.language === 'ms' ? 'Jumlah Tersuai (MYR)' : 'Custom Amount (MYR)'}</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-on-surface-variant">MYR</span>
-                            <input type="number" id="custom-topup-input" value="150" min="10" step="5" class="w-full pl-12 pr-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
+                            <input type="number" id="custom-topup-input" value="150" min="10" step="5" oninput="renderTopupView()" class="w-full pl-12 pr-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
                         </div>
                     </div>
                 </div>
+
+                <!-- Payment Method Selector Tabs -->
+                <div class="border-t border-outline-variant/30 pt-6 mb-6">
+                    <h3 class="font-serif text-sm font-bold text-[#1E293B] mb-3">${state.language === 'ms' ? 'Pilih Kaedah Pembayaran' : 'Select Payment Method'}</h3>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="setTopUpPaymentMethod('card')" class="flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-xs font-bold transition-all ${method === 'card' ? 'bg-[#50613f] text-white border-[#50613f] shadow-md' : 'bg-stone-50 border-stone-200 text-stone-700 hover:border-stone-400'}">
+                            <span class="material-symbols-outlined text-lg">credit_card</span>
+                            <span class="text-[11px]">${state.language === 'ms' ? 'Kad Kredit / Debit' : 'Credit / Debit Card'}</span>
+                        </button>
+                        <button type="button" onclick="setTopUpPaymentMethod('qr')" class="flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-xs font-bold transition-all ${method === 'qr' ? 'bg-[#50613f] text-white border-[#50613f] shadow-md' : 'bg-stone-50 border-stone-200 text-stone-700 hover:border-stone-400'}">
+                            <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+                            <span class="text-[11px]">${state.language === 'ms' ? 'Kod QR (DuitNow)' : 'QR Code (DuitNow)'}</span>
+                        </button>
+                        <button type="button" onclick="setTopUpPaymentMethod('ewallet')" class="flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-xs font-bold transition-all ${method === 'ewallet' ? 'bg-[#50613f] text-white border-[#50613f] shadow-md' : 'bg-stone-50 border-stone-200 text-stone-700 hover:border-stone-400'}">
+                            <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+                            <span class="text-[11px]">${state.language === 'ms' ? 'E-Wallet Digital' : 'Digital E-Wallet'}</span>
+                        </button>
+                    </div>
+                </div>
                 
-                <!-- Payment Details Section -->
-                <div class="border-t border-outline-variant/30 pt-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-serif text-sm font-bold text-[#1E293B]">Payment Details</h3>
-                        <span class="flex items-center gap-1 text-[9px] text-outline font-bold tracking-wider uppercase">
-                            <span class="material-symbols-outlined text-[12px] text-outline">lock</span> Secure Stripe Payment
-                        </span>
-                    </div>
-                    
-                    <!-- Form Fields -->
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Card Number</label>
-                            <div class="relative">
-                                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">credit_card</span>
-                                <input type="text" id="stripe-card-number" placeholder="0000 0000 0000 0000" class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Expiry Date</label>
-                                <input type="text" id="stripe-card-expiry" placeholder="MM/YY" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">CVC</label>
-                                <input type="text" id="stripe-card-cvc" placeholder="123" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-[10px] font-bold text-outline uppercase tracking-wider mb-1">Name on Card</label>
-                            <input type="text" id="stripe-card-name" placeholder="e.g. Jane Doe" class="w-full px-4 py-2.5 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs font-semibold text-on-surface">
-                        </div>
-                    </div>
-                    
-                    <!-- Action Button -->
-                    <button type="button" onclick="submitStripeTopUp()" class="w-full mt-6 bg-[#FACC15] text-[#241a00] hover:bg-[#eab308] font-bold text-xs py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 hover:shadow-lg">
-                        Pay with Stripe <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
-                    </button>
-                    
-                    <!-- Encryption Footer -->
-                    <div class="flex items-center justify-center gap-1 mt-4 text-[10px] text-on-surface-variant font-semibold">
-                        <span class="material-symbols-outlined text-[12px]">lock</span>
-                        <span>Payments are securely encrypted.</span>
-                    </div>
+                <!-- Dynamic Payment Method Fields -->
+                <div>
+                    ${paymentFieldsHtml}
+                </div>
+
+                <!-- Security Note Footer -->
+                <div class="flex items-center justify-center gap-1 mt-6 text-[10px] text-on-surface-variant font-semibold">
+                    <span class="material-symbols-outlined text-[12px] text-emerald-600">verified_user</span>
+                    <span>${state.language === 'ms' ? 'Pembayaran disulitkan dengan selamat (SSL 256-bit).' : 'Payments are securely encrypted via SSL 256-bit.'}</span>
                 </div>
             </div>
         </div>
@@ -3253,18 +3430,28 @@ function renderTopupView() {
     selectTopUpAmount(selectedAmount);
 }
 
-window.selectTopUpAmount = function (amount) {
+window.setTopUpPaymentMethod = function (method) {
+    state.topupPaymentMethod = method;
+    renderTopupView();
+};
+
+window.setEWalletBrand = function (brand) {
+    state.selectedEWallet = brand;
+    renderTopupView();
+};
+
+function selectTopUpAmount(amount) {
     state.selectedTopUpAmount = amount;
 
     document.querySelectorAll('.topup-amount-btn').forEach(btn => {
-        btn.classList.remove('bg-[#50613f]/10', 'border-[#50613f]', 'text-[#50613f]', 'font-bold');
-        btn.classList.add('bg-white', 'border-outline-variant/60', 'text-on-surface-variant');
+        btn.classList.remove('bg-[#50613f]', 'border-[#50613f]', 'text-white', 'font-bold');
+        btn.classList.add('bg-stone-50', 'border-stone-200', 'text-stone-700');
     });
 
     const activeBtn = document.getElementById(`topup-amt-${amount}`);
     if (activeBtn) {
-        activeBtn.classList.remove('bg-white', 'border-outline-variant/60', 'text-on-surface-variant');
-        activeBtn.classList.add('bg-[#50613f]/10', 'border-[#50613f]', 'text-[#50613f]', 'font-bold');
+        activeBtn.classList.remove('bg-stone-50', 'border-stone-200', 'text-stone-700');
+        activeBtn.classList.add('bg-[#50613f]', 'border-[#50613f]', 'text-white', 'font-bold');
     }
 
     const wrapper = document.getElementById('custom-amount-wrapper');
@@ -3275,34 +3462,39 @@ window.selectTopUpAmount = function (amount) {
             wrapper.classList.add('hidden');
         }
     }
-};
+}
+window.selectTopUpAmount = selectTopUpAmount;
 
 window.navigateToTopUp = function (amount) {
-    state.selectedTopUpAmount = amount;
+    state.selectedTopUpAmount = amount || 100;
     navigateTo('topup');
 };
 
-window.submitStripeTopUp = function () {
-    const cardNum = document.getElementById('stripe-card-number').value.trim();
-    const cardExpiry = document.getElementById('stripe-card-expiry').value.trim();
-    const cardCvc = document.getElementById('stripe-card-cvc').value.trim();
-    const cardName = document.getElementById('stripe-card-name').value.trim();
-
-    if (!cardNum || !cardExpiry || !cardCvc || !cardName) {
-        showNotification(state.language === 'ms' ? 'Sila masukkan semua butiran pembayaran untuk meneruskan.' : 'Please enter all payment details to proceed.', 'error');
-        return;
-    }
-
+window.submitTopUpProcess = function (method) {
     let amount = 0;
     if (state.selectedTopUpAmount === 'custom') {
-        const customVal = parseFloat(document.getElementById('custom-topup-input').value);
+        const customVal = parseFloat(document.getElementById('custom-topup-input')?.value);
         if (isNaN(customVal) || customVal <= 0) {
             showNotification(state.language === 'ms' ? 'Sila masukkan jumlah yang sah.' : 'Please enter a valid amount.', 'error');
             return;
         }
         amount = customVal;
     } else {
-        amount = parseFloat(state.selectedTopUpAmount);
+        amount = parseFloat(state.selectedTopUpAmount || 100);
+    }
+
+    if (method === 'card') {
+        const cardNum = document.getElementById('stripe-card-number')?.value.trim();
+        if (!cardNum) {
+            showNotification(state.language === 'ms' ? 'Sila masukkan nombor kad.' : 'Please enter card number.', 'error');
+            return;
+        }
+    } else if (method === 'ewallet') {
+        const phone = document.getElementById('ewallet-phone-input')?.value.trim();
+        if (!phone) {
+            showNotification(state.language === 'ms' ? 'Sila masukkan nombor telefon E-Wallet.' : 'Please enter E-Wallet registered phone number.', 'error');
+            return;
+        }
     }
 
     let bonusText = '';
@@ -3313,20 +3505,26 @@ window.submitStripeTopUp = function () {
 
     state.walletBalance += amount;
 
+    const methodLabels = {
+        card: 'Credit/Debit Card',
+        qr: 'DuitNow QR / QRIS',
+        ewallet: `E-Wallet (${(state.selectedEWallet || 'TnG').toUpperCase()})`
+    };
+
     const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
     state.transactions.unshift({
         date: dateStr,
-        description: 'Wallet Top Up',
+        description: `Wallet Top Up (${methodLabels[method] || 'Online'})`,
         amount: amount + (amount === 200 ? 10 : 0),
         status: 'Completed'
     });
 
-    updateHeaderWalletDisplay();
-    const successMsg = state.language === 'ms'
-        ? `Berjaya menambah nilai MYR ${amount.toFixed(2)}${bonusText}!`
-        : `Successfully topped up MYR ${amount.toFixed(2)}${bonusText}!`;
-    showNotification(successMsg, 'success');
+    const msg = state.language === 'ms'
+        ? `Berjaya menambah MYR ${amount.toFixed(2)}${bonusText} menggunakan ${methodLabels[method] || 'pembayaran online'}!`
+        : `Successfully topped up MYR ${amount.toFixed(2)}${bonusText} via ${methodLabels[method] || 'online payment'}!`;
 
+    updateHeaderWalletDisplay();
+    showNotification(msg, 'success');
     navigateTo('wallet');
 };
 
@@ -3891,43 +4089,71 @@ window.confirmReschedule = function () {
     showNotification(state.language === 'ms' ? 'Janji temu berjaya dijadualkan semula!' : 'Appointment successfully rescheduled!', 'success');
 };
 
+let activeCancelBookingId = null;
+
 window.cancelBooking = function (bookingId) {
-    const confirmMsg = state.language === 'ms'
-        ? "Adakah anda pasti mahu membatalkan janji temu ini?"
-        : "Are you sure you want to cancel this appointment?";
-    if (confirm(confirmMsg)) {
-        const booking = state.bookings.find(b => b.id === bookingId);
-        if (booking) {
-            booking.status = 'Cancelled';
-            // refund if paid with wallet
-            state.walletBalance += parseFloat(booking.price);
-            
-            // Add a transaction logs
-            state.transactions.unshift({
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                description: state.language === 'ms' ? `Bayaran Balik: Pembatalan ${booking.serviceName}` : `Refund: ${booking.serviceName} Cancellation`,
-                amount: parseFloat(booking.price),
-                status: 'Completed'
-            });
+    if (!state.bookings) return;
+    let booking = state.bookings.find(b => String(b.id) === String(bookingId));
+    if (!booking) return;
 
-            // Add notification
-            state.notifications.unshift({
-                id: 'notif-' + Date.now(),
-                date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-                text: state.language === 'ms'
-                    ? `Dibatalkan: Tempahan anda untuk ${booking.serviceName} telah dibatalkan. MYR ${parseFloat(booking.price).toFixed(2)} dikembalikan ke dompet anda.`
-                    : `Cancelled: Your reservation for ${booking.serviceName} has been cancelled. MYR ${parseFloat(booking.price).toFixed(2)} refunded to your wallet.`
-            });
+    activeCancelBookingId = bookingId;
+    const deposit = booking.depositPaid || (booking.price ? booking.price * 0.5 : 50.00);
 
-            const successMsg = state.language === 'ms'
-                ? 'Janji temu berjaya dibatalkan. MYR ' + parseFloat(booking.price).toFixed(2) + ' dikembalikan ke dompet.'
-                : 'Appointment cancelled successfully. MYR ' + parseFloat(booking.price).toFixed(2) + ' refunded to wallet.';
-            showNotification(successMsg, 'success');
-            renderBookingHistoryView();
-            updateHeaderWalletDisplay();
-            saveState();
-        }
+    const modal = document.getElementById('cancel-booking-modal');
+    const serviceTitle = document.getElementById('cancel-modal-service-name');
+    const depositEl = document.getElementById('cancel-modal-deposit-amount');
+
+    if (serviceTitle) serviceTitle.textContent = `${booking.serviceName} (${booking.date} at ${booking.time})`;
+    if (depositEl) depositEl.textContent = `MYR ${parseFloat(deposit).toFixed(2)}`;
+
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
     }
+};
+
+window.closeCancelBookingModal = function () {
+    const modal = document.getElementById('cancel-booking-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+};
+
+window.confirmCancelBooking = function () {
+    if (!activeCancelBookingId || !state.bookings) return;
+    const booking = state.bookings.find(b => String(b.id) === String(activeCancelBookingId));
+    if (!booking) return;
+
+    const depositForfeited = booking.depositPaid || (booking.price ? booking.price * 0.5 : 50.00);
+    booking.status = 'Cancelled';
+    booking.forfeitedDeposit = depositForfeited;
+
+    // Transaction log of forfeit per 24h policy
+    state.transactions.unshift({
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        description: state.language === 'ms' ? `Deposit Dirampas (Denda 24j): ${booking.serviceName}` : `Deposit Forfeited (24h Policy): ${booking.serviceName}`,
+        amount: 0,
+        status: 'Completed'
+    });
+
+    // Add notification
+    state.notifications.unshift({
+        id: 'notif-' + Date.now(),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        text: state.language === 'ms'
+            ? `Dibatalkan: Tempahan ${booking.serviceName} dibatalkan. Deposit 50% (MYR ${parseFloat(depositForfeited).toFixed(2)}) dirampas mengikut polisi.`
+            : `Cancelled: Reservation for ${booking.serviceName} cancelled. 50% deposit (MYR ${parseFloat(depositForfeited).toFixed(2)}) forfeited per policy.`
+    });
+
+    closeCancelBookingModal();
+
+    const successMsg = state.language === 'ms'
+        ? `Tempahan dibatalkan. Deposit 50% (MYR ${parseFloat(depositForfeited).toFixed(2)}) dirampas mengikut polisi pembatalan.`
+        : `Reservation cancelled. 50% deposit (MYR ${parseFloat(depositForfeited).toFixed(2)}) forfeited per cancellation policy.`;
+    showNotification(successMsg, 'warning');
+    renderBookingHistoryView();
+    saveState();
 };
 
 // 3. NOTIFICATIONS
@@ -5541,3 +5767,149 @@ function submitTreatmentReview() {
     }
 }
 window.submitTreatmentReview = submitTreatmentReview;
+
+// E-Gift Card Handlers (Task 6)
+let selectedGiftCardAmount = 50;
+
+function openSendGiftCardModal() {
+    const modal = document.getElementById('send-giftcard-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    }
+}
+window.openSendGiftCardModal = openSendGiftCardModal;
+
+function closeSendGiftCardModal() {
+    const modal = document.getElementById('send-giftcard-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+}
+window.closeSendGiftCardModal = closeSendGiftCardModal;
+
+function setGiftAmount(amount) {
+    selectedGiftCardAmount = amount;
+    document.querySelectorAll('.gift-amount-btn').forEach(btn => {
+        if (btn.textContent.includes(String(amount))) {
+            btn.className = 'gift-amount-btn py-2 rounded-xl bg-[#50613f] text-white text-xs font-bold transition-all shadow-sm';
+        } else {
+            btn.className = 'gift-amount-btn py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:border-[#50613f] hover:bg-[#50613f]/5 transition-all';
+        }
+    });
+}
+window.setGiftAmount = setGiftAmount;
+
+function submitSendGiftCard() {
+    const nameInput = document.getElementById('giftcard-recipient-name');
+    const emailInput = document.getElementById('giftcard-recipient-email');
+    const msgInput = document.getElementById('giftcard-message-input');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const message = msgInput ? msgInput.value.trim() : '';
+
+    if (!name || !email) {
+        showNotification(state.language === 'ms' ? 'Sila isi nama dan e-mel penerima.' : 'Please enter recipient name and email.', 'error');
+        return;
+    }
+
+    const amount = parseFloat(selectedGiftCardAmount) || 50;
+    if (state.walletBalance < amount) {
+        showNotification(state.language === 'ms' ? `Baki dompet anda tidak mencukupi (MYR ${state.walletBalance.toFixed(2)}).` : `Insufficient wallet balance (MYR ${state.walletBalance.toFixed(2)}).`, 'error');
+        return;
+    }
+
+    state.walletBalance -= amount;
+    state.transactions.unshift({
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        description: `E-Gift Card to ${name} (${email})`,
+        amount: -amount,
+        status: 'Completed'
+    });
+
+    state.notifications.unshift({
+        id: 'notif-' + Date.now(),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        text: state.language === 'ms'
+            ? `E-Gift Card MYR ${amount.toFixed(2)} berjaya dihantar kepada ${name} (${email}).`
+            : `E-Gift Card MYR ${amount.toFixed(2)} successfully sent to ${name} (${email}).`
+    });
+
+    closeSendGiftCardModal();
+
+    if (nameInput) nameInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (msgInput) msgInput.value = '';
+
+    const successMsg = state.language === 'ms'
+        ? `E-Gift Card bernilai MYR ${amount.toFixed(2)} telah berjaya dikirim kepada ${name}!`
+        : `E-Gift Card of MYR ${amount.toFixed(2)} successfully sent to ${name}!`;
+    showNotification(successMsg, 'success');
+    renderWalletView();
+    saveState();
+}
+window.submitSendGiftCard = submitSendGiftCard;
+
+// Redeem Loyalty Points Handlers
+function openRedeemPointsModal() {
+    const modal = document.getElementById('redeem-points-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    }
+}
+window.openRedeemPointsModal = openRedeemPointsModal;
+
+function closeRedeemPointsModal() {
+    const modal = document.getElementById('redeem-points-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+}
+window.closeRedeemPointsModal = closeRedeemPointsModal;
+
+function redeemRewardItem(pointsNeeded, creditReward, title) {
+    if (!state.loyaltyPoints) state.loyaltyPoints = 350;
+
+    if (state.loyaltyPoints < pointsNeeded) {
+        showNotification(
+            state.language === 'ms'
+                ? `Poin Serenity anda tidak mencukupi (${state.loyaltyPoints} Pts / ${pointsNeeded} Pts).`
+                : `Insufficient Serenity Points (${state.loyaltyPoints} Pts / ${pointsNeeded} Pts).`,
+            'error'
+        );
+        return;
+    }
+
+    state.loyaltyPoints -= pointsNeeded;
+    state.walletBalance += creditReward;
+
+    state.transactions.unshift({
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        description: `Rewards Redeem: ${title}`,
+        amount: creditReward,
+        status: 'Completed'
+    });
+
+    state.notifications.unshift({
+        id: 'notif-' + Date.now(),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        text: state.language === 'ms'
+            ? `Berjaya menukar ${pointsNeeded} Pts untuk ${title} (+MYR ${creditReward.toFixed(2)} Saldo).`
+            : `Successfully redeemed ${pointsNeeded} Pts for ${title} (+MYR ${creditReward.toFixed(2)} Balance).`
+    });
+
+    closeRedeemPointsModal();
+
+    const successMsg = state.language === 'ms'
+        ? `Tahniah! ${title} telah ditukar. Saldo dompet anda bertambah MYR ${creditReward.toFixed(2)}!`
+        : `Congratulations! ${title} redeemed. MYR ${creditReward.toFixed(2)} added to your wallet!`;
+
+    showNotification(successMsg, 'success');
+    renderWalletView();
+    saveState();
+}
+window.redeemRewardItem = redeemRewardItem;

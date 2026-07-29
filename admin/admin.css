@@ -577,3 +577,7 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #c5c8bc; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #75786e; }
+
+@media (min-width: 768px) {
+  #mobile-nav { display: none !important; }
+}

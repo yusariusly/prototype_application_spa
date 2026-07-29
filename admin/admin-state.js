@@ -84,6 +84,81 @@ const DEFAULT_TENANTS = {
   }
 };
 
+const DEFAULT_CUSTOMERS = [
+  {
+    id: 'cust-1',
+    name: 'Eleanor Vance',
+    email: 'eleanor.vance@gmail.com',
+    phone: '+60 12-345 6789',
+    avatar: 'EV',
+    tier: 'VIP Platinum',
+    totalVisits: 14,
+    totalSpent: 2150.00,
+    preferredTherapist: 'Sari',
+    preferredTreatment: 'Aromatherapy Massage & Glow Facial',
+    skinAllergies: 'Sensitive skin (Avoid harsh scrubs)',
+    preferences: 'Prefers lavender essential oil, warm tea post-session',
+    lastVisit: '2026-07-20',
+    notes: [
+      { date: '2026-07-20', author: 'Siti Rahma', text: 'Enjoys firm pressure on neck and shoulder area.' }
+    ]
+  },
+  {
+    id: 'cust-2',
+    name: 'Nia Ramadhani',
+    email: 'nia.ramadhani@yahoo.com',
+    phone: '+60 17-889 1234',
+    avatar: 'NR',
+    tier: 'Gold Member',
+    totalVisits: 8,
+    totalSpent: 1240.00,
+    preferredTherapist: 'Siti Rahma',
+    preferredTreatment: 'Signature Soul Massage',
+    skinAllergies: 'N/A',
+    preferences: 'Requests quiet room, low ambient lighting',
+    lastVisit: '2026-07-28',
+    notes: [
+      { date: '2026-07-28', author: 'Siti Rahma', text: 'Loved the hot stone treatment upgrade.' }
+    ]
+  },
+  {
+    id: 'cust-3',
+    name: 'Mr. Reza',
+    email: 'reza.k@techcorp.com',
+    phone: '+60 19-334 5566',
+    avatar: 'MR',
+    tier: 'Silver Member',
+    totalVisits: 5,
+    totalSpent: 680.00,
+    preferredTherapist: 'Budi Santoso',
+    preferredTreatment: 'Deep Tissue Massage',
+    skinAllergies: 'Nut oil allergy (Use Jojoba oil only)',
+    preferences: 'Focus on lower back tension',
+    lastVisit: '2026-07-15',
+    notes: [
+      { date: '2026-07-15', author: 'Budi Santoso', text: 'Lower back stiffness improved.' }
+    ]
+  },
+  {
+    id: 'cust-4',
+    name: 'Diana K.',
+    email: 'diana.k@beautyblog.com',
+    phone: '+60 11-234 9988',
+    avatar: 'DK',
+    tier: 'VIP Platinum',
+    totalVisits: 19,
+    totalSpent: 3100.00,
+    preferredTherapist: 'Lestari Ayu',
+    preferredTreatment: 'Radiance Organic Facial',
+    skinAllergies: 'N/A',
+    preferences: 'Subscribes to monthly facial packages',
+    lastVisit: '2026-07-25',
+    notes: [
+      { date: '2026-07-25', author: 'Lestari Ayu', text: 'Purchased 10-session Radiance Bundle.' }
+    ]
+  }
+];
+
 // Helper to initialize local storage for a specific tenant
 function initStorage(tId) {
   const activeT = tId || getTenantId();
@@ -91,6 +166,7 @@ function initStorage(tId) {
   const STAFF_KEY = `${activeT}_admin_staff`;
   const RESERVATIONS_KEY = `${activeT}_admin_reservations`;
   const ROOMS_KEY = `${activeT}_admin_rooms`;
+  const CUSTOMERS_KEY = `${activeT}_admin_customers`;
 
   const existing = localStorage.getItem(SERVICES_KEY);
   if (!existing || !existing.includes('1200')) {
@@ -104,6 +180,10 @@ function initStorage(tId) {
   }
   if (!localStorage.getItem(ROOMS_KEY)) {
     localStorage.setItem(ROOMS_KEY, JSON.stringify(DEFAULT_ROOMS));
+  }
+  const custRaw = localStorage.getItem(CUSTOMERS_KEY);
+  if (!custRaw || custRaw === '[]') {
+    localStorage.setItem(CUSTOMERS_KEY, JSON.stringify(DEFAULT_CUSTOMERS));
   }
 }
 
@@ -215,6 +295,19 @@ const AdminState = {
     const tId = getTenantId();
     const own = data.filter(r => !r.isShared);
     localStorage.setItem(`${tId}_admin_rooms`, JSON.stringify(own));
+  },
+
+  getCustomers: () => {
+    const tId = getTenantId();
+    initStorage(tId);
+    const own = JSON.parse(localStorage.getItem(`${tId}_admin_customers`)) || [];
+    const shared = getSharedData('customers');
+    return own.concat(shared);
+  },
+  saveCustomers: (data) => {
+    const tId = getTenantId();
+    const own = data.filter(c => !c.isShared);
+    localStorage.setItem(`${tId}_admin_customers`, JSON.stringify(own));
   },
 
   // Add Reservation
@@ -663,5 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectTenantSettingsModal();
 });
 
-export default AdminState;
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = AdminState;
+}
 window.AdminState = AdminState;
