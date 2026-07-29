@@ -260,6 +260,66 @@
                 <!-- Rendered dynamically by main.js -->
             </div>
 
+            <!-- About Us & Vision-Mission Section -->
+            <div class="bg-surface-container-low py-16 border-y border-outline-variant/20 my-8" style="font-family:'Manrope',sans-serif;">
+                <div class="max-w-container-max mx-auto px-4 md:px-margin-desktop">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <!-- Left Column: Visual Showcase -->
+                        <div class="lg:col-span-5 relative">
+                            <div class="relative rounded-3xl overflow-hidden shadow-lg border border-outline-variant/30 aspect-[4/5] bg-slate-100">
+                                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Serenity & Soul Sanctuary">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                <div class="absolute bottom-6 left-6 right-6 text-white text-left">
+                                    <span class="font-serif text-xl font-bold block mb-1">Serenity &amp; Soul Sanctuary</span>
+                                    <p class="text-xs text-white/80">Est. 2015 • Kuala Lumpur</p>
+                                </div>
+                            </div>
+                            <!-- Floating Stat Badge -->
+                            <div class="absolute -bottom-6 -right-4 md:right-4 bg-white rounded-2xl p-4 shadow-xl border border-slate-100 flex items-center gap-3 animate-fade-in">
+                                <div class="w-10 h-10 rounded-xl bg-[#50613f]/10 text-[#50613f] flex items-center justify-center font-bold">
+                                    <span class="material-symbols-outlined text-xl">workspace_premium</span>
+                                </div>
+                                <div class="text-left">
+                                    <span class="text-sm font-bold text-slate-800 block leading-tight">10+ Years</span>
+                                    <span class="text-[10px] text-slate-500">Holistic Excellence</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Story, Vision & Mission -->
+                        <div class="lg:col-span-7 space-y-6 text-left">
+                            <div>
+                                <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block mb-2" data-translate="about_tag">Our Sanctuary Story</span>
+                                <h2 class="font-serif text-2xl md:text-3xl font-bold text-[#1E293B] leading-tight" data-translate="about_title">Harmonizing Body, Mind, &amp; Soul Through Natural Healing</h2>
+                                <p class="text-xs md:text-sm text-on-surface-variant leading-relaxed mt-3" data-translate="about_desc">
+                                    Founded with a deep commitment to holistic wellness, Serenity &amp; Soul is more than a spa—it is a sacred retreat designed to restore equilibrium to your daily life. We blend ancient Eastern touch therapies with pure organic botanical formulations to provide a transformative sensory experience.
+                                </p>
+                            </div>
+
+                            <!-- Vision & Mission Cards Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <!-- Vision Card -->
+                                <div class="bg-white rounded-2xl p-5 border border-outline-variant/30 shadow-sm flex flex-col gap-2">
+                                    <div class="w-8 h-8 rounded-lg bg-[#50613f]/10 text-[#50613f] flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-lg">visibility</span>
+                                    </div>
+                                    <h3 class="font-serif text-sm font-bold text-slate-800" data-translate="about_vision_title">Our Vision</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed" data-translate="about_vision_desc">To be the region's leading eco-conscious holistic sanctuary, empowering individuals to cultivate lifelong physical vitality and mental tranquility.</p>
+                                </div>
+                                <!-- Mission Card -->
+                                <div class="bg-white rounded-2xl p-5 border border-outline-variant/30 shadow-sm flex flex-col gap-2">
+                                    <div class="w-8 h-8 rounded-lg bg-[#B45309]/10 text-[#B45309] flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-lg">flag</span>
+                                    </div>
+                                    <h3 class="font-serif text-sm font-bold text-slate-800" data-translate="about_mission_title">Our Mission</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed" data-translate="about_mission_desc">Delivering tailored, ethical therapeutic treatments with certified practitioners, sustainable organic oils, and uncompromised personal care.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Why Choose Us Section -->
             <div class="max-w-container-max mx-auto px-4 md:px-margin-desktop py-16 text-center">
                 <h2 class="font-display-lg text-2xl text-[#1E293B] mb-12 font-bold font-serif" data-translate="why_choose_us_title">Why Choose Us?</h2>
@@ -641,6 +701,67 @@
                     </div>
                     <div id="blog-modal-content" class="text-xs text-slate-600 leading-relaxed space-y-4 font-medium">
                         <!-- Content populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Therapist Bio Modal -->
+        <div id="therapist-bio-modal" class="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[9999] flex items-center justify-center hidden p-4" style="font-family:'Manrope',sans-serif;">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full mx-4 shadow-xl border border-outline-variant/30 flex flex-col gap-4 relative max-h-[88vh] overflow-hidden">
+                <button onclick="closeTherapistBio()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors z-10 cursor-pointer">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                <div class="overflow-y-auto pr-1 flex flex-col gap-4 text-left">
+                    <!-- Top Profile Header -->
+                    <div class="flex items-center gap-4 pb-3 border-b border-slate-100">
+                        <div id="therapist-modal-img-container" class="w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 border-[#50613f]/20 bg-slate-100 shadow-sm">
+                            <img id="therapist-modal-img" src="" class="w-full h-full object-cover" alt="Therapist Profile">
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span class="bg-[#50613f]/10 text-[#50613f] text-[9px] font-bold px-2 py-0.5 rounded-full uppercase" id="therapist-modal-role">Therapist</span>
+                                <span class="flex items-center gap-0.5 text-amber-500 font-bold text-xs" id="therapist-modal-rating">
+                                    <span class="material-symbols-outlined text-sm">star</span> <span id="therapist-modal-score">4.9</span>
+                                </span>
+                            </div>
+                            <h2 id="therapist-modal-name" class="font-serif text-lg font-bold text-slate-800">Siti Rahmawati</h2>
+                            <p id="therapist-modal-exp" class="text-[11px] text-slate-500 font-semibold mt-0.5">8+ Years Experience</p>
+                        </div>
+                    </div>
+
+                    <!-- Bio Paragraph -->
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">About Practitioner</h4>
+                        <p id="therapist-modal-bio" class="text-xs text-slate-600 leading-relaxed font-medium">
+                            Siti is a master practitioner with over 8 years of dedicated experience in deep muscle therapy and sensory healing.
+                        </p>
+                    </div>
+
+                    <!-- Specialties Badges -->
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Specialties</h4>
+                        <div id="therapist-modal-specialties" class="flex flex-wrap gap-1.5">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Certifications & Accreditations -->
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Certifications</h4>
+                        <div id="therapist-modal-certs" class="space-y-1.5 text-xs text-slate-700">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="pt-2 border-t border-slate-100 flex gap-2 mt-1">
+                        <button onclick="closeTherapistBio()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all">
+                            Close
+                        </button>
+                        <button id="therapist-modal-select-btn" class="flex-1 py-2.5 rounded-xl bg-[#50613f] hover:bg-[#3e4b30] text-white font-bold text-xs transition-all shadow-md">
+                            Select Practitioner
+                        </button>
                     </div>
                 </div>
             </div>

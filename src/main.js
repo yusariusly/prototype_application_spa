@@ -335,8 +335,21 @@ function syncTherapists() {
                 name: s.name,
                 role: s.specialization || 'Therapist',
                 specialties: s.tags || [],
-                experience: s.rating ? `${s.rating} Rating` : '5 Years',
+                rating: s.rating || 4.9,
+                reviews: s.reviews || 95,
+                experience: s.rating ? `★ ${s.rating} (${s.reviews || 85} reviews)` : '5 Years',
+                experienceYears: s.id === 'stf-1' ? '8+ Years' : (s.id === 'stf-2' ? '10+ Years' : '6+ Years'),
+                certifications: s.id === 'stf-1'
+                    ? ['CISP International Master', 'Deep Tissue & Sports Massage Diploma', 'Organic Aromatherapy Certified']
+                    : (s.id === 'stf-2'
+                        ? ['Shiatsu Master Healer', 'Reflexology Practitioner Diploma', 'Thai Traditional Massage']
+                        : ['Swedish Therapeutic Diploma', 'Volcanic Hot Stone Certified', 'Lymphatic Drainage Specialist']),
                 description: s.specialization ? `Expert in ${s.specialization} and dedicated to providing a deeply relaxing and therapeutic wellness session.` : 'Dedicated wellness practitioner.',
+                fullBio: s.id === 'stf-1'
+                    ? 'Siti is a master practitioner with over 8 years of dedicated experience in deep muscle therapy and sensory healing. Trained at the renowned Bali Spa Institute, her intuitive touch effectively targets chronic stiffness and stress points.'
+                    : (s.id === 'stf-2'
+                        ? 'Budi specializes in oriental pressure-point therapies including Shiatsu and holistic Reflexology. With 10+ years of practice, he helps clients restore vital energy flow and relieve nerve tension.'
+                        : 'Dewi combines soft rhythmic Swedish strokes with heated volcanic stones to deliver a comforting, deeply rejuvenating experience aimed at calming the mind and softening rigid muscles.'),
                 image: imgUrl
             };
         });
@@ -1974,9 +1987,17 @@ function renderSelectTherapistView() {
                 
                 <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3 mb-4">${therapist.description}</p>
                 
-                <button class="w-full py-2.5 px-4 rounded-lg font-semibold text-xs transition-colors shadow-sm ${isSelected ? 'bg-primary text-white' : 'bg-transparent border border-outline text-on-surface group-hover:bg-primary/5'}">
-                    ${isSelected ? (state.language === 'ms' ? 'Dipilih' : 'Selected') : (state.language === 'ms' ? 'Pilih' : 'Select')}
-                </button>
+                <div class="flex items-center gap-2.5 mt-auto">
+                    ${therapist.id !== 'no-preference' ? `
+                        <button onclick="event.stopPropagation(); openTherapistBio('${therapist.id}')" class="flex-1 py-2.5 px-3 rounded-lg border border-primary/30 text-primary text-xs font-semibold hover:bg-primary/5 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                            <span class="material-symbols-outlined text-[16px]">badge</span>
+                            ${state.language === 'ms' ? 'Lihat Bio' : 'View Bio'}
+                        </button>
+                    ` : ''}
+                    <button onclick="selectTherapist('${therapist.id}')" class="${therapist.id !== 'no-preference' ? 'flex-1' : 'w-full'} py-2.5 px-4 rounded-lg font-semibold text-xs transition-colors shadow-sm cursor-pointer ${isSelected ? 'bg-primary text-white' : 'bg-transparent border border-outline text-on-surface group-hover:bg-primary/5'}">
+                        ${isSelected ? (state.language === 'ms' ? 'Dipilih' : 'Selected') : (state.language === 'ms' ? 'Pilih' : 'Select')}
+                    </button>
+                </div>
             </div>
         `;
     });
@@ -5271,6 +5292,69 @@ window.openBlogArticle = function (id) {
 
 window.closeBlogArticle = function () {
     const modal = document.getElementById('blog-article-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+};
+
+// ── THERAPIST BIO MODAL HANDLERS ─────────────────────────────
+window.openTherapistBio = function (therapistId) {
+    const therapist = THERAPISTS[therapistId];
+    if (!therapist || therapist.id === 'no-preference') return;
+
+    const modal = document.getElementById('therapist-bio-modal');
+    const img = document.getElementById('therapist-modal-img');
+    const name = document.getElementById('therapist-modal-name');
+    const role = document.getElementById('therapist-modal-role');
+    const score = document.getElementById('therapist-modal-score');
+    const exp = document.getElementById('therapist-modal-exp');
+    const bio = document.getElementById('therapist-modal-bio');
+    const specialtiesContainer = document.getElementById('therapist-modal-specialties');
+    const certsContainer = document.getElementById('therapist-modal-certs');
+    const selectBtn = document.getElementById('therapist-modal-select-btn');
+
+    if (modal && name) {
+        if (img) img.src = therapist.image || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80';
+        name.textContent = therapist.name;
+        if (role) role.textContent = therapist.role || 'Therapist';
+        if (score) score.textContent = therapist.rating ? `${therapist.rating} (${therapist.reviews || 50})` : '4.9 (120)';
+        if (exp) exp.textContent = therapist.experienceYears || '5+ Years Experience';
+        if (bio) bio.textContent = therapist.fullBio || therapist.description;
+
+        // Populate specialties badges
+        if (specialtiesContainer) {
+            specialtiesContainer.innerHTML = (therapist.specialties || []).map(s => `
+                <span class="px-2.5 py-1 bg-primary/10 text-primary font-bold text-[10px] rounded-full uppercase tracking-wider">${s}</span>
+            `).join('');
+        }
+
+        // Populate certifications list
+        if (certsContainer) {
+            certsContainer.innerHTML = (therapist.certifications || [
+                'Certified International Spa Practitioner (CISP)',
+                'Traditional Healing Massage Diploma'
+            ]).map(c => `
+                <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-100">
+                    <span class="material-symbols-outlined text-[#50613f] text-base">verified</span>
+                    <span class="font-medium text-slate-700 text-xs">${c}</span>
+                </div>
+            `).join('');
+        }
+
+        // Wire select button
+        if (selectBtn) {
+            selectBtn.onclick = function() {
+                selectTherapist(therapist.id);
+                closeTherapistBio();
+            };
+        }
+
+        modal.classList.remove('hidden');
+    }
+};
+
+window.closeTherapistBio = function () {
+    const modal = document.getElementById('therapist-bio-modal');
     if (modal) {
         modal.classList.add('hidden');
     }

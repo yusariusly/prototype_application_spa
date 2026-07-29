@@ -28,8 +28,8 @@ TABEL ANALISIS KELAYAKAN FITUR (WEBSITE VS DOKUMEN OWNER)
 
 5. PROFIL USAHA & PROFIL TERAPIS
    - Status di Dokumen: Parsial
-   - Status Riil di Kode: Belum Sesuai
-   - Rencana Penyelesaian UI: Tambahkan seksi "About Us" singkat di landing page, dan modal profil terapis yang muncul ketika kartu terapis diklik pada langkah booking.
+   - Status Riil di Kode: Sesuai (UI Ada)
+   - Keterangan & Lokasi: Seksi "Our Story & Sanctuary Vision" disematkan di halaman depan, dan tombol "Lihat Bio" / Modal detail profil terapis disajikan pada langkah wizard pemilihan terapis.
 
 6. MANAJEMEN AKUN PELANGGAN (CRM) - ADMIN
    - Status di Dokumen: Tidak
