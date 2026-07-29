@@ -17,6 +17,7 @@ export default defineConfig({
         'admin-reservations': resolve(__dirname, 'admin/reservations.html'),
         'admin-staff': resolve(__dirname, 'admin/staff.html'),
         'admin-services': resolve(__dirname, 'admin/services.html'),
+        'admin-customers': resolve(__dirname, 'admin/customers.html'),
         'admin-login': resolve(__dirname, 'admin/login.html'),
       }
     }
