@@ -15,7 +15,12 @@ import { renderBookPackageView, renderActivePackagesView } from '../views/Packag
 
 // 9. APP INITIALIZATION
 document.addEventListener('DOMContentLoaded', () => {
-    navigateTo(state.currentView || 'home');
+    // Ensure entry point is always as a guest
+    localStorage.removeItem(`${tenantId}_user_logged_in`);
+    localStorage.removeItem(`${tenantId}_user_name`);
+    localStorage.removeItem(`${tenantId}_user_email`);
+    
+    navigateTo('home');
     updateNavbarAuth();
 });
 
