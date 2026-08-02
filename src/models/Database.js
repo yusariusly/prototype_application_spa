@@ -1,16 +1,4 @@
 import { tenantId, currentTenant, DEFAULT_TENANTS } from '../models/Tenant.js';
-import { TRANSLATIONS, t, getServiceTranslation, translateStaticHtml, toggleLanguage } from '../models/Translations.js';
-import { DEFAULT_STATE, state, loadState, saveState } from '../models/State.js';
-import { isLoggedIn, updateNavbarAuth } from '../controllers/AuthController.js';
-import { navigateTo, updateTenantLinks, updateNavbarActiveState, updateStepperUI, navigateToAllServicesWithFilter } from '../controllers/Router.js';
-import { renderActiveViewContents, updateHeaderWalletDisplay, renderHomeView, renderServicesCatalogView, renderSelectServiceView, renderSelectTherapistView, renderSelectTimeView, renderConfirmBookingView, renderActivePackagesWidget, renderPaymentMethodSelection, startBookingWithService } from '../views/Renderers.js';
-import { renderSidebarSummary, renderSuccessView } from '../views/SidebarSummary.js';
-import { resetBookingFlow, nextStep, prevStep } from '../controllers/BookingController.js';
-import { showNotification } from '../views/Toast.js';
-import { renderProfileView, renderWalletView, renderTopupView, renderPersonalDetailsView, renderBookingHistoryView, renderNotificationsView, renderPrivacySecurityView, renderRescheduleView } from '../views/ProfileViews.js';
-import { renderAllServicesView } from '../views/CatalogViews.js';
-import { openPaymentMethodsModal, closePaymentMethodsModal } from '../views/PaymentModal.js';
-import { renderBookPackageView, renderActivePackagesView } from '../views/PackageViews.js';
 
 // 1. MOCK DATABASE
 export let SERVICES = {
@@ -348,3 +336,7 @@ export function syncTherapists() {
 }
 
 syncTherapists();
+
+window.getSharedData = getSharedData;
+window.syncServices = syncServices;
+window.syncTherapists = syncTherapists;

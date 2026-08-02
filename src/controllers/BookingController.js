@@ -171,3 +171,8 @@ export function resetBookingFlow() {
     isEditingGuest = false;
     navigateTo('home');
 };
+
+window.nextStep = nextStep;
+window.prevStep = prevStep;
+window.confirmReservation = confirmReservation;
+window.resetBookingFlow = resetBookingFlow;

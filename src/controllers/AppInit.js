@@ -584,3 +584,115 @@ export function redeemRewardItem(pointsNeeded, creditReward, title) {
     saveState();
 }
 window.redeemRewardItem = redeemRewardItem;
+
+// ── CONTACT FORM HANDLER ─────────────────────────────
+export function submitContactForm() {
+    window.submitContactForm = submitContactForm;
+    const nameInput = document.getElementById('contact-name');
+    const emailInput = document.getElementById('contact-email');
+    const msgInput = document.getElementById('contact-message');
+    const subjectInput = document.getElementById('contact-subject');
+
+    if (nameInput) nameInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (msgInput) msgInput.value = '';
+    if (subjectInput) subjectInput.value = '';
+
+    showNotification(
+        state.language === 'ms' 
+            ? 'Terima kasih! Mesej anda telah dihantar. Kami akan menghubungi anda segera.' 
+            : 'Thank you! Your message has been sent. We will get back to you shortly.', 
+        'success'
+    );
+}
+window.submitContactForm = submitContactForm;
+
+// ── THERAPIST PROFILE MODAL HANDLERS ─────────────────────────────
+export function openTherapistModal(therapistId) {
+    window.openTherapistModal = openTherapistModal;
+    const therapist = THERAPISTS[therapistId];
+    if (!therapist || therapist.id === 'no-preference') return;
+
+    const modal = document.getElementById('modal-therapist-profile');
+    const content = document.getElementById('therapist-modal-content');
+    
+    const img = document.getElementById('tp-image');
+    const name = document.getElementById('tp-name');
+    const role = document.getElementById('tp-role');
+    const rating = document.getElementById('tp-rating');
+    const exp = document.getElementById('tp-experience');
+    const bio = document.getElementById('tp-bio');
+    const certsContainer = document.getElementById('tp-certs');
+    const selectBtn = document.getElementById('tp-select-btn');
+
+    if (modal && name) {
+        if (img) img.src = therapist.image || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80';
+        name.textContent = therapist.name;
+        if (role) role.textContent = therapist.role || 'Therapist';
+        if (rating) rating.textContent = therapist.rating ? `${therapist.rating} (${therapist.reviews || 50} reviews)` : '4.9 (120 reviews)';
+        if (exp) exp.textContent = therapist.experienceYears || '5+ Years';
+        if (bio) bio.textContent = therapist.fullBio || therapist.description;
+
+        // Populate certifications list
+        if (certsContainer) {
+            certsContainer.innerHTML = (therapist.certifications || [
+                'Certified International Spa Practitioner (CISP)',
+                'Traditional Healing Massage Diploma'
+            ]).map(c => `
+                <li class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#50613f] text-sm font-bold">check_circle</span>
+                    ${c}
+                </li>
+            `).join('');
+        }
+
+        // Wire select button
+        if (selectBtn) {
+            selectBtn.onclick = function() {
+                if (window.selectTherapist) {
+                    window.selectTherapist(therapist.id);
+                }
+                closeTherapistModal();
+            };
+        }
+
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        // Trigger animation
+        setTimeout(() => {
+            if (content) {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }
+        }, 10);
+    }
+}
+
+export function closeTherapistModal() {
+    window.closeTherapistModal = closeTherapistModal;
+    const modal = document.getElementById('modal-therapist-profile');
+    const content = document.getElementById('therapist-modal-content');
+    
+    if (content) {
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+    }
+    
+    setTimeout(() => {
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+        }
+    }, 300);
+}
+
+window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
+window.updateMobileMenuUI = updateMobileMenuUI;
+window.handleMobileMenuAuth = handleMobileMenuAuth;
+window.openBlogArticle = openBlogArticle;
+window.closeBlogArticle = closeBlogArticle;
+window.openTherapistBio = openTherapistBio;
+window.closeTherapistBio = closeTherapistBio;
+window.openTherapistModal = openTherapistModal;
+window.closeTherapistModal = closeTherapistModal;

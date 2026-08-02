@@ -171,3 +171,12 @@ export function setDefaultCard(cardId) {
     renderSavedCards();
     showNotification(state.language === 'ms' ? 'Kaedah pembayaran lalai dikemas kini.' : 'Default payment method updated.', 'success');
 };
+
+window.openPaymentMethodsModal = openPaymentMethodsModal;
+window.closePaymentMethodsModal = closePaymentMethodsModal;
+window.renderSavedCards = renderSavedCards;
+window.showAddNewCardForm = showAddNewCardForm;
+window.hideAddNewCardForm = hideAddNewCardForm;
+window.handleAddNewCard = handleAddNewCard;
+window.deleteSavedCard = deleteSavedCard;
+window.setDefaultCard = setDefaultCard;

@@ -288,3 +288,6 @@ export function renderSuccessView() {
         </div>
     `;
 }
+
+window.renderSidebarSummary = renderSidebarSummary;
+window.renderSuccessView = renderSuccessView;

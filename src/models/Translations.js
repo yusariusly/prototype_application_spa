@@ -1,16 +1,6 @@
 import { tenantId, currentTenant, DEFAULT_TENANTS } from '../models/Tenant.js';
 import { SERVICES, THERAPISTS, getSharedData, syncServices, syncTherapists } from '../models/Database.js';
 import { DEFAULT_STATE, state, loadState, saveState } from '../models/State.js';
-import { isLoggedIn, updateNavbarAuth } from '../controllers/AuthController.js';
-import { navigateTo, updateTenantLinks, updateNavbarActiveState, updateStepperUI, navigateToAllServicesWithFilter } from '../controllers/Router.js';
-import { renderActiveViewContents, updateHeaderWalletDisplay, renderHomeView, renderServicesCatalogView, renderSelectServiceView, renderSelectTherapistView, renderSelectTimeView, renderConfirmBookingView, renderActivePackagesWidget, renderPaymentMethodSelection, startBookingWithService } from '../views/Renderers.js';
-import { renderSidebarSummary, renderSuccessView } from '../views/SidebarSummary.js';
-import { resetBookingFlow, nextStep, prevStep } from '../controllers/BookingController.js';
-import { showNotification } from '../views/Toast.js';
-import { renderProfileView, renderWalletView, renderTopupView, renderPersonalDetailsView, renderBookingHistoryView, renderNotificationsView, renderPrivacySecurityView, renderRescheduleView } from '../views/ProfileViews.js';
-import { renderAllServicesView } from '../views/CatalogViews.js';
-import { openPaymentMethodsModal, closePaymentMethodsModal } from '../views/PaymentModal.js';
-import { renderBookPackageView, renderActivePackagesView } from '../views/PackageViews.js';
 
 // 1.5 TRANSLATIONS DICTIONARY (ENGLISH & BAHASA MELAYU)
 export const TRANSLATIONS = {
@@ -23,6 +13,13 @@ export const TRANSLATIONS = {
         nav_profile: "Profile",
         btn_sign_out: "Sign Out",
         btn_sign_in: "Sign In",
+        nav_contact: "Contact",
+
+        // Contact Page
+        contact_tag: "GET IN TOUCH",
+        contact_title: "We'd Love to Hear From You",
+        contact_desc: "Whether you have a question about treatments, bookings, or anything else, our team is ready to answer all your questions.",
+
         btn_register: "Register",
         btn_back: "Back",
         btn_continue: "Continue",
@@ -162,6 +159,13 @@ export const TRANSLATIONS = {
         nav_profile: "Profil",
         btn_sign_out: "Log Keluar",
         btn_sign_in: "Log Masuk",
+        nav_contact: "Kontak",
+
+        // Contact Page
+        contact_tag: "HUBUNGI KAMI",
+        contact_title: "Kami Ingin Mendengar Dari Anda",
+        contact_desc: "Baik Anda memiliki pertanyaan tentang perawatan, pemesanan, atau hal lainnya, tim kami siap menjawab semua pertanyaan Anda.",
+
         btn_register: "Daftar",
         btn_back: "Kembali",
         btn_continue: "Teruskan",
@@ -394,23 +398,28 @@ export function toggleLanguage(event) {
     translateStaticHtml();
     
     // Re-render the active views so dynamic templates pickup new language instantly
-    if (typeof renderActiveViewContents === 'function') {
-        renderActiveViewContents(state.currentView);
+    if (typeof window.renderActiveViewContents === 'function') {
+        window.renderActiveViewContents(state.currentView);
     }
     if (state.currentView === 'home') {
-        renderHomeView();
-        renderActivePackagesWidget();
+        window.renderHomeView();
+        window.renderActivePackagesWidget();
     } else if (state.currentView === 'services-catalog') {
-        renderServicesCatalogView();
+        window.renderServicesCatalogView();
     } else if (state.currentView === 'profile') {
-        renderProfileView();
+        window.renderProfileView();
     } else if (state.currentView === 'wallet') {
-        renderWalletView();
+        window.renderWalletView();
     } else if (state.currentView === 'booking-history') {
-        renderBookingHistoryView();
+        window.renderBookingHistoryView();
     }
     
     if (document.getElementById('payment-methods-container')) {
-        renderPaymentMethodSelection();
+        window.renderPaymentMethodSelection();
     }
 };
+
+window.t = t;
+window.getServiceTranslation = getServiceTranslation;
+window.translateStaticHtml = translateStaticHtml;
+window.toggleLanguage = toggleLanguage;

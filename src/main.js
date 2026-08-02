@@ -12,6 +12,7 @@ import './views/ProfileViews.js';
 import './views/CatalogViews.js';
 import './views/PaymentModal.js';
 import './views/PackageViews.js';
+import './controllers/WABotController.js';
 import './controllers/AppInit.js';
-
 console.log("MVC initialized");
+window.translateStaticHtml && window.translateStaticHtml();

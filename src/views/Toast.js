@@ -39,3 +39,5 @@ export function showNotification(message, type = 'success') {
         setTimeout(() => toast.remove(), 300);
     }, 4000);
 }
+
+window.showNotification = showNotification;

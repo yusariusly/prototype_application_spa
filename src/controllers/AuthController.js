@@ -104,3 +104,10 @@ export function updateNavbarAuth() {
     // Refresh active packages widget on home
     renderActivePackagesWidget();
 }
+
+window.isLoggedIn = isLoggedIn;
+window.requireLogin = requireLogin;
+window.closeLoginModal = closeLoginModal;
+window.onLoginSuccess = onLoginSuccess;
+window.userSignOut = userSignOut;
+window.updateNavbarAuth = updateNavbarAuth;

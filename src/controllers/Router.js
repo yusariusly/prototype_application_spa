@@ -111,6 +111,7 @@ export function navigateToAllServicesWithFilter(filterId) {
 export function updateNavbarActiveState(viewId) {
     const homeLinks = document.querySelectorAll('[onclick="resetBookingFlow()"]');
     const serviceLinks = document.querySelectorAll('[onclick="navigateTo(\'services-catalog\')"]');
+    const contactLinks = document.querySelectorAll('[onclick="navigateTo(\'contact\')"]');
 
     if (viewId === 'home') {
         homeLinks.forEach(link => {
@@ -119,6 +120,11 @@ export function updateNavbarActiveState(viewId) {
             }
         });
         serviceLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+        contactLinks.forEach(link => {
             if (link.tagName === 'A') {
                 link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
             }
@@ -132,6 +138,43 @@ export function updateNavbarActiveState(viewId) {
         serviceLinks.forEach(link => {
             if (link.tagName === 'A') {
                 link.className = 'text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+        contactLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+    } else if (viewId === 'contact') {
+        homeLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+        serviceLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+        contactLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+    } else {
+        homeLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+        serviceLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
+            }
+        });
+        contactLinks.forEach(link => {
+            if (link.tagName === 'A') {
+                link.className = 'text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer';
             }
         });
     }
@@ -236,3 +279,7 @@ export function updateStepperUI(viewId) {
         </div>
     `;
 }
+
+window.navigateToAllServicesWithFilter = navigateToAllServicesWithFilter;
+window.updateNavbarActiveState = updateNavbarActiveState;
+window.updateStepperUI = updateStepperUI;

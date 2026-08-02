@@ -173,3 +173,6 @@ export function searchAllServices(query) {
     state.searchQuery = query;
     renderAllServicesView();
 };
+
+window.setAllServicesFilter = setAllServicesFilter;
+window.searchAllServices = searchAllServices;

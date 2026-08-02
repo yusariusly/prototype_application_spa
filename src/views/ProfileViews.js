@@ -1711,3 +1711,28 @@ export function performSignOut() {
     showNotification(state.language === 'ms' ? 'Berjaya log keluar.' : 'Signed out successfully.', 'success');
     navigateTo('home');
 };
+
+window.renderProfileView = renderProfileView;
+window.renderWalletView = renderWalletView;
+window.renderTopupView = renderTopupView;
+window.setTopUpPaymentMethod = setTopUpPaymentMethod;
+window.setEWalletBrand = setEWalletBrand;
+window.navigateToTopUp = navigateToTopUp;
+window.submitTopUpProcess = submitTopUpProcess;
+window.savePersonalDetails = savePersonalDetails;
+window.setHistoryTab = setHistoryTab;
+window.rescheduleBooking = rescheduleBooking;
+window.selectRescheduleDate = selectRescheduleDate;
+window.selectRescheduleTime = selectRescheduleTime;
+window.changeRescheduleMonth = changeRescheduleMonth;
+window.confirmReschedule = confirmReschedule;
+window.cancelBooking = cancelBooking;
+window.closeCancelBookingModal = closeCancelBookingModal;
+window.confirmCancelBooking = confirmCancelBooking;
+window.saveNotificationPreferences = saveNotificationPreferences;
+window.savePassword = savePassword;
+window.savePrivacySettings = savePrivacySettings;
+window.deleteAccount = deleteAccount;
+window.confirmSignOut = confirmSignOut;
+window.cancelSignOut = cancelSignOut;
+window.performSignOut = performSignOut;

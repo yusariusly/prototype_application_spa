@@ -155,6 +155,7 @@
             <a onclick="resetBookingFlow()" class="text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_home">Home</a>
             <a onclick="navigateTo('services-catalog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_service">Service</a>
             <a onclick="navigateTo('blog')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_blog">Blog</a>
+            <a onclick="navigateTo('contact')" class="text-sm font-semibold text-on-surface-variant/60 hover:text-primary transition-colors duration-300 cursor-pointer" data-translate="nav_contact">Contact</a>
         </div>
 
         <!-- Desktop Header Buttons (Hidden on Mobile) -->
@@ -207,6 +208,10 @@
                 <a onclick="closeMobileMenu(); navigateTo('blog');" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">rss_feed</span>
                     <span data-translate="nav_blog">Blog</span>
+                </a>
+                <a onclick="closeMobileMenu(); navigateTo('contact');" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
+                    <span class="material-symbols-outlined text-[20px]">mail</span>
+                    <span data-translate="nav_contact">Contact</span>
                 </a>
                 <a onclick="closeMobileMenu(); startBookingWithService(null);" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#50613f] transition-colors cursor-pointer text-sm font-medium text-left">
                     <span class="material-symbols-outlined text-[20px]">calendar_month</span>
@@ -438,6 +443,35 @@
                                     <p class="text-[10px] text-slate-500 font-semibold">Botanical Facial • Dewi</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Awards Section -->
+            <div class="py-16 my-8 bg-surface-container-low" style="font-family:'Manrope',sans-serif;">
+                <div class="max-w-container-max mx-auto px-4 md:px-margin-desktop text-center">
+                    <div class="max-w-2xl mx-auto mb-10">
+                        <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block mb-2" data-translate="awards_tag">Excellence & Recognition</span>
+                        <h2 class="font-serif text-2xl md:text-3xl font-bold text-[#1E293B]" data-translate="awards_title">Award-Winning Spa Sanctuary</h2>
+                        <p class="text-xs md:text-sm text-on-surface-variant leading-relaxed mt-2" data-translate="awards_desc">We are humbled to be recognized by leading wellness organizations for our commitment to holistic healing and exceptional service.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-center opacity-80">
+                        <div class="flex flex-col items-center gap-3 grayscale hover:grayscale-0 transition-all duration-300">
+                            <span class="material-symbols-outlined text-4xl text-[#B45309]">workspace_premium</span>
+                            <span class="text-xs font-bold text-slate-700">Best Holistic Spa 2025</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3 grayscale hover:grayscale-0 transition-all duration-300">
+                            <span class="material-symbols-outlined text-4xl text-[#B45309]">military_tech</span>
+                            <span class="text-xs font-bold text-slate-700">Top Spa Awards 2024</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3 grayscale hover:grayscale-0 transition-all duration-300">
+                            <span class="material-symbols-outlined text-4xl text-[#B45309]">star</span>
+                            <span class="text-xs font-bold text-slate-700">5-Star Wellness Center</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3 grayscale hover:grayscale-0 transition-all duration-300">
+                            <span class="material-symbols-outlined text-4xl text-[#B45309]">diamond</span>
+                            <span class="text-xs font-bold text-slate-700">Luxury Spa Excellence</span>
                         </div>
                     </div>
                 </div>
@@ -773,6 +807,71 @@
                             Read Full Article <span class="material-symbols-outlined text-sm">arrow_forward</span>
                         </button>
                     </div>
+                </div>
+            </div>
+        </section>
+        </section>
+
+        <!-- ==================== VIEW: CONTACT VIEW ==================== -->
+        <section id="view-contact" class="view-section hidden max-w-container-max mx-auto px-4 md:px-margin-desktop py-8" style="font-family:'Manrope',sans-serif;">
+            <div class="text-center max-w-2xl mx-auto mb-12 animate-fade-in">
+                <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block mb-2" data-translate="contact_tag">Get In Touch</span>
+                <h1 class="font-serif text-3xl md:text-4xl text-[#1E293B] font-black tracking-tight" data-translate="contact_title">We'd Love to Hear From You</h1>
+                <p class="text-xs text-on-surface-variant leading-relaxed mt-2" data-translate="contact_desc">Whether you have a question about treatments, bookings, or anything else, our team is ready to answer all your questions.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start max-w-5xl mx-auto">
+                <div class="flex flex-col gap-8">
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-outline-variant/30 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-2xl">location_on</span>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-base font-bold text-slate-800 mb-1">Our Sanctuary</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Kuala Lumpur City Centre,<br>50088 Kuala Lumpur,<br>Malaysia</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-outline-variant/30 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-2xl">mail</span>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-base font-bold text-slate-800 mb-1">Email Us</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">hello@serenitysoul.com<br>support@serenitysoul.com</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-outline-variant/30 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-2xl">phone</span>
+                        </div>
+                        <div>
+                            <h3 class="font-serif text-base font-bold text-slate-800 mb-1">Call Us</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">+60 3-1234 5678<br>Mon-Sun, 9:00 AM - 8:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-md border border-outline-variant/30">
+                    <h3 class="font-serif text-2xl font-bold text-slate-800 mb-6">Send a Message</h3>
+                    <form id="contact-form" onsubmit="event.preventDefault(); window.submitContactForm && window.submitContactForm();" class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-caps text-[9px] text-outline font-bold uppercase tracking-wider">Your Name</label>
+                            <input type="text" id="contact-name" required placeholder="Jane Doe" class="px-4 py-3 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs text-on-surface">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-caps text-[9px] text-outline font-bold uppercase tracking-wider">Email Address</label>
+                            <input type="email" id="contact-email" required placeholder="jane@example.com" class="px-4 py-3 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs text-on-surface">
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="font-label-caps text-[9px] text-outline font-bold uppercase tracking-wider">Subject</label>
+                            <input type="text" id="contact-subject" required placeholder="How can we help?" class="px-4 py-3 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs text-on-surface">
+                        </div>
+                        <div class="flex flex-col gap-1 mb-2">
+                            <label class="font-label-caps text-[9px] text-outline font-bold uppercase tracking-wider">Message</label>
+                            <textarea id="contact-message" required rows="4" placeholder="Your message here..." class="px-4 py-3 rounded-xl border border-outline-variant/60 focus:outline-none focus:border-primary text-xs text-on-surface resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-[#3e4b30] text-white py-3 rounded-xl font-bold text-xs shadow-sm transition-colors">Send Message</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -1267,20 +1366,18 @@
     </div>
 
 
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/628123456789?text=Hi%20Serenity%20%26%20Soul,%20I%20would%20like%20to%20ask%20about%20spa%20treatments!" 
-       target="_blank" 
-       rel="noopener noreferrer" 
+    <!-- Floating WhatsApp Bot Button -->
+    <button onclick="window.openWABot && window.openWABot()" 
        class="fixed bottom-24 right-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:bg-[#20ba5a] hover:scale-105 active:scale-95 transition-all duration-300 group"
-       title="Chat via WhatsApp">
+       title="Expert System Chat">
         <svg class="w-6 h-6 md:w-7 md:h-7 fill-current" viewBox="0 0 24 24">
             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.528 2.01 14.069.835 11.5.835c-5.441 0-9.87 4.372-9.874 9.802-.001 1.734.469 3.426 1.36 4.966L2.012 21.84l6.096-1.597.539.311zM16.91 14.88c-.27-.135-1.591-.785-1.838-.875-.246-.09-.426-.135-.606.135-.18.27-.696.875-.853 1.053-.157.178-.315.202-.585.067-.27-.135-1.14-.42-2.172-1.341-.803-.715-1.344-1.6-1.502-1.87-.157-.271-.017-.417.118-.552.122-.121.27-.315.405-.471.135-.158.18-.27.27-.45.09-.18.045-.337-.023-.472-.067-.135-.606-1.458-.83-2.001-.219-.527-.44-.455-.606-.464-.157-.008-.337-.008-.517-.008-.18 0-.472.067-.719.337-.247.27-.942.921-.942 2.247 0 1.326.966 2.607 1.101 2.787.135.18 1.902 2.904 4.607 4.069.643.277 1.145.443 1.536.567.646.206 1.233.177 1.697.108.517-.077 1.591-.65 1.816-1.277.225-.628.225-1.166.157-1.277-.067-.111-.247-.202-.517-.337z"/>
         </svg>
         <!-- Tooltip -->
         <span class="absolute right-16 bg-slate-800 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg shadow-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            Chat via WhatsApp
+            Expert System
         </span>
-    </a>
+    </button>
 
     <!-- Blog Detail Modal -->
     <div id="blog-article-modal" class="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[9999] flex items-center justify-center hidden p-4" style="font-family:'Manrope',sans-serif;">
@@ -1549,6 +1646,101 @@
             <div class="pt-2">
                 <button onclick="closeRedeemPointsModal()" type="button" class="w-full py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all">
                     Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Therapist Profile Modal -->
+    <div id="modal-therapist-profile" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeTherapistModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="relative bg-white w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col md:flex-row transform transition-all scale-95 opacity-0 duration-300" id="therapist-modal-content">
+            <!-- Close Button -->
+            <button onclick="closeTherapistModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white text-slate-800 transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
+
+            <!-- Image Section -->
+            <div class="w-full md:w-5/12 h-64 md:h-auto relative shrink-0">
+                <img id="tp-image" src="" alt="Therapist" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4">
+                    <h2 id="tp-name" class="font-serif text-2xl font-bold text-white mb-1">Name</h2>
+                    <p id="tp-role" class="text-[11px] font-bold text-white/80 uppercase tracking-wider">Role</p>
+                </div>
+            </div>
+
+            <!-- Details Section -->
+            <div class="w-full md:w-7/12 p-6 md:p-8 flex flex-col max-h-[80vh] overflow-y-auto custom-scrollbar">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="flex items-center gap-1.5 bg-[#FACC15]/20 text-[#B45309] px-3 py-1.5 rounded-xl">
+                        <span class="material-symbols-outlined text-[16px] fill-current">star</span>
+                        <span id="tp-rating" class="text-xs font-bold">4.9</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-slate-100 text-slate-600 px-3 py-1.5 rounded-xl">
+                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                        <span id="tp-experience" class="text-xs font-bold">5+ Years</span>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h3 class="font-serif text-base font-bold text-slate-800 mb-2">About</h3>
+                    <p id="tp-bio" class="text-xs text-slate-500 leading-relaxed">Biography goes here...</p>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="font-serif text-base font-bold text-slate-800 mb-3">Certifications</h3>
+                    <ul id="tp-certs" class="space-y-2 text-xs text-slate-600 font-medium">
+                        <!-- Certs injected here -->
+                    </ul>
+                </div>
+
+                <div class="mt-auto pt-6 border-t border-slate-100">
+                    <button id="tp-select-btn" class="w-full bg-[#50613f] hover:bg-[#3e4b30] text-white py-3 rounded-xl font-bold text-xs shadow-sm transition-colors flex items-center justify-center gap-2">
+                        Select Therapist <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Expert System Bot Modal -->
+    <div id="modal-wa-bot" class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center sm:p-4 pointer-events-none">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-auto" onclick="window.closeWABot && window.closeWABot()"></div>
+        <div id="wa-bot-content" class="relative bg-[#efeae2] w-full h-full sm:h-auto sm:max-h-[85vh] sm:max-w-md sm:rounded-[24px] shadow-2xl overflow-hidden flex flex-col transform transition-all translate-y-full sm:translate-y-8 opacity-0 duration-300 pointer-events-auto border border-[#d1d7db]">
+            <!-- WA Header -->
+            <div class="bg-[#005c4b] text-white p-3 flex items-center gap-3 shrink-0">
+                <button onclick="window.closeWABot && window.closeWABot()" class="sm:hidden text-white flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name=Serenity+Bot&background=50613f&color=fff" alt="Bot" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-[15px] leading-tight">Serenity Expert System</h3>
+                    <p class="text-[11px] text-white/80">Online</p>
+                </div>
+                <button onclick="window.closeWABot && window.closeWABot()" class="hidden sm:flex text-white hover:bg-white/10 p-1.5 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+            
+            <!-- WA Chat Area -->
+            <div id="wa-chat-area" class="flex-grow p-4 overflow-y-auto bg-[url('https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg')] bg-cover flex flex-col gap-3 custom-scrollbar">
+                <!-- Messages injected here -->
+            </div>
+            
+            <!-- WA Input Area -->
+            <div class="bg-[#f0f2f5] p-3 flex items-center gap-2 shrink-0 border-t border-[#d1d7db]">
+                <div class="flex-grow bg-white rounded-full px-4 py-2 flex items-center shadow-sm">
+                    <input type="text" id="wa-input" placeholder="Type a message (e.g. 1)" class="w-full bg-transparent outline-none text-[15px] text-[#111b21]" onkeypress="if(event.key === 'Enter') window.sendWAMessage && window.sendWAMessage()">
+                </div>
+                <button onclick="window.sendWAMessage && window.sendWAMessage()" class="w-10 h-10 rounded-full bg-[#00a884] text-white flex items-center justify-center hover:bg-[#008f6f] transition-colors shrink-0 shadow-sm">
+                    <span class="material-symbols-outlined text-[20px]">send</span>
                 </button>
             </div>
         </div>

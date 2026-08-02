@@ -851,7 +851,7 @@ export function renderSelectTherapistView() {
                 
                 <div class="flex items-center gap-2.5 mt-auto">
                     ${therapist.id !== 'no-preference' ? `
-                        <button onclick="event.stopPropagation(); openTherapistBio('${therapist.id}')" class="flex-1 py-2.5 px-3 rounded-lg border border-primary/30 text-primary text-xs font-semibold hover:bg-primary/5 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                        <button onclick="event.stopPropagation(); window.openTherapistModal('${therapist.id}')" class="flex-1 py-2.5 px-3 rounded-lg border border-primary/30 text-primary text-xs font-semibold hover:bg-primary/5 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                             <span class="material-symbols-outlined text-[16px]">badge</span>
                             ${state.language === 'ms' ? 'Lihat Bio' : 'View Bio'}
                         </button>
@@ -1185,3 +1185,31 @@ export function selectPaymentMethod(methodId, event) {
     renderPaymentMethodSelection();
     renderSidebarSummary(); // recalculate price breakdown if bundle could be applied
 };
+
+window.renderActiveViewContents = renderActiveViewContents;
+window.updateHeaderWalletDisplay = updateHeaderWalletDisplay;
+window.renderHomeView = renderHomeView;
+window.renderServicesCatalogView = renderServicesCatalogView;
+window.renderActivePackagesWidget = renderActivePackagesWidget;
+window.purchaseBundle = purchaseBundle;
+window.bookPackageSession = bookPackageSession;
+window.startBookingWithService = startBookingWithService;
+window.renderSelectServiceView = renderSelectServiceView;
+window.filterServiceCategory = filterServiceCategory;
+window.selectService = selectService;
+window.renderSelectTherapistView = renderSelectTherapistView;
+window.selectTherapist = selectTherapist;
+window.renderSelectTimeView = renderSelectTimeView;
+window.renderCalendar = renderCalendar;
+window.prevMonth = prevMonth;
+window.nextMonth = nextMonth;
+window.selectDate = selectDate;
+window.renderTimeSlots = renderTimeSlots;
+window.selectTime = selectTime;
+window.renderConfirmBookingView = renderConfirmBookingView;
+window.renderGuestInfoCard = renderGuestInfoCard;
+window.toggleEditGuest = toggleEditGuest;
+window.saveGuestInfo = saveGuestInfo;
+window.renderPaymentMethodSelection = renderPaymentMethodSelection;
+window.togglePaymentDropdown = togglePaymentDropdown;
+window.selectPaymentMethod = selectPaymentMethod;

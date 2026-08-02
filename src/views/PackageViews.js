@@ -528,3 +528,11 @@ export function closeQrTicketModal() {
         modal.classList.add('hidden');
     }, 300);
 };
+
+window.selectPackageDate = selectPackageDate;
+window.selectPackageTime = selectPackageTime;
+window.changePackageMonth = changePackageMonth;
+window.cancelPackageBookingFlow = cancelPackageBookingFlow;
+window.confirmPackageBooking = confirmPackageBooking;
+window.openQrTicketModal = openQrTicketModal;
+window.closeQrTicketModal = closeQrTicketModal;
