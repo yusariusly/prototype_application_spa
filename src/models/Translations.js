@@ -15,6 +15,13 @@ export const TRANSLATIONS = {
         btn_sign_in: "Sign In",
         nav_contact: "Contact",
 
+        // About Page
+        nav_about: "About",
+        about_tag: "Our Story",
+        about_title: "Serenity & Soul Sanctuary",
+        about_desc: "Established in 2024, Serenity & Soul Sanctuary was born from a simple belief: that everyone deserves a moment of absolute peace. Our sanctuary is a haven in the bustling city, designed to harmonize your body, mind, and spirit through holistic treatments and expert care.",
+        about_team_title: "Meet Our Therapists",
+
         // Contact Page
         contact_tag: "GET IN TOUCH",
         contact_title: "We'd Love to Hear From You",
@@ -160,6 +167,13 @@ export const TRANSLATIONS = {
         btn_sign_out: "Log Keluar",
         btn_sign_in: "Log Masuk",
         nav_contact: "Kontak",
+
+        // About Page
+        nav_about: "Tentang Kami",
+        about_tag: "Kisah Kami",
+        about_title: "Serenity & Soul Sanctuary",
+        about_desc: "Didirikan pada tahun 2024, Serenity & Soul Sanctuary lahir dari sebuah keyakinan sederhana: bahwa setiap orang berhak mendapatkan momen kedamaian mutlak. Tempat kami adalah surga di tengah kota yang sibuk, dirancang untuk menyelaraskan tubuh, pikiran, dan jiwa Anda melalui perawatan holistik dan penanganan ahli.",
+        about_team_title: "Temui Terapis Kami",
 
         // Contact Page
         contact_tag: "HUBUNGI KAMI",

@@ -20,6 +20,8 @@ export function renderActiveViewContents(viewId) {
 
         if (viewId === 'home') {
             renderHomeView();
+        } else if (viewId === 'about') {
+            renderAboutView();
         } else if (viewId === 'services-catalog') {
             renderServicesCatalogView();
         } else if (viewId === 'select-service') {
@@ -1186,6 +1188,40 @@ export function selectPaymentMethod(methodId, event) {
     renderSidebarSummary(); // recalculate price breakdown if bundle could be applied
 };
 
+
+export function renderAboutView() {
+    const container = document.getElementById('about-therapists-container');
+    if (!container) return;
+    
+    // Use the THERAPISTS array from Database.js
+    const html = Object.values(THERAPISTS).filter(t => t.id !== 'no-preference').map(therapist => {
+        return `
+            <div class="glass-card rounded-xl overflow-hidden flex flex-col group border border-outline-variant/30 hover:border-primary/50 transition-colors">
+                <div class="h-48 bg-surface-variant relative overflow-hidden">
+                    ${therapist.image 
+                        ? `<img src="${therapist.image}" alt="${therapist.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">`
+                        : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 text-primary text-4xl font-serif">
+                            ${therapist.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase()}
+                           </div>`
+                    }
+                </div>
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="font-serif text-xl text-on-surface font-bold mb-1">${therapist.name}</h3>
+                    <p class="text-xs text-primary font-medium mb-3">${therapist.specialty}</p>
+                    <p class="text-xs text-on-surface-variant leading-relaxed line-clamp-3 mb-4 flex-1">${therapist.description}</p>
+                    <div class="flex items-center gap-2 mt-auto">
+                        <span class="material-symbols-outlined text-amber-400 text-sm">star</span>
+                        <span class="text-xs font-semibold text-on-surface">${therapist.rating}</span>
+                        <span class="text-xs text-on-surface-variant ml-auto font-medium">${therapist.experience} Exp</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;
+}
+window.renderAboutView = renderAboutView;
 window.renderActiveViewContents = renderActiveViewContents;
 window.updateHeaderWalletDisplay = updateHeaderWalletDisplay;
 window.renderHomeView = renderHomeView;
@@ -1213,3 +1249,6 @@ window.saveGuestInfo = saveGuestInfo;
 window.renderPaymentMethodSelection = renderPaymentMethodSelection;
 window.togglePaymentDropdown = togglePaymentDropdown;
 window.selectPaymentMethod = selectPaymentMethod;
+
+
+

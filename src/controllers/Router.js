@@ -112,6 +112,7 @@ export function updateNavbarActiveState(viewId) {
     const homeLinks = document.querySelectorAll('[onclick="resetBookingFlow()"]');
     const serviceLinks = document.querySelectorAll('[onclick="navigateTo(\'services-catalog\')"]');
     const contactLinks = document.querySelectorAll('[onclick="navigateTo(\'contact\')"]');
+    const aboutLinks = document.querySelectorAll('[onclick="navigateTo(\'about\')"]');
 
     if (viewId === 'home') {
         homeLinks.forEach(link => {
@@ -283,3 +284,4 @@ export function updateStepperUI(viewId) {
 window.navigateToAllServicesWithFilter = navigateToAllServicesWithFilter;
 window.updateNavbarActiveState = updateNavbarActiveState;
 window.updateStepperUI = updateStepperUI;
+
