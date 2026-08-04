@@ -2,9 +2,9 @@ import { tenantId, currentTenant, DEFAULT_TENANTS } from '../models/Tenant.js';
 import { SERVICES, THERAPISTS, getSharedData, syncServices, syncTherapists } from '../models/Database.js';
 import { TRANSLATIONS, t, getServiceTranslation, translateStaticHtml, toggleLanguage } from '../models/Translations.js';
 import { DEFAULT_STATE, state, loadState, saveState } from '../models/State.js';
-import { isLoggedIn, updateNavbarAuth } from '../controllers/AuthController.js';
+import { isLoggedIn, updateNavbarAuth, requireLogin } from '../controllers/AuthController.js';
 import { navigateTo, updateTenantLinks, updateNavbarActiveState, updateStepperUI, navigateToAllServicesWithFilter } from '../controllers/Router.js';
-import { renderActiveViewContents, updateHeaderWalletDisplay, renderHomeView, renderServicesCatalogView, renderSelectServiceView, renderSelectTherapistView, renderSelectTimeView, renderConfirmBookingView, renderActivePackagesWidget, renderPaymentMethodSelection, startBookingWithService } from '../views/Renderers.js';
+import { renderActiveViewContents, updateHeaderWalletDisplay, renderHomeView, renderServicesCatalogView, renderSelectServiceView, renderSelectTherapistView, renderSelectTimeView, renderConfirmBookingView, renderActivePackagesWidget, renderPaymentMethodSelection, startBookingWithService, selectedPaymentMethod, resetSelectedDateObj, resetIsEditingGuest } from '../views/Renderers.js';
 import { renderSidebarSummary, renderSuccessView } from '../views/SidebarSummary.js';
 import { showNotification } from '../views/Toast.js';
 import { renderProfileView, renderWalletView, renderTopupView, renderPersonalDetailsView, renderBookingHistoryView, renderNotificationsView, renderPrivacySecurityView, renderRescheduleView } from '../views/ProfileViews.js';
@@ -167,8 +167,8 @@ export function resetBookingFlow() {
         date: null,
         time: null
     };
-    selectedDateObj = null;
-    isEditingGuest = false;
+    resetSelectedDateObj();
+    resetIsEditingGuest();
     navigateTo('home');
 };
 

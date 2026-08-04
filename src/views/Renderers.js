@@ -1243,6 +1243,27 @@ window.selectDate = selectDate;
 window.renderTimeSlots = renderTimeSlots;
 window.selectTime = selectTime;
 window.renderConfirmBookingView = renderConfirmBookingView;
+window.renderActiveViewContents = renderActiveViewContents;
+window.updateHeaderWalletDisplay = updateHeaderWalletDisplay;
+window.renderHomeView = renderHomeView;
+window.renderServicesCatalogView = renderServicesCatalogView;
+window.renderActivePackagesWidget = renderActivePackagesWidget;
+window.purchaseBundle = purchaseBundle;
+window.bookPackageSession = bookPackageSession;
+window.startBookingWithService = startBookingWithService;
+window.renderSelectServiceView = renderSelectServiceView;
+window.filterServiceCategory = filterServiceCategory;
+window.selectService = selectService;
+window.renderSelectTherapistView = renderSelectTherapistView;
+window.selectTherapist = selectTherapist;
+window.renderSelectTimeView = renderSelectTimeView;
+window.renderCalendar = renderCalendar;
+window.prevMonth = prevMonth;
+window.nextMonth = nextMonth;
+window.selectDate = selectDate;
+window.renderTimeSlots = renderTimeSlots;
+window.selectTime = selectTime;
+window.renderConfirmBookingView = renderConfirmBookingView;
 window.renderGuestInfoCard = renderGuestInfoCard;
 window.toggleEditGuest = toggleEditGuest;
 window.saveGuestInfo = saveGuestInfo;
@@ -1250,5 +1271,10 @@ window.renderPaymentMethodSelection = renderPaymentMethodSelection;
 window.togglePaymentDropdown = togglePaymentDropdown;
 window.selectPaymentMethod = selectPaymentMethod;
 
+export function resetSelectedDateObj() {
+    selectedDateObj = null;
+}
 
-
+export function resetIsEditingGuest() {
+    isEditingGuest = false;
+}
