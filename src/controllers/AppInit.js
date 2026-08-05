@@ -15,8 +15,10 @@ import { renderBookPackageView, renderActivePackagesView } from '../views/Packag
 
 // 9. APP INITIALIZATION
 document.addEventListener('DOMContentLoaded', () => {
-    // Keep authenticated users in the app; guests start on the landing page.
-    navigateTo(isLoggedIn() ? 'dashboard' : 'home');
+    // Force the very first view to landing page, regardless of auth status.
+    window.__forceLandingEntry = true;
+    navigateTo('home');
+    window.__forceLandingEntry = false;
     updateNavbarAuth();
 });
 

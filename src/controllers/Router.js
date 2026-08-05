@@ -14,7 +14,7 @@ import { renderBookPackageView, renderActivePackagesView } from '../views/Packag
 
 // 3. CORE ROUTING & VIEW CONTROLLER
 export function navigateTo(viewId) {
-    if (viewId === 'home' && isLoggedIn()) {
+    if (viewId === 'home' && isLoggedIn() && !window.__forceLandingEntry) {
         viewId = 'dashboard';
     }
 
