@@ -378,6 +378,12 @@ export function getServiceTranslation(serviceId, field, fallback) {
             desc_ms: 'Rawatan pengelupasan dengan garam laut semulajadi untuk kulit sehalus sutera.'
         }
     };
+    
+    const lang = state.language || 'en';
+    if (lang === 'ms' && dict[serviceId] && dict[serviceId][field + '_ms']) {
+        return dict[serviceId][field + '_ms'];
+    }
+    
     return fallback;
 };
 
