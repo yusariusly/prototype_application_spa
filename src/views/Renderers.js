@@ -600,6 +600,32 @@ export function renderDashboardView() {
     if (!container) return;
 
     const userName = localStorage.getItem(`${tenantId}_user_name`) || state.guestInfo.name || 'Member';
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    const mondayOffset = (now.getDay() + 6) % 7;
+    startOfWeek.setDate(now.getDate() - mondayOffset);
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    const formatDayLabel = date => date.toLocaleDateString(state.language === 'ms' ? 'ms-MY' : 'en-US', { weekday: 'short' });
+    const formatWeekday = date => date.toLocaleDateString(state.language === 'ms' ? 'ms-MY' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const parseBookingDate = value => {
+        const parsed = new Date(value);
+        return isNaN(parsed) ? null : parsed;
+    };
+    const bookingsThisWeek = state.bookings
+        .map(booking => ({ ...booking, parsedDate: parseBookingDate(booking.date) }))
+        .filter(booking => booking.parsedDate && booking.parsedDate >= startOfWeek && booking.parsedDate <= endOfWeek)
+        .sort((a, b) => a.parsedDate - b.parsedDate);
+    const weekDays = Array.from({ length: 7 }, (_, index) => {
+        const date = new Date(startOfWeek);
+        date.setDate(startOfWeek.getDate() + index);
+        const dayBookings = bookingsThisWeek.filter(booking => booking.parsedDate.toDateString() === date.toDateString());
+        return { date, dayBookings };
+    });
+
     const upcoming = state.bookings.filter(b => b.status === 'Upcoming');
     upcoming.sort((a, b) => {
         const dateA = new Date(a.date);
@@ -652,6 +678,69 @@ export function renderDashboardView() {
                     <div class="bg-white rounded-3xl p-5 shadow-sm border border-outline-variant/30">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-outline block mb-1">${state.language === 'ms' ? 'Transaksi' : 'Transactions'}</span>
                         <div class="font-serif text-2xl font-bold text-[#1E293B]">${transactionCount}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-5">
+                    <div>
+                        <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block mb-2">${state.language === 'ms' ? 'Jadual Mingguan' : 'Weekly Schedule'}</span>
+                        <h2 class="font-serif text-xl text-[#1E293B] font-bold">${formatWeekday(startOfWeek)} - ${formatWeekday(endOfWeek)}</h2>
+                        <p class="text-xs text-on-surface-variant mt-1">${bookingsThisWeek.length > 0 ? (state.language === 'ms' ? `Anda mempunyai ${bookingsThisWeek.length} jadual pada minggu ini.` : `You have ${bookingsThisWeek.length} scheduled items this week.`) : (state.language === 'ms' ? 'Tiada tempahan dijadualkan pada minggu ini.' : 'No appointments are scheduled for this week.')}</p>
+                    </div>
+                    <button onclick="navigateTo('booking-history')" class="self-start md:self-auto text-xs font-bold text-[#B45309] hover:text-[#92400e] flex items-center gap-1 transition-colors">
+                        ${state.language === 'ms' ? 'Buka Sejarah Tempahan' : 'Open Booking History'} <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                    ${weekDays.map(({ date, dayBookings }) => {
+                        const isToday = date.toDateString() === now.toDateString();
+                        const hasBooking = dayBookings.length > 0;
+                        const firstBooking = dayBookings[0];
+                        return `
+                            <div class="rounded-2xl border p-4 min-h-[140px] flex flex-col justify-between ${isToday ? 'border-[#50613f] bg-[#50613f]/5 shadow-sm' : 'border-outline-variant/30 bg-[#F8FAF8]'}">
+                                <div class="flex items-start justify-between gap-2 mb-3">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-wider ${isToday ? 'text-[#50613f]' : 'text-outline'}">${formatDayLabel(date)}</p>
+                                        <p class="font-serif text-lg font-bold text-[#1E293B]">${date.getDate()}</p>
+                                    </div>
+                                    <span class="text-[10px] font-bold px-2 py-1 rounded-full ${hasBooking ? 'bg-[#50613f] text-white' : 'bg-white text-outline border border-outline-variant/30'}">${hasBooking ? `${dayBookings.length}` : '0'}</span>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    ${hasBooking ? `
+                                        <div class="text-xs font-semibold text-[#1E293B] line-clamp-2">${firstBooking.serviceName}</div>
+                                        <div class="text-[11px] text-on-surface-variant">${firstBooking.time}</div>
+                                        ${dayBookings.length > 1 ? `<div class="text-[10px] font-bold text-[#B45309]">+${dayBookings.length - 1} ${state.language === 'ms' ? 'lagi' : 'more'}</div>` : ''}
+                                    ` : `
+                                        <div class="text-[11px] text-on-surface-variant">${state.language === 'ms' ? 'Kosong' : 'Free'}</div>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="mt-5 rounded-2xl border border-outline-variant/25 bg-[#FEFCE8] p-4">
+                    <div class="flex items-center gap-2 mb-2 text-amber-700 font-bold text-xs uppercase tracking-wider">
+                        <span class="material-symbols-outlined text-[18px]">event_available</span>
+                        ${state.language === 'ms' ? 'Sorotan Minggu Ini' : 'This Week at a Glance'}
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        ${bookingsThisWeek.length > 0 ? bookingsThisWeek.map(booking => `
+                            <div class="flex items-center justify-between gap-3 rounded-xl bg-white/80 border border-amber-100 px-4 py-3">
+                                <div>
+                                    <p class="text-xs font-bold text-[#1E293B]">${booking.serviceName}</p>
+                                    <p class="text-[11px] text-on-surface-variant">${booking.date} • ${booking.time} • ${booking.therapist}</p>
+                                </div>
+                                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#50613f]/10 text-[#50613f]">${booking.status}</span>
+                            </div>
+                        `).join('') : `
+                            <div class="rounded-xl bg-white/80 border border-amber-100 px-4 py-3 text-xs text-on-surface-variant">
+                                ${state.language === 'ms' ? 'Tiada jadual untuk minggu ini. Tempah servis untuk melihatnya muncul di sini.' : 'There are no appointments this week. Book a service and it will appear here.'}
+                            </div>
+                        `}
                     </div>
                 </div>
             </div>
