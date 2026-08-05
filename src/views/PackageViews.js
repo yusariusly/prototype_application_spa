@@ -27,7 +27,10 @@ export function renderBookPackageView() {
     if (!bundle) return;
 
     const sessionsLeft = state.activePackages[bundleId] || 0;
-    const therapist = state.packageTherapists[bundleId] || THERAPISTS['siti'];
+    const therapist = state.packageTherapists?.[bundleId]
+        || THERAPISTS['stf-1']
+        || THERAPISTS['no-preference']
+        || { name: state.language === 'ms' ? 'Terapis Belum Dipilih' : 'Therapist Not Selected', role: 'Therapist', image: null };
 
     // Initial date if null
     if (!state.pkgBooking.date) {
@@ -195,8 +198,8 @@ export function renderBookPackageView() {
                                 </div>
                                 <div>
                                     <span class="font-label-caps text-[9px] text-outline mb-0.5 block uppercase font-bold tracking-wider">THERAPIST</span>
-                                    <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">${therapist.name}</h3>
-                                    <p class="font-body-sm text-[11px] text-on-surface-variant">${therapist.role || 'Therapist'}</p>
+                                    <h3 class="font-title-md text-xs font-semibold text-[#1E293B]">${therapist?.name || (state.language === 'ms' ? 'Terapis Belum Dipilih' : 'Therapist Not Selected')}</h3>
+                                    <p class="font-body-sm text-[11px] text-on-surface-variant">${therapist?.role || 'Therapist'}</p>
                                 </div>
                             </div>
                             
@@ -300,7 +303,10 @@ export function confirmPackageBooking() {
 
     // Deduct session
     state.activePackages[bundleId]--;
-    const therapist = state.packageTherapists[bundleId] || THERAPISTS['siti'];
+    const therapist = state.packageTherapists?.[bundleId]
+        || THERAPISTS['stf-1']
+        || THERAPISTS['no-preference']
+        || { name: state.language === 'ms' ? 'Terapis Belum Dipilih' : 'Therapist Not Selected', role: 'Therapist', image: null };
     const resId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
 
     // Record booking history
@@ -311,7 +317,7 @@ export function confirmPackageBooking() {
         serviceType: bundle.type,
         date: state.pkgBooking.date,
         time: state.pkgBooking.time,
-        therapist: therapist.name,
+        therapist: therapist?.name || (state.language === 'ms' ? 'Terapis Belum Dipilih' : 'Therapist Not Selected'),
         location: 'Serenity & Soul Sanctuary, 12 Orchard Road, Singapore 238886',
         price: 0,
         status: 'Upcoming'

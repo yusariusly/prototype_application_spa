@@ -20,6 +20,8 @@ export function renderActiveViewContents(viewId) {
 
         if (viewId === 'home') {
             renderHomeView();
+        } else if (viewId === 'dashboard') {
+            renderDashboardView();
         } else if (viewId === 'about') {
             renderAboutView();
         } else if (viewId === 'services-catalog') {
