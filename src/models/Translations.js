@@ -152,6 +152,11 @@ export const TRANSLATIONS = {
         blog_title: "Sanctuary Wellness Journal",
         blog_desc: "Explore expert insights on stress relief, holistic therapies, aftercare advice, and mindful living routines curated by our master practitioners.",
 
+        // Awards Section
+        awards_tag: "Excellence & Recognition",
+        awards_title: "Award-Winning Spa Sanctuary",
+        awards_desc: "We are humbled to be recognized by leading wellness organizations for our commitment to holistic healing and exceptional service.",
+
         // Testimonials Section
         testimonials_tag: "Guest Experiences",
         testimonials_title: "Loved & Trusted by Over 1,200+ Guests",
@@ -304,6 +309,11 @@ export const TRANSLATIONS = {
         blog_subtitle: "Panduan & Inspirasi",
         blog_title: "Jurnal Kesejahteraan Spa",
         blog_desc: "Terokai ulasan pakar mengenai pelegaan tekanan, terapi holistik, petua penjagaan selepas spa, dan amalan hidup tenang daripada terapis pakar kami.",
+
+        // Awards Section
+        awards_tag: "Kecemerlangan & Pengiktirafan",
+        awards_title: "Pusat Rawatan Spa Pemenang Anugerah",
+        awards_desc: "Kami berbangga kerana diiktiraf oleh organisasi kesejahteraan terkemuka atas komitmen kami terhadap penyembuhan holistik dan perkhidmatan cemerlang.",
 
         // Testimonials Section
         testimonials_tag: "Pengalaman Tetamu",
