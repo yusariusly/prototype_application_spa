@@ -323,7 +323,7 @@ export function t(key) {
     }
     if (typeof text === 'string') {
         text = text.replace(/Serenity\s*&\s*Soul/gi, currentTenant.name)
-                   .replace(/Serenity/gi, currentTenant.logo || currentTenant.name);
+            .replace(/Serenity/gi, currentTenant.logo || currentTenant.name);
     }
     return text;
 };
@@ -378,12 +378,12 @@ export function getServiceTranslation(serviceId, field, fallback) {
             desc_ms: 'Rawatan pengelupasan dengan garam laut semulajadi untuk kulit sehalus sutera.'
         }
     };
-    
+
     const lang = state.language || 'en';
     if (lang === 'ms' && dict[serviceId] && dict[serviceId][field + '_ms']) {
         return dict[serviceId][field + '_ms'];
     }
-    
+
     return fallback;
 };
 
@@ -398,7 +398,7 @@ export function translateStaticHtml() {
             el.innerHTML = translation;
         }
     });
-    
+
     // Sync language switcher text/states
     const desktopLangBtnText = document.getElementById('lang-toggle-text');
     if (desktopLangBtnText) {
@@ -416,7 +416,7 @@ export function toggleLanguage(event) {
     state.language = state.language === 'en' ? 'ms' : 'en';
     saveState();
     translateStaticHtml();
-    
+
     // Re-render the active views so dynamic templates pickup new language instantly
     if (typeof window.renderActiveViewContents === 'function') {
         window.renderActiveViewContents(state.currentView);
@@ -433,7 +433,7 @@ export function toggleLanguage(event) {
     } else if (state.currentView === 'booking-history') {
         window.renderBookingHistoryView();
     }
-    
+
     if (document.getElementById('payment-methods-container')) {
         window.renderPaymentMethodSelection();
     }

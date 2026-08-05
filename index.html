@@ -152,13 +152,17 @@
     <!-- Top Navigation Bar -->
     <nav
         class="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-margin-desktop h-20 bg-surface/70 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm transition-all">
-        <div onclick="resetBookingFlow()"
-            class="font-headline-lg text-xl md:text-headline-lg text-primary cursor-pointer hover:opacity-80 transition-opacity animate-fade-in">
-            Serenity &amp; Soul
+        
+        <!-- Left Side -->
+        <div class="flex-1 flex justify-start">
+            <div onclick="resetBookingFlow()"
+                class="font-headline-lg text-xl md:text-headline-lg text-primary cursor-pointer hover:opacity-80 transition-opacity animate-fade-in whitespace-nowrap">
+                Serenity &amp; Soul
+            </div>
         </div>
 
         <!-- Navigation Links -->
-        <div class="hidden md:flex flex-1 justify-center items-center gap-4 lg:gap-8 mx-2 lg:mx-4 whitespace-nowrap">
+        <div class="hidden md:flex justify-center items-center gap-4 lg:gap-8 mx-2 lg:mx-4 whitespace-nowrap">
             <a onclick="resetBookingFlow()"
                 class="text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer"
                 data-translate="nav_home">Home</a>
@@ -176,7 +180,7 @@
         </div>
 
         <!-- Desktop Header Buttons (Hidden on Mobile) -->
-        <div class="hidden md:flex items-center gap-3 md:gap-4">
+        <div class="hidden md:flex flex-1 justify-end items-center gap-3 md:gap-4">
             <div onclick="requireLogin(() => navigateTo('wallet'))"
                 class="wallet-nav-pill flex items-center gap-2 text-primary bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:bg-primary/10 transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-[18px] md:text-[20px]">account_balance_wallet</span>
