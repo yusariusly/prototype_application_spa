@@ -2,7 +2,7 @@ import { tenantId, currentTenant, DEFAULT_TENANTS } from '../models/Tenant.js';
 import { SERVICES, THERAPISTS, getSharedData, syncServices, syncTherapists } from '../models/Database.js';
 import { TRANSLATIONS, t, getServiceTranslation, translateStaticHtml, toggleLanguage } from '../models/Translations.js';
 import { DEFAULT_STATE, state, loadState, saveState } from '../models/State.js';
-import { isLoggedIn, updateNavbarAuth } from '../controllers/AuthController.js';
+import { isLoggedIn, updateNavbarAuth, userSignOut } from '../controllers/AuthController.js';
 import { navigateTo, updateTenantLinks, updateNavbarActiveState, updateStepperUI, navigateToAllServicesWithFilter } from '../controllers/Router.js';
 import { renderActiveViewContents, updateHeaderWalletDisplay, renderHomeView, renderServicesCatalogView, renderSelectServiceView, renderSelectTherapistView, renderSelectTimeView, renderConfirmBookingView, renderActivePackagesWidget, renderPaymentMethodSelection, startBookingWithService } from '../views/Renderers.js';
 import { renderSidebarSummary, renderSuccessView } from '../views/SidebarSummary.js';
@@ -1709,7 +1709,7 @@ export function performSignOut() {
 
     updateHeaderWalletDisplay();
     showNotification(state.language === 'ms' ? 'Berjaya log keluar.' : 'Signed out successfully.', 'success');
-    navigateTo('home');
+    userSignOut();
 };
 
 window.renderProfileView = renderProfileView;
