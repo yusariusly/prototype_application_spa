@@ -91,7 +91,7 @@ export function handleMobileMenuAuth() {
     if (loggedIn) {
         handleResetAll();
     } else {
-        requireLogin(() => {});
+        requireLogin(() => navigateTo('profile'));
     }
 };
 

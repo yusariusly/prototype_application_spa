@@ -71,6 +71,8 @@ export function onLoginSuccess() {
         const cb = window._loginCallback;
         window._loginCallback = null;
         cb();
+    } else {
+        navigateTo('profile');
     }
 };
 
