@@ -14,6 +14,10 @@ import { renderBookPackageView, renderActivePackagesView } from '../views/Packag
 
 // 3. CORE ROUTING & VIEW CONTROLLER
 export function navigateTo(viewId) {
+    if (viewId === 'home' && isLoggedIn()) {
+        viewId = 'dashboard';
+    }
+
     const wizardViews = ['select-therapist', 'select-time', 'confirm-booking'];
     if (wizardViews.includes(viewId) && (!state.booking || !state.booking.service)) {
         navigateTo('select-service');
@@ -114,7 +118,7 @@ export function updateNavbarActiveState(viewId) {
     const contactLinks = document.querySelectorAll('[onclick="navigateTo(\'contact\')"]');
     const aboutLinks = document.querySelectorAll('[onclick="navigateTo(\'about\')"]');
 
-    if (viewId === 'home') {
+    if (viewId === 'home' || viewId === 'dashboard') {
         homeLinks.forEach(link => {
             if (link.tagName === 'A') {
                 link.className = 'text-sm font-semibold text-primary transition-colors duration-300 cursor-pointer';

@@ -72,7 +72,7 @@ export function onLoginSuccess() {
         window._loginCallback = null;
         cb();
     } else {
-        navigateTo('profile');
+        navigateTo('dashboard');
     }
 };
 
@@ -92,6 +92,7 @@ export function updateNavbarAuth() {
     const loggedIn = isLoggedIn();
     const name = localStorage.getItem(`${tenantId}_user_name`) || '';
     const avatar = document.getElementById('nav-user-btn');
+    const homeLabels = document.querySelectorAll('[data-translate="nav_home"]');
     if (avatar) {
         if (loggedIn) {
             avatar.setAttribute('title', name ? `Hi, ${name}` : 'My Account');
@@ -101,6 +102,9 @@ export function updateNavbarAuth() {
             avatar.style.background = '';
         }
     }
+    homeLabels.forEach(label => {
+        label.innerHTML = loggedIn ? 'Dashboard' : 'Home';
+    });
     // Refresh wallet balance text
     updateHeaderWalletDisplay();
     // Refresh active packages widget on home

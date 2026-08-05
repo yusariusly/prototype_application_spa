@@ -595,6 +595,124 @@ export function renderServicesCatalogView() {
     `;
 }
 
+export function renderDashboardView() {
+    const container = document.getElementById('dashboard-container');
+    if (!container) return;
+
+    const userName = localStorage.getItem(`${tenantId}_user_name`) || state.guestInfo.name || 'Member';
+    const upcoming = state.bookings.filter(b => b.status === 'Upcoming');
+    upcoming.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        if (isNaN(dateA) || isNaN(dateB)) return 0;
+        return dateA - dateB;
+    });
+    const nextBooking = upcoming[0] || null;
+    const activePackagesCount = Object.values(state.activePackages || {}).filter(count => Number(count) > 0).length;
+    const transactionCount = Array.isArray(state.transactions) ? state.transactions.length : 0;
+
+    container.innerHTML = `
+        <div class="max-w-container-max mx-auto px-4 md:px-margin-desktop py-10 md:py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-8 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30 overflow-hidden relative">
+                    <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-primary/10 blur-3xl"></div>
+                    <div class="relative z-10">
+                        <span class="font-label-caps text-[10px] text-[#B45309] font-bold uppercase tracking-wider block mb-2">${state.language === 'ms' ? 'Papan Pemuka Anda' : 'Your Dashboard'}</span>
+                        <h1 class="font-serif text-3xl md:text-4xl text-[#1E293B] font-bold leading-tight mb-3">${state.language === 'ms' ? 'Selamat kembali' : 'Welcome back'}, ${userName}</h1>
+                        <p class="text-xs md:text-sm text-on-surface-variant leading-relaxed max-w-2xl">${state.language === 'ms' ? 'Ini ialah ruang peribadi anda untuk pantau tempahan, dompet digital, dan pakej aktif tanpa kembali ke halaman landing.' : 'This is your personal space to track bookings, wallet balance, and active packages without returning to the landing page.'}</p>
+
+                        <div class="flex flex-wrap gap-3 mt-6">
+                            <button onclick="navigateTo('services-catalog')" class="bg-[#FACC15] hover:bg-[#eab308] text-[#241a00] px-5 py-2.5 rounded-full text-xs font-bold shadow-sm transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">spa</span> ${state.language === 'ms' ? 'Tempah Servis' : 'Book Service'}
+                            </button>
+                            <button onclick="navigateTo('wallet')" class="bg-white border border-outline-variant/60 hover:border-primary hover:bg-primary/5 text-[#50613f] px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">account_balance_wallet</span> ${state.language === 'ms' ? 'Buka Dompet' : 'Open Wallet'}
+                            </button>
+                            <button onclick="navigateTo('profile')" class="bg-white border border-outline-variant/60 hover:border-primary hover:bg-primary/5 text-[#50613f] px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">person</span> ${state.language === 'ms' ? 'Profil Saya' : 'My Profile'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 grid grid-cols-2 gap-4">
+                    <div class="bg-primary text-white rounded-3xl p-5 shadow-sm relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 opacity-15"><span class="material-symbols-outlined text-7xl">account_balance_wallet</span></div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-white/80 block mb-1">${state.language === 'ms' ? 'Baki Dompet' : 'Wallet Balance'}</span>
+                        <div class="font-serif text-2xl font-bold">MYR ${state.walletBalance.toFixed(2)}</div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-outline-variant/30">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-outline block mb-1">${state.language === 'ms' ? 'Janji Temu' : 'Bookings'}</span>
+                        <div class="font-serif text-2xl font-bold text-[#1E293B]">${state.bookings.length}</div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-outline-variant/30">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-outline block mb-1">${state.language === 'ms' ? 'Pakej Aktif' : 'Active Packages'}</span>
+                        <div class="font-serif text-2xl font-bold text-[#1E293B]">${activePackagesCount}</div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-outline-variant/30">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-outline block mb-1">${state.language === 'ms' ? 'Transaksi' : 'Transactions'}</span>
+                        <div class="font-serif text-2xl font-bold text-[#1E293B]">${transactionCount}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+                <div class="lg:col-span-7 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30">
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="font-serif text-xl text-[#1E293B] font-bold">${state.language === 'ms' ? 'Ringkasan Terkini' : 'Current Summary'}</h2>
+                        <button onclick="navigateTo('booking-history')" class="text-xs font-bold text-[#B45309] hover:text-[#92400e] flex items-center gap-1 transition-colors">
+                            ${state.language === 'ms' ? 'Lihat Sejarah' : 'View History'} <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="rounded-2xl bg-[#F8FAF8] border border-outline-variant/25 p-4">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-outline block mb-2">${state.language === 'ms' ? 'Tempahan Seterusnya' : 'Next Booking'}</span>
+                            ${nextBooking ? `
+                                <h3 class="font-serif text-base font-bold text-[#1E293B] mb-1">${nextBooking.serviceName}</h3>
+                                <p class="text-xs text-on-surface-variant">${nextBooking.date} • ${nextBooking.time}</p>
+                                <p class="text-xs text-on-surface-variant mt-2">${state.language === 'ms' ? 'Terapis' : 'Therapist'}: ${nextBooking.therapist}</p>
+                            ` : `
+                                <p class="text-xs text-on-surface-variant">${state.language === 'ms' ? 'Belum ada tempahan akan datang.' : 'No upcoming booking yet.'}</p>
+                            `}
+                        </div>
+                        <div class="rounded-2xl bg-[#FEFCE8] border border-amber-200/60 p-4">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700 block mb-2">${state.language === 'ms' ? 'Akses Pantas' : 'Quick Access'}</span>
+                            <div class="flex flex-col gap-2">
+                                <button onclick="navigateTo('wallet')" class="text-left text-xs font-semibold text-[#1E293B] hover:text-[#50613f] transition-colors">${state.language === 'ms' ? 'Buka & tambah dompet' : 'Open and top up wallet'}</button>
+                                <button onclick="navigateTo('profile')" class="text-left text-xs font-semibold text-[#1E293B] hover:text-[#50613f] transition-colors">${state.language === 'ms' ? 'Urus profil dan tetapan' : 'Manage profile and settings'}</button>
+                                <button onclick="navigateTo('all-services')" class="text-left text-xs font-semibold text-[#1E293B] hover:text-[#50613f] transition-colors">${state.language === 'ms' ? 'Semak semua servis' : 'Browse all services'}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30">
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="font-serif text-xl text-[#1E293B] font-bold">${state.language === 'ms' ? 'Aktiviti Anda' : 'Your Activity'}</h2>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#50613f]">${state.language === 'ms' ? 'Langsung' : 'Live'}</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-[#F8FAF8] border border-outline-variant/25">
+                            <div class="w-10 h-10 rounded-xl bg-[#50613f]/10 text-[#50613f] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-lg">calendar_month</span></div>
+                            <div>
+                                <p class="text-xs font-semibold text-[#1E293B]">${state.language === 'ms' ? 'Tempahan anda kini disambung ke dashboard.' : 'Your bookings now flow into this dashboard.'}</p>
+                                <p class="text-[11px] text-on-surface-variant mt-1">${state.language === 'ms' ? 'Anda boleh semak jadual, dompet, dan pakej tanpa kembali ke landing page.' : 'You can review schedule, wallet, and packages without going back to the landing page.'}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-4 rounded-2xl bg-[#F8FAF8] border border-outline-variant/25">
+                            <div class="w-10 h-10 rounded-xl bg-[#B45309]/10 text-[#B45309] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-lg">stars</span></div>
+                            <div>
+                                <p class="text-xs font-semibold text-[#1E293B]">${state.language === 'ms' ? 'Pakej aktif dan simpanan kekal terpapar di sini.' : 'Active packages and savings stay visible here.'}</p>
+                                <p class="text-[11px] text-on-surface-variant mt-1">${state.language === 'ms' ? 'Panel ini direka sebagai pintu masuk utama user selepas log masuk.' : 'This panel is the main user entry point after login.'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 export function renderActivePackagesWidget() {
     const widget = document.getElementById('owned-packages-widget');
     if (!widget) return;
@@ -1225,6 +1343,7 @@ window.renderAboutView = renderAboutView;
 window.renderActiveViewContents = renderActiveViewContents;
 window.updateHeaderWalletDisplay = updateHeaderWalletDisplay;
 window.renderHomeView = renderHomeView;
+window.renderDashboardView = renderDashboardView;
 window.renderServicesCatalogView = renderServicesCatalogView;
 window.renderActivePackagesWidget = renderActivePackagesWidget;
 window.purchaseBundle = purchaseBundle;

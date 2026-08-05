@@ -2,7 +2,7 @@ import { tenantId, currentTenant, DEFAULT_TENANTS } from '../models/Tenant.js';
 import { SERVICES, THERAPISTS, getSharedData, syncServices, syncTherapists } from '../models/Database.js';
 import { TRANSLATIONS, t, getServiceTranslation, translateStaticHtml, toggleLanguage } from '../models/Translations.js';
 import { DEFAULT_STATE, state, loadState, saveState } from '../models/State.js';
-import { isLoggedIn, updateNavbarAuth } from '../controllers/AuthController.js';
+import { isLoggedIn, updateNavbarAuth, userSignOut } from '../controllers/AuthController.js';
 import { navigateTo, updateTenantLinks, updateNavbarActiveState, updateStepperUI, navigateToAllServicesWithFilter } from '../controllers/Router.js';
 import { renderActiveViewContents, updateHeaderWalletDisplay, renderHomeView, renderServicesCatalogView, renderSelectServiceView, renderSelectTherapistView, renderSelectTimeView, renderConfirmBookingView, renderActivePackagesWidget, renderPaymentMethodSelection, startBookingWithService } from '../views/Renderers.js';
 import { renderSidebarSummary, renderSuccessView } from '../views/SidebarSummary.js';
@@ -15,12 +15,8 @@ import { renderBookPackageView, renderActivePackagesView } from '../views/Packag
 
 // 9. APP INITIALIZATION
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure entry point is always as a guest
-    localStorage.removeItem(`${tenantId}_user_logged_in`);
-    localStorage.removeItem(`${tenantId}_user_name`);
-    localStorage.removeItem(`${tenantId}_user_email`);
-    
-    navigateTo('home');
+    // Keep authenticated users in the app; guests start on the landing page.
+    navigateTo(isLoggedIn() ? 'dashboard' : 'home');
     updateNavbarAuth();
 });
 
@@ -89,7 +85,7 @@ export function handleMobileMenuAuth() {
     window.closeMobileMenu();
     const loggedIn = isLoggedIn();
     if (loggedIn) {
-        handleResetAll();
+        userSignOut();
     } else {
         requireLogin(() => navigateTo('profile'));
     }

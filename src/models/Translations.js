@@ -434,6 +434,8 @@ export function toggleLanguage(event) {
     if (state.currentView === 'home') {
         window.renderHomeView();
         window.renderActivePackagesWidget();
+    } else if (state.currentView === 'dashboard') {
+        window.renderDashboardView();
     } else if (state.currentView === 'services-catalog') {
         window.renderServicesCatalogView();
     } else if (state.currentView === 'profile') {
@@ -446,6 +448,10 @@ export function toggleLanguage(event) {
 
     if (document.getElementById('payment-methods-container')) {
         window.renderPaymentMethodSelection();
+    }
+
+    if (typeof window.updateNavbarAuth === 'function') {
+        window.updateNavbarAuth();
     }
 };
 
