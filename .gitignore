@@ -3,7 +3,6 @@ dist/
 .DS_Store
 *.log
 test.txt
-Documentation/
 
 node_modules
 dist
@@ -29,7 +28,6 @@ DEADJOE
 !.vscode/*.code-snippets
 
 ### Documentation ###
-Documentation/
 .tmp_audit.ps1
 .tmp_audit2.ps1
 .tmp_audit3.ps1
